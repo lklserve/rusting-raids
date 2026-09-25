@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Rusting Raids — Sobrevivência, zumbis e raids no celular</title>
+  <meta name="description" content="Rusting Raids: sobrevivência em mundo aberto com zumbis, construção de base e raids com C4. Sem pay-to-win. Baixe o alpha para Android e apoie o servidor.">
+  <meta name="theme-color" content="#09090a">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/icone-180.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Rusting Raids — Survivor's Battlegrounds">
+  <meta property="og:description" content="Sobreviva, construa sua base e exploda a dos outros. Mundo aberto, zumbis e raids — sem pay-to-win.">
+  <meta property="og:image" content="assets/img/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@500;700&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/estilo.css">
+</head>
+<body>
+
+<!-- Ícones (sprite SVG) -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+  <symbol id="i-coracao" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-esq" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-dir" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-seta" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="i-copiar" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><line x1="4" x2="20" y1="7" y2="7"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="17" y2="17"/></symbol>
+  <symbol id="i-machado" viewBox="0 0 24 24"><path d="m14 12-8.5 8.5a2.12 2.12 0 1 1-3-3L11 9"/><path d="M15 13 9 7l4-4 6 6h3a8 8 0 0 1-7 7z"/></symbol>
+  <symbol id="i-muro" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9.3h18M3 14.6h18M9 4v5.3M15 4v5.3M6 9.3v5.3M12 9.3v5.3M18 9.3v5.3M9 14.6V20M15 14.6V20"/></symbol>
+  <symbol id="i-tnt" viewBox="0 0 24 24"><rect x="7" y="8" width="10" height="14" rx="1.5"/><path d="M7 12h10M7 18h10"/><path d="M12 8c0-2.2 1.2-3.6 3.4-3.6"/><path d="M17.5 2.5l.8.8M19.6 4.2l1.1-.3M18.6 5.8l.9.9"/></symbol>
+  <symbol id="i-caveira" viewBox="0 0 24 24"><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><path d="M8 20v2h8v-2"/><path d="m12.5 17-.5-1-.5 1h1z"/><path d="M16 20a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20"/></symbol>
+  <symbol id="i-trem" viewBox="0 0 24 24"><path d="M8 3.1V7a4 4 0 0 0 8 0V3.1"/><path d="m9 15-1-1"/><path d="m15 15 1-1"/><path d="M9 19c-2.8 0-5-2.2-5-5v-4a8 8 0 0 1 16 0v4c0 2.8-2.2 5-5 5Z"/><path d="m8 19-2 3"/><path d="m16 19 2 3"/></symbol>
+  <symbol id="i-lua" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="i-chave" viewBox="0 0 24 24"><path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/></symbol>
+  <symbol id="i-celular" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/></symbol>
+  <symbol id="i-servidor" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></symbol>
+  <symbol id="i-codigo" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
+  <symbol id="i-escudo" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
+  <symbol id="i-expandir" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></symbol>
+  <symbol id="i-discord" viewBox="0 0 24 24" class="cheio"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></symbol>
+  <symbol id="i-whatsapp" viewBox="0 0 24 24" class="cheio"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></symbol>
+  <symbol id="i-tiktok" viewBox="0 0 24 24" class="cheio"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></symbol>
+  <symbol id="i-pix" viewBox="0 0 24 24" class="cheio"><path d="M5.283 18.36a3.505 3.505 0 0 0 2.493-1.032l3.6-3.6a.684.684 0 0 1 .946 0l3.613 3.613a3.504 3.504 0 0 0 2.493 1.032h.71l-4.56 4.56a3.647 3.647 0 0 1-5.156 0L4.85 18.36ZM18.428 5.627a3.505 3.505 0 0 0-2.493 1.032l-3.613 3.614a.67.67 0 0 1-.946 0l-3.6-3.6A3.505 3.505 0 0 0 5.283 5.64h-.434l4.573-4.572a3.646 3.646 0 0 1 5.156 0l4.559 4.559ZM1.068 9.422 3.79 6.699h1.492a2.483 2.483 0 0 1 1.744.722l3.6 3.6a1.73 1.73 0 0 0 2.443 0l3.614-3.613a2.482 2.482 0 0 1 1.744-.723h1.767l2.737 2.737a3.646 3.646 0 0 1 0 5.156l-2.736 2.736h-1.768a2.482 2.482 0 0 1-1.744-.722l-3.613-3.613a1.77 1.77 0 0 0-2.444 0l-3.6 3.6a2.483 2.483 0 0 1-1.744.722H3.791l-2.723-2.723a3.646 3.646 0 0 1 0-5.156"/></symbol>
+</svg>
+
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+<!-- ============================================================ TOPO -->
+<header class="topo" id="topo">
+  <div class="topo__barra container">
+    <a class="marca" href="#inicio" aria-label="Rusting Raids — início">
+      <span class="marca__texto">RUST<b>I</b>NG RA<b>I</b>DS</span>
+    </a>
+    <nav class="menu" id="menu" aria-label="Seções">
+      <a href="#jogo" class="menu__link">O jogo</a>
+      <a href="#galeria" class="menu__link">Galeria</a>
+      <a href="#devblog" class="menu__link">Devblog</a>
+      <a href="#roadmap" class="menu__link">Em breve</a>
+      <a href="#como-jogar" class="menu__link">Como jogar</a>
+      <a href="#faq" class="menu__link">Dúvidas</a>
+      <div class="menu__redes" data-redes></div>
+    </nav>
+    <div class="topo__acoes">
+      <button class="btn btn--tnt btn--peq" data-abrir-apoio type="button">
+        <svg class="ic"><use href="#i-coracao"/></svg><span>Apoiar</span>
+      </button>
+      <a class="btn btn--aco btn--peq so-desktop" data-baixar href="#como-jogar">
+        <svg class="ic"><use href="#i-download"/></svg><span>Baixar</span>
+      </a>
+      <button class="hamburguer" id="hamburguer" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="conteudo">
+
+<!-- ============================================================ HERÓI -->
+<section class="heroi" id="inicio" aria-label="Rusting Raids">
+  <div class="heroi__fundo" aria-hidden="true">
+    <img src="assets/img/heroi.webp" alt="" class="heroi__img" fetchpriority="high">
+    <div class="heroi__nevoa"></div>
+  </div>
+  <canvas class="brasas" id="brasas" aria-hidden="true"></canvas>
+
+  <div class="heroi__conteudo container">
+    <p class="kicker kicker--centro revelar"><span class="ponto-vivo"></span> Alpha · em desenvolvimento</p>
+    <h1 class="heroi__logo revelar">
+      <picture>
+        <source srcset="assets/img/logo.webp" type="image/webp">
+        <img src="assets/img/logo.png" alt="Rusting Raids — Survivor's Battlegrounds" width="852" height="724">
+      </picture>
+      <span class="faisca faisca--1" aria-hidden="true"></span>
+      <span class="faisca faisca--2" aria-hidden="true"></span>
+    </h1>
+    <p class="heroi__frase revelar">Sobreviva. Construa. <em>Exploda tudo.</em></p>
+    <p class="heroi__sub revelar">Mundo aberto de sobrevivência com zumbis, bases e raids — do jeito raiz: sem pay-to-win, sem talentos, sem pets voadores.</p>
+
+    <div class="heroi__ctas revelar">
+      <a class="btn btn--tnt btn--grande" data-baixar href="#como-jogar">
+        <svg class="ic"><use href="#i-download"/></svg>
+        <span>Baixar para Android</span>
+        <small data-versao>alpha</small>
+      </a>
+      <button class="btn btn--aco btn--grande" type="button" data-abrir-apoio>
+        <svg class="ic ic--pix"><use href="#i-pix"/></svg>
+        <span>Apoiar com Pix</span>
+        <small>a partir de R$ 5</small>
+      </button>
+    </div>
+
+    <ul class="chips revelar" aria-label="Características">
+      <li>Sobrevivência</li><li>Zumbis</li><li>Raids</li><li>PvP + PvE</li><li>Mundo aberto</li><li>Android</li>
+    </ul>
+  </div>
+
+  <a class="heroi__rolar" href="#jogo" aria-label="Rolar para o jogo">
+    <span class="pavio"><span class="pavio__chama"></span></span>
+    <span>role</span>
+  </a>
+</section>
+
+<div class="faixa-perigo" aria-hidden="true"></div>
+
+<!-- ============================================================ O JOGO -->
+<section class="secao" id="jogo">
+  <div class="container">
+    <header class="secao__cab revelar">
+      <p class="kicker">// o jogo</p>
+      <h2 class="titulo">A ilha não perdoa</h2>
+      <p class="secao__lead">Você acorda sem nada numa praia. Tudo o que tiver daqui pra frente, você vai coletar, construir — ou arrancar de alguém.</p>
+    </header>
+
+    <div class="cards">
+      <article class="card revelar" data-inclinar>
+        <div class="card__ic"><svg class="ic"><use href="#i-machado"/></svg></div>
+        <span class="card__num">01</span>
+        <h3>Sobreviva</h3>
+        <p>Corte árvores, quebre minério, cace, cozinhe na fogueira e fuja das zonas de radiação. A fome não espera.</p>
+      </article>
+      <article class="card revelar" data-inclinar>
+        <div class="card__ic"><svg class="ic"><use href="#i-muro"/></svg></div>
+        <span class="card__num">02</span>
+        <h3>Construa sua base</h3>
+        <p>Fundações, paredes, portas com fechadura de código e o gabinete que protege o território. Madeira, pedra ou metal.</p>
+      </article>
+      <article class="card card--destaque revelar" data-inclinar>
+        <div class="card__ic"><svg class="ic"><use href="#i-tnt"/></svg></div>
+        <span class="card__num">03</span>
+        <h3>Raid</h3>
+        <p>C4, foguetes, granadas e cargas de demolição. Nenhuma parede é para sempre — nem a sua.</p>
+      </article>
+      <article class="card revelar" data-inclinar>
+        <div class="card__ic"><svg class="ic"><use href="#i-caveira"/></svg></div>
+        <span class="card__num">04</span>
+        <h3>Hordas e chefes</h3>
+        <p>Zumbis em bando, elites, a Banshee, o Tirano e a pirâmide do Anúbis. Tanque e helicóptero de guerra patrulham o mapa.</p>
+      </article>
+      <article class="card revelar" data-inclinar>
+        <div class="card__ic"><svg class="ic"><use href="#i-trem"/></svg></div>
+        <span class="card__num">05</span>
+        <h3>Um mundo que se move</h3>
+        <p>Um trem que dá a volta na ilha, cavalos selvagens para domar, bicicleta, veículos e airdrops chamados no sinalizador.</p>
+      </article>
+      <article class="card revelar" data-inclinar>
+        <div class="card__ic"><svg class="ic"><use href="#i-lua"/></svg></div>
+        <span class="card__num">06</span>
+        <h3>Noites de verdade</h3>
+        <p>Quando o sol cai, só a tocha, o lampião e a lanterna te salvam. E a cada 7 dias de jogo, chove.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ NÚMEROS -->
+<section class="numeros" aria-label="Números do Rusting Raids">
+  <div class="container numeros__grade">
+    <div class="numero revelar"><strong data-contar="168">168</strong><span>horas por temporada</span></div>
+    <div class="numero revelar"><strong data-contar="24.6" data-casas="1">24,6</strong><span>km de trilhos de trem</span></div>
+    <div class="numero revelar"><strong data-contar="14">14</strong><span>estações pelo mapa</span></div>
+    <div class="numero revelar"><strong data-contar="0" class="zero">0</strong><span>pay-to-win</span></div>
+  </div>
+</section>
+
+<!-- ============================================================ GALERIA -->
+<section class="secao secao--escura" id="galeria">
+  <div class="container">
+    <header class="secao__cab secao__cab--centro revelar">
+      <p class="kicker">// direto do jogo</p>
+      <h2 class="titulo">Galeria</h2>
+      <p class="secao__lead">Capturas reais do Rusting Raids em desenvolvimento.</p>
+    </header>
+
+    <div class="galeria revelar" id="galeria-palco" aria-roledescription="carrossel" aria-label="Capturas do jogo">
+      <div class="galeria__trilho" data-trilho></div>
+      <button class="galeria__seta galeria__seta--esq" type="button" data-ant aria-label="Imagem anterior"><svg class="ic"><use href="#i-esq"/></svg></button>
+      <button class="galeria__seta galeria__seta--dir" type="button" data-prox aria-label="Próxima imagem"><svg class="ic"><use href="#i-dir"/></svg></button>
+      <div class="galeria__progresso" aria-hidden="true"><span data-progresso></span></div>
+    </div>
+    <div class="galeria__miniaturas" data-miniaturas role="tablist" aria-label="Escolher imagem"></div>
+  </div>
+</section>
+
+<!-- ============================================================ DEVBLOG -->
+<section class="secao" id="devblog">
+  <div class="container">
+    <header class="secao__cab revelar">
+      <p class="kicker">// diário de desenvolvimento</p>
+      <h2 class="titulo">Devblog</h2>
+      <p class="secao__lead">Tudo o que entrou no jogo, dia após dia. Transparência total — você vê o jogo nascer.</p>
+    </header>
+    <div class="abas revelar" role="tablist" aria-label="Filtrar posts" data-abas></div>
+    <div class="blog" data-blog></div>
+  </div>
+</section>
+
+<!-- ============================================================ ROADMAP -->
+<section class="secao secao--escura" id="roadmap">
+  <div class="container">
+    <header class="secao__cab revelar">
+      <p class="kicker">// o que vem aí</p>
+      <h2 class="titulo">Em breve</h2>
+      <p class="secao__lead">O caminho até o servidor online. Cada apoio encurta essa estrada.</p>
+    </header>
+    <ol class="linha-tempo" data-roadmap></ol>
+  </div>
+</section>
+
+<!-- ============================================================ COMO JOGAR -->
+<section class="secao" id="como-jogar">
+  <div class="container">
+    <header class="secao__cab secao__cab--centro revelar">
+      <p class="kicker">// em 4 passos</p>
+      <h2 class="titulo">Como jogar</h2>
+    </header>
+    <ol class="passos">
+      <li class="passo revelar">
+        <span class="passo__num">1</span>
+        <svg class="ic"><use href="#i-pix"/></svg>
+        <h3>Apoie com Pix</h3>
+        <p>Escolha um valor a partir de R$ 5. O dinheiro paga a hospedagem do servidor.</p>
+      </li>
+      <li class="passo revelar">
+        <span class="passo__num">2</span>
+        <svg class="ic"><use href="#i-chave"/></svg>
+        <h3>Receba sua chave</h3>
+        <p>Assim que o Pix cai, sua chave de acesso aparece na tela. Guarde bem.</p>
+      </li>
+      <li class="passo revelar">
+        <span class="passo__num">3</span>
+        <svg class="ic"><use href="#i-download"/></svg>
+        <h3>Baixe o jogo</h3>
+        <p>O APK para Android sai pelo link oficial. Instale e abra.</p>
+      </li>
+      <li class="passo revelar">
+        <span class="passo__num">4</span>
+        <svg class="ic"><use href="#i-celular"/></svg>
+        <h3>Ative e sobreviva</h3>
+        <p>No painel de chaves do jogo, cole a sua. Pronto: a ilha é sua. Por enquanto.</p>
+      </li>
+    </ol>
+    <div class="passos__ctas revelar">
+      <button class="btn btn--tnt btn--grande" type="button" data-abrir-apoio><svg class="ic"><use href="#i-chave"/></svg><span>Quero minha chave</span></button>
+      <a class="btn btn--aco btn--grande" data-baixar href="#como-jogar"><svg class="ic"><use href="#i-download"/></svg><span>Baixar o APK</span><small data-versao>alpha</small></a>
+    </div>
+    <p class="nota revelar" data-minha-chave hidden></p>
+  </div>
+</section>
+
+<!-- ============================================================ APOIAR -->
+<section class="secao secao--apoio" id="apoiar">
+  <div class="container">
+    <div class="apoio-bloco revelar">
+      <div class="apoio-bloco__texto">
+        <p class="kicker">// apoie o desenvolvimento</p>
+        <h2 class="titulo">Mantenha a ilha <span class="tnt-txt">acesa</span></h2>
+        <p>O Rusting Raids é feito por um dev só, sem investidor e sem loja paga dentro do jogo. Cada Pix vira servidor ligado, correções e conteúdo novo.</p>
+        <div class="meta" data-meta>
+          <div class="meta__topo"><span data-meta-titulo>Servidor do mês</span><strong data-meta-pct>0%</strong></div>
+          <div class="meta__barra"><span data-meta-barra></span></div>
+          <div class="meta__rodape"><span data-meta-valor>R$ 0,00 arrecadados</span><span data-meta-objetivo>meta R$ 110</span></div>
+        </div>
+        <button class="btn btn--tnt btn--grande" type="button" data-abrir-apoio><svg class="ic"><use href="#i-coracao"/></svg><span>Apoiar agora</span></button>
+      </div>
+      <ul class="apoio-bloco__lista">
+        <li><svg class="ic"><use href="#i-servidor"/></svg><div><strong>Servidor online</strong><span>A máquina que segura a temporada de 7 dias, 24 horas por dia.</span></div></li>
+        <li><svg class="ic"><use href="#i-codigo"/></svg><div><strong>Desenvolvimento</strong><span>Multiplayer, equipes, correções e o que a comunidade pedir.</span></div></li>
+        <li><svg class="ic"><use href="#i-escudo"/></svg><div><strong>Jogo limpo</strong><span>Painel de chaves com banimento de quem usar hack.</span></div></li>
+        <li><svg class="ic"><use href="#i-chave"/></svg><div><strong>Sua chave de acesso</strong><span>Todo apoio a partir de R$ 5 libera a sua chave para jogar.</span></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ FAQ -->
+<section class="secao" id="faq">
+  <div class="container container--estreito">
+    <header class="secao__cab secao__cab--centro revelar">
+      <p class="kicker">// dúvidas</p>
+      <h2 class="titulo">Perguntas frequentes</h2>
+    </header>
+    <div class="faq" data-faq></div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================================================ RODAPÉ -->
+<footer class="rodape">
+  <div class="faixa-perigo faixa-perigo--fina" aria-hidden="true"></div>
+  <div class="container rodape__grade">
+    <div class="rodape__marca">
+      <picture>
+        <source srcset="assets/img/logo.webp" type="image/webp">
+        <img src="assets/img/logo.png" alt="Rusting Raids" width="170" height="145" loading="lazy">
+      </picture>
+      <p>// sobreviva a qualquer custo</p>
+    </div>
+    <div class="rodape__meio">
+      <div class="redes" data-redes></div>
+      <p>© <span data-ano>2026</span> Rusting Raids. Todos os direitos reservados.</p>
+      <p>Um jogo de sobrevivência para Android, feito no Brasil.</p>
+    </div>
+    <div class="rodape__status"><span class="ponto-vivo"></span> Em desenvolvimento</div>
+  </div>
+</footer>
+
+<!-- Barra fixa no celular -->
+<div class="barra-movel" id="barra-movel">
+  <a class="btn btn--aco" data-baixar href="#como-jogar"><svg class="ic"><use href="#i-download"/></svg><span>Baixar</span></a>
+  <button class="btn btn--tnt" type="button" data-abrir-apoio><svg class="ic"><use href="#i-coracao"/></svg><span>Apoiar</span></button>
+</div>
+
+<!-- ============================================================ MODAL: APOIO -->
+<dialog class="modal modal--apoio" id="modal-apoio" aria-labelledby="apoio-titulo">
+  <div class="modal__caixa">
+    <button class="modal__fechar" type="button" data-fechar aria-label="Fechar"><svg class="ic"><use href="#i-x"/></svg></button>
+
+    <!-- Etapa 0: convite -->
+    <div class="etapa" data-etapa="convite">
+      <p class="kicker">// apoie o desenvolvimento</p>
+      <h2 class="modal__titulo" id="apoio-titulo">Apoie o<br><span>Rusting Raids</span></h2>
+      <p class="modal__texto">Cada contribuição mantém o servidor ligado e acelera o desenvolvimento. Seja um sobrevivente fundador — e receba sua chave de acesso.</p>
+      <div class="meta meta--modal" data-meta>
+        <div class="meta__barra"><span data-meta-barra></span></div>
+        <div class="meta__rodape"><span data-meta-valor>R$ 0,00 arrecadados</span><strong data-meta-pct>0%</strong></div>
+      </div>
+      <button class="btn btn--tnt btn--largo" type="button" data-ir="valor"><svg class="ic"><use href="#i-pix"/></svg><span>Apoiar o Rusting Raids</span></button>
+      <button class="link-discreto" type="button" data-fechar data-mais-tarde>Talvez mais tarde</button>
+    </div>
+
+    <!-- Etapa 1: valor -->
+    <div class="etapa" data-etapa="valor" hidden>
+      <p class="kicker">// passo 1 de 3</p>
+      <h2 class="modal__titulo modal__titulo--menor">Quanto você quer apoiar?</h2>
+      <div class="valor">
+        <output class="valor__numero" id="valor-saida" for="valor-slider">R$ <b>10</b></output>
+        <span class="valor__patente" data-patente>Sobrevivente</span>
+      </div>
+      <div class="deslizante">
+        <input type="range" id="valor-slider" min="5" max="100" step="1" value="10" aria-label="Valor do apoio em reais">
+        <div class="deslizante__marcas" aria-hidden="true"><span>R$ 5</span><span>R$ 50</span><span>R$ 100</span></div>
+      </div>
+      <div class="rapidos" data-rapidos>
+        <button type="button" data-valor="5">R$ 5</button>
+        <button type="button" data-valor="10">R$ 10</button>
+        <button type="button" data-valor="25">R$ 25</button>
+        <button type="button" data-valor="50">R$ 50</button>
+        <button type="button" data-valor="100">R$ 100</button>
+      </div>
+      <label class="campo">
+        <span>Seu e-mail <small>(o Pix e a chave ficam ligados a ele)</small></span>
+        <input type="email" id="apoio-email" autocomplete="email" inputmode="email" placeholder="voce@email.com" required>
+      </label>
+      <p class="erro" data-erro hidden></p>
+      <button class="btn btn--tnt btn--largo" type="button" data-gerar-pix><svg class="ic"><use href="#i-pix"/></svg><span>Gerar Pix de <b data-valor-botao>R$ 10</b></span></button>
+      <p class="modal__rodape">Pagamento processado pelo Mercado Pago. Sem pay-to-win: o apoio não compra vantagem no jogo.</p>
+    </div>
+
+    <!-- Etapa 2: Pix -->
+    <div class="etapa" data-etapa="pix" hidden>
+      <p class="kicker">// passo 2 de 3</p>
+      <h2 class="modal__titulo modal__titulo--menor">Pague com Pix</h2>
+      <p class="aviso-demo" data-aviso-demo hidden>Modo de demonstração — este QR não é um Pix de verdade. O pagamento real entra na próxima etapa.</p>
+      <div class="pix">
+        <div class="pix__qr" data-qr><div class="carregando"></div></div>
+        <div class="pix__info">
+          <div class="pix__valor">Valor: <strong data-pix-valor>R$ 10,00</strong></div>
+          <div class="pix__tempo">Expira em <strong data-pix-tempo>30:00</strong></div>
+          <div class="pix__status"><span class="radar"></span> Aguardando pagamento…</div>
+        </div>
+      </div>
+      <label class="campo campo--copia">
+        <span>Pix copia e cola</span>
+        <div class="copia">
+          <input type="text" readonly data-pix-codigo value="">
+          <button class="btn btn--aco btn--peq" type="button" data-copiar-pix><svg class="ic"><use href="#i-copiar"/></svg><span>Copiar</span></button>
+        </div>
+      </label>
+      <ol class="pix__como">
+        <li>Abra o app do seu banco e escolha <b>Pix</b>.</li>
+        <li>Leia o QR ou cole o código copia e cola.</li>
+        <li>Confirme. A chave aparece aqui sozinha.</li>
+      </ol>
+      <button class="btn btn--aco btn--largo" type="button" data-simular hidden>Simular pagamento aprovado (demo)</button>
+      <button class="link-discreto" type="button" data-ir="valor">Voltar e mudar o valor</button>
+    </div>
+
+    <!-- Etapa 3: chave -->
+    <div class="etapa" data-etapa="chave" hidden>
+      <div class="explosao" aria-hidden="true"></div>
+      <p class="kicker kicker--verde">// pagamento confirmado</p>
+      <h2 class="modal__titulo modal__titulo--menor">Valeu, sobrevivente!</h2>
+      <p class="modal__texto">Esta é a sua chave de acesso. Ela fica guardada neste aparelho, mas anote num lugar seguro.</p>
+      <div class="chave">
+        <code data-chave>RR-XXXX-XXXX</code>
+        <button class="btn btn--aco btn--peq" type="button" data-copiar-chave><svg class="ic"><use href="#i-copiar"/></svg><span>Copiar</span></button>
+      </div>
+      <a class="btn btn--tnt btn--largo" data-baixar href="#como-jogar"><svg class="ic"><use href="#i-download"/></svg><span>Baixar o jogo</span></a>
+      <ol class="pix__como">
+        <li>Instale o APK e abra o Rusting Raids.</li>
+        <li>No <b>painel de chaves</b>, cole a sua chave.</li>
+        <li>Crie sua conta e boa sorte na ilha.</li>
+      </ol>
+    </div>
+
+    <!-- Erro -->
+    <div class="etapa" data-etapa="erro" hidden>
+      <p class="kicker kicker--tnt">// algo deu errado</p>
+      <h2 class="modal__titulo modal__titulo--menor">Não deu para gerar o Pix</h2>
+      <p class="modal__texto" data-erro-texto>Tente de novo em instantes.</p>
+      <button class="btn btn--tnt btn--largo" type="button" data-ir="valor">Tentar de novo</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- ============================================================ MODAL: POST -->
+<dialog class="modal modal--post" id="modal-post" aria-labelledby="post-titulo">
+  <div class="modal__caixa modal__caixa--larga">
+    <button class="modal__fechar" type="button" data-fechar aria-label="Fechar"><svg class="ic"><use href="#i-x"/></svg></button>
+    <div data-post></div>
+  </div>
+</dialog>
+
+<!-- ============================================================ LIGHTBOX -->
+<dialog class="lightbox" id="lightbox" aria-label="Imagem ampliada">
+  <button class="modal__fechar" type="button" data-fechar aria-label="Fechar"><svg class="ic"><use href="#i-x"/></svg></button>
+  <figure>
+    <img alt="" data-lb-img>
+    <figcaption data-lb-legenda></figcaption>
+  </figure>
+  <button class="galeria__seta galeria__seta--esq" type="button" data-lb-ant aria-label="Anterior"><svg class="ic"><use href="#i-esq"/></svg></button>
+  <button class="galeria__seta galeria__seta--dir" type="button" data-lb-prox aria-label="Próxima"><svg class="ic"><use href="#i-dir"/></svg></button>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/dados.js"></script>
+<script src="assets/js/app.js" defer></script>
+</body>
+</html>
