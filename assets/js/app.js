@@ -250,8 +250,14 @@
       </figure>`).join("");
     minis.innerHTML = itens.map((it, n) => `
       <button class="miniatura" type="button" role="tab" aria-selected="false" aria-label="${esc(it.titulo)}" data-n="${n}">
-        <img src="${mini(it)}" alt="" decoding="async" onerror="this.onerror=null;this.src='${src(it)}'">
+        <img alt="" decoding="async" data-mini="${n}">
       </button>`).join("");
+    // Sem handler inline (o CSP proíbe): a miniatura tenta a versão pequena e cai na grande.
+    $$("img[data-mini]", minis).forEach((img) => {
+      const it = itens[+img.dataset.mini];
+      img.addEventListener("error", function cai() { img.removeEventListener("error", cai); img.src = src(it); });
+      img.src = mini(it);
+    });
 
     let atual = 0, timer, t0 = 0, pausado = false;
     const DUR = 6000;
@@ -608,8 +614,8 @@
       try {
         const r = await fetch(`${A.api}/status?pedido=${encodeURIComponent(pedido.pedidoId)}`);
         const j = await r.json();
-        if (j.status === "approved" && j.chave) { aprovado(j.chave); return; }
-        if (j.status === "expired") { guardar.apagar(ATIVO); etapa("erro"); return; }
+        if (j.status === "aprovado" && j.chave) { aprovado(j.chave); return; }
+        if (j.status === "expirado") { guardar.apagar(ATIVO); etapa("erro"); return; }
       } catch { /* rede instável: segue tentando */ }
       timerStatus = setTimeout(consultar, A.intervaloDeConsulta || 4000);
     }

@@ -1,52 +1,75 @@
 # Site do Rusting Raids
 
-Landing page do jogo: download do APK, galeria, devblog, roadmap, dúvidas e o apoio via Pix com o
-deslizante de R$ 5 a R$ 100. É HTML, CSS e JavaScript puros: sem build, sem biblioteca. Abrir o
-`index.html` no navegador já funciona.
+Landing page do jogo + apoio via Pix + chaves de acesso. O site (frente) é HTML, CSS e
+JavaScript puros, sem build. O backend são **funções serverless na Vercel** (pasta `api/`),
+com banco no **Supabase**. Tudo é **próprio e isolado do jogo** — nenhuma ligação com outro sistema.
+
+## Estrutura
+
+```
+index.html, assets/            → o site (estático)
+api/pix/criar.js               → cria a cobrança Pix (valida o valor no servidor)
+api/pix/status.js              → a tela pergunta aqui de 4 em 4 s
+api/webhooks/mercadopago.js    → o Mercado Pago avisa aqui quando o pagamento cai
+api/jogo/ativar.js             → o painel de chaves DO JOGO ativa a chave num aparelho
+api/jogo/validar.js            → o jogo confere a chave ao abrir (e o banimento)
+api/_lib/                      → supabase, mercadopago, keygen, rate-limit, emitir, http
+supabase/schema.sql            → o banco (rode uma vez no projeto novo)
+```
 
 ## O que editar no dia a dia
 
 | Arquivo | O que tem |
 |---|---|
-| `assets/js/config.js` | **Link do Mediafire** (`linkDownload`), versão, redes (Discord, WhatsApp, TikTok), meta do mês, limites do apoio |
-| `assets/js/dados.js` | **Posts do devblog**, fotos da galeria, roadmap e dúvidas |
-| `assets/img/galeria/` | Fotos 1920×1080 em `.webp`, com miniatura 480×270 de mesmo nome em `mini/` |
+| `assets/js/config.js` | link do Mediafire, versão, redes, meta do mês, e o **liga/desliga do Pix real** |
+| `assets/js/dados.js` | posts do devblog, galeria, roadmap e dúvidas |
+| `assets/img/galeria/` | fotos 1920×1080 `.webp`, com miniatura de mesmo nome em `mini/` |
 
-- **Post novo no devblog:** acrescentar no começo da lista `devblog` do `dados.js`. O primeiro aparece em destaque.
-- **Redes sociais:** enquanto o endereço estiver vazio, o botão fica escondido.
-- **Meta do mês:** enquanto a API não existir, `arrecadado` é trocado à mão.
 - **Testar sem o convite de apoio abrindo sozinho:** `index.html?semconvite`.
 
-## Hospedagem (Vercel + GitHub)
+## Segurança (o que já está feito)
 
-1. Criar um repositório no GitHub só com esta pasta.
-2. Na Vercel: **Add New → Project → Import** do repositório.
-   - Framework: **Other**.
-   - Sem comando de build.
-   - Pasta de saída: a raiz.
-3. Cada `git push` publica sozinho. O `vercel.json` já tem o cache e os cabeçalhos de segurança.
+- **Segredos só em variável de ambiente** da Vercel; `.env` está no `.gitignore` e nunca vai para o git.
+- **Chave do Supabase `service_role` só no servidor** — nunca chega ao navegador. O banco fica
+  trancado por **RLS sem policies**: só as funções acessam.
+- **O preço é validado no servidor** (R$ 5 a R$ 100). O navegador não decide valor.
+- **Chave gerada por CSPRNG** (`crypto`), nunca `Math.random()`.
+- **Idempotência:** o webhook e a consulta de status nunca emitem duas chaves para o mesmo pedido
+  (trava `pedido_id` único no banco).
+- **Webhook à prova de falsificação:** a chave só sai depois de a função **perguntar ao próprio
+  Mercado Pago** se o pagamento está aprovado. Um webhook forjado não libera nada. (Há ainda a
+  conferência opcional da assinatura, se `MERCADO_PAGO_WEBHOOK_SECRET` estiver definido.)
+- **Limite de requisições** por e-mail e por IP na cobrança, e por IP nas rotas do jogo.
+- **Cabeçalhos de segurança + CSP estrito** no `vercel.json`: `script-src 'self'` (nenhum script
+  de terceiro), HSTS, `X-Frame-Options: DENY`, `X-Content-Type-Options`, `Referrer-Policy`,
+  `Permissions-Policy`. Testado sem violações.
+- **Limite de aparelhos por chave** (3) e **banimento** por chave e por jogador.
 
-## Próxima etapa: Pix de verdade e painel de chaves
+## Como ligar o Pix de verdade (quando quiser cobrar)
 
-Hoje o apoio roda em **modo de demonstração** (`apoio.api: null` no `config.js`): o QR é falso e
-avisa que é falso, e há um botão para simular a aprovação. Para ligar o Pix real, no mesmo
-esquema da lkl-shop:
+1. **Supabase** — criar um projeto NOVO só do jogo, abrir o SQL Editor e rodar `supabase/schema.sql`.
+2. **Mercado Pago** — pegar o *Access Token de produção* (`APP_USR-...`) e, em Webhooks, apontar
+   para `https://SEU-SITE/api/webhooks/mercadopago` (guardar o segredo do webhook, opcional).
+3. **Vercel → Project → Settings → Environment Variables** — preencher (ver `.env.example`):
+   `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `MERCADO_PAGO_ACCESS_TOKEN`,
+   `MERCADO_PAGO_WEBHOOK_SECRET` (opcional), `SITE_URL`, `SITE_ORIGEM`.
+4. Em `assets/js/config.js`, trocar `api: null` por `api: "/api/pix"` e publicar.
 
-- **Funções na Vercel**, em `api/`:
-  - `POST /api/pix/criar {valor, email}`: cria o pagamento no Mercado Pago (`payment_method_id:
-    "pix"`, validade de 30 min, `X-Idempotency-Key`, `notification_url`) e devolve
-    `{pedidoId, valor, qrBase64, copiaECola, expiraEm}`;
-  - `GET /api/pix/status?pedido=ID`: devolve `{status, chave}`. Se o webhook não tiver chegado,
-    pergunta direto ao Mercado Pago;
-  - `POST /api/webhooks/mercadopago`: aprova o pedido e emite a chave. Tem de ser idempotente:
-    webhook repetido não gera outra chave.
-- **Segredos só em variável de ambiente da Vercel:** `MERCADO_PAGO_ACCESS_TOKEN` e a chave do
-  banco. Nunca no código do site.
-- **Valor:** o servidor valida o valor de novo (mínimo R$ 5, máximo R$ 100). O navegador não
-  decide preço.
-- **Banco** (Supabase, por exemplo): `pedidos`, `chaves`, `jogadores` (ID da conta do jogo) e
-  `banimentos`. O painel de chaves lê e escreve nessas tabelas, e o jogo valida a chave nele.
-- **Chave:** gerada com gerador criptográfico (`crypto.randomBytes`), nunca com `Math.random`.
+Enquanto `api` for `null`, o site fica em **modo de demonstração** (QR falso e botão de simular) —
+ninguém paga de verdade. Nada de segredo é necessário nesse modo.
 
-A tela já está pronta para esse contrato: a consulta de status roda a cada 4 s, o pedido pendente
-volta se a pessoa fechar e reabrir o site, e a chave fica guardada no aparelho.
+## O jogo (painel de chaves)
+
+- Ao colar a chave no painel dentro do jogo: `POST /api/jogo/ativar { codigo, deviceId, nome }`.
+- Ao abrir o jogo: `POST /api/jogo/validar { codigo, deviceId }` → `{ ok, banido, motivo }`.
+- O ID do jogador e o aparelho ficam na tabela `jogadores`, que o painel de administração usa para
+  banir.
+
+## Falta (próxima etapa)
+
+- **Painel de administração** (página protegida por senha): ver chaves, jogadores, quanto
+  arrecadou, e **banir**. A visão `painel_resumo` no banco já entrega os números.
+
+## Hospedagem
+
+GitHub → Vercel (Framework: Other, sem comando de build). Cada `git push` publica.

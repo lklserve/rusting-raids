@@ -1,0 +1,13 @@
+{
+  "name": "rusting-raids-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Site do Rusting Raids: landing page + apoio via Pix + chaves de acesso.",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}

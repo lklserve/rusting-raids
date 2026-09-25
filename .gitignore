@@ -1,0 +1,11 @@
+# Segredos NUNCA vão para o git — só nas variáveis de ambiente da Vercel.
+.env
+.env.*
+!.env.example
+.vercel
+
+# Dependências e lixo de sistema
+node_modules
+.DS_Store
+Thumbs.db
+*.log
