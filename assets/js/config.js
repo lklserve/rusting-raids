@@ -22,7 +22,7 @@ window.RR_CONFIG = {
      *   POST {api}/criar   { valor, email }  -> { pedidoId, valor, qrBase64, copiaECola, expiraEm }
      *   GET  {api}/status?pedido=ID          -> { status: "pendente"|"aprovado"|"expirado", chave? }
      */
-    api: null,
+    api: "/api/pix",
     intervaloDeConsulta: 4000,   // ms entre as consultas de status
     /* Nomes que aparecem conforme o valor escolhido no deslizante (só enfeite, não dá item no jogo). */
     patentes: [
