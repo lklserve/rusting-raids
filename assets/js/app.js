@@ -94,6 +94,7 @@
     ["discord", "Discord", "#i-discord"],
     ["whatsappGrupo", "Grupo", "#i-whatsapp"],
     ["whatsappCanal", "Canal", "#i-whatsapp"],
+    ["telegram", "Telegram", "#i-telegram"],
     ["tiktok", "TikTok", "#i-tiktok"],
   ];
   const htmlRedes = REDES.filter(([k]) => CFG.redes?.[k])

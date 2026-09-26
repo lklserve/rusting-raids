@@ -48,8 +48,9 @@ window.RR_CONFIG = {
   /* Redes. Deixe "" para esconder. */
   redes: {
     discord: "",
-    whatsappGrupo: "",
-    whatsappCanal: "",
+    whatsappGrupo: "https://chat.whatsapp.com/JMx0PnI2XknCrQ0sPaS2fC",
+    whatsappCanal: "https://whatsapp.com/channel/0029Vb8nQucFSAt7ZghHSA0F",
+    telegram: "https://t.me/RustingRaids",
     tiktok: "",
   },
 };
