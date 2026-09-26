@@ -38,7 +38,7 @@ window.RR_CONFIG = {
   meta: {
     titulo: "Servidor do mês",
     arrecadado: 0,
-    objetivo: 110,
+    objetivo: 1500,
   },
 
   /* O convite de apoio abre sozinho ao entrar no site (uma vez por sessão). */
