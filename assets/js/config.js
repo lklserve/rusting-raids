@@ -34,11 +34,13 @@ window.RR_CONFIG = {
     ],
   },
 
-  /* Meta do mês (hospedagem). Troque "arrecadado" à mão até a API ligar. */
+  /* Meta do mês (hospedagem). A barra enche SOZINHA com a soma dos Pix pagos no mês
+     (horário de Brasília), lida do banco pela rota abaixo. "arrecadado" só vale se ela falhar. */
   meta: {
     titulo: "Servidor do mês",
-    arrecadado: 0,
     objetivo: 1500,
+    api: "/api/meta",
+    arrecadado: 0,
   },
 
   /* O convite de apoio abre sozinho ao entrar no site (uma vez por sessão). */

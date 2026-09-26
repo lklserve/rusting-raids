@@ -444,19 +444,38 @@
   /* ------------------------------------------------------------ meta do apoio */
   (function meta() {
     const m = CFG.meta || { arrecadado: 0, objetivo: 1 };
-    const pct = Math.max(0, Math.min(100, (m.arrecadado / (m.objetivo || 1)) * 100));
-    $$("[data-meta-titulo]").forEach((el) => { el.textContent = m.titulo || "Meta do mês"; });
-    $$("[data-meta-pct]").forEach((el) => { el.textContent = `${pct.toFixed(pct < 10 && pct > 0 ? 1 : 0).replace(".", ",")}%`; });
-    $$("[data-meta-valor]").forEach((el) => {
-      el.textContent = m.arrecadado > 0 ? `${brl.format(m.arrecadado)} arrecadados` : "Seja o primeiro a apoiar";
-    });
-    $$("[data-meta-objetivo]").forEach((el) => { el.textContent = `meta ${brl.format(m.objetivo)}`; });
+    const objetivo = m.objetivo || 1;
+    let pct = 0;
+    const largura = () => `${Math.max(pct, pct > 0 ? 2 : 0)}%`;   // um fiozinho aparece mesmo com pouco
+    const vistas = new Set();   // barras que já apareceram na tela (as outras enchem quando aparecerem)
+
+    function desenhar(arrecadado) {
+      const valor = Math.max(0, Number(arrecadado) || 0);
+      pct = Math.max(0, Math.min(100, (valor / objetivo) * 100));
+      $$("[data-meta-titulo]").forEach((el) => { el.textContent = m.titulo || "Meta do mês"; });
+      $$("[data-meta-pct]").forEach((el) => { el.textContent = `${pct.toFixed(pct < 10 && pct > 0 ? 1 : 0).replace(".", ",")}%`; });
+      $$("[data-meta-valor]").forEach((el) => {
+        el.textContent = valor > 0 ? `${brl.format(valor)} arrecadados` : "Seja o primeiro a apoiar";
+      });
+      $$("[data-meta-objetivo]").forEach((el) => { el.textContent = `meta ${brl.format(objetivo)}`; });
+      vistas.forEach((el) => { el.style.width = largura(); });
+    }
+
     const obs = new IntersectionObserver((ents) => ents.forEach((e) => {
       if (!e.isIntersecting) return;
-      e.target.style.width = `${Math.max(pct, pct > 0 ? 2 : 0)}%`;
+      vistas.add(e.target);
+      e.target.style.width = largura();
       obs.unobserve(e.target);
     }), { threshold: .5 });
     $$("[data-meta-barra]").forEach((el) => obs.observe(el));
+
+    desenhar(m.arrecadado);   // na hora, com o valor de reserva
+    if (m.api) {              // e depois com a soma real do mês, lida do banco
+      fetch(m.api, { headers: { Accept: "application/json" } })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((j) => { if (j && Number.isFinite(Number(j.arrecadado))) desenhar(j.arrecadado); })
+        .catch(() => { /* sem rede: fica o valor de reserva */ });
+    }
   })();
 
   /* ------------------------------------------------------------ APOIO (Pix) */

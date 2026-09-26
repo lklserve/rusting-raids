@@ -92,5 +92,8 @@ create or replace view public.painel_resumo as
     (select count(*) from public.jogadores where banido)                               as jogadores_banidos,
     (select count(*) from public.pedidos where status = 'aprovado')                    as pedidos_pagos,
     (select coalesce(sum(valor),0) from public.pedidos where status = 'aprovado')      as total_arrecadado,
+    -- O mês é o de Brasília (o banco roda em UTC): começa à 00:00 de São Paulo.
     (select coalesce(sum(valor),0) from public.pedidos
-       where status = 'aprovado' and aprovado_em >= date_trunc('month', now()))        as arrecadado_no_mes;
+       where status = 'aprovado'
+         and aprovado_em >= (date_trunc('month', now() at time zone 'America/Sao_Paulo')
+                             at time zone 'America/Sao_Paulo'))               as arrecadado_no_mes;
