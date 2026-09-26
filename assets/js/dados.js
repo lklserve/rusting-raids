@@ -137,8 +137,8 @@ window.RR_DADOS = {
     { p: "Já dá para jogar online com os amigos?", r: "Ainda não. O alpha atual é para explorar e testar. O multiplayer com equipes está em desenvolvimento — e é exatamente isso que o seu apoio financia." },
     { p: "Tem pay-to-win?", r: "Não. Nada que dá vantagem em combate é vendido. Sem talentos, sem pets voadores, sem mechas. O apoio paga o servidor, não compra poder." },
     { p: "Como recebo minha chave?", r: "Na hora, na tela, assim que o Pix é confirmado. Ela também fica guardada neste aparelho. Anote num lugar seguro." },
-    { p: "Perdi minha chave. E agora?", r: "Chame a gente no grupo do WhatsApp ou no Telegram com o e-mail que você usou no Pix. A gente encontra." },
-    { p: "Vi alguém usando hack.", r: "Grave a tela e mande no grupo do WhatsApp ou no Telegram. Cada conta tem um ID, e quem for pego é banido pelo painel de chaves." },
+    { p: "Perdi minha chave. E agora?", r: "Chame a gente no Discord, no grupo do WhatsApp ou no Telegram com o e-mail que você usou no Pix. A gente encontra." },
+    { p: "Vi alguém usando hack.", r: "Grave a tela e mande no Discord, no grupo do WhatsApp ou no Telegram. Cada conta tem um ID, e quem for pego é banido pelo painel de chaves." },
     { p: "O que acontece no fim da temporada?", r: "No servidor online, cada temporada dura 7 dias reais (168 horas). No fim, o mundo reinicia e todo mundo começa do zero — igual para todos." },
   ],
 };
