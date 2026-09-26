@@ -45,8 +45,10 @@ create table if not exists public.cupons_movimentos (
   cupons    integer not null,              -- + entra, − sai
   pedido_id uuid unique references public.pedidos(id),   -- unique: o webhook credita uma vez só
   item_id   integer,
+  observacao text,                         -- ajuste manual: quem e por quê
   criado_em timestamptz not null default now()
 );
+alter table public.cupons_movimentos add column if not exists observacao text;
 create index if not exists cupons_movimentos_chave_idx on public.cupons_movimentos (chave_id);
 
 -- ----------------------------------------------------------------- itens
