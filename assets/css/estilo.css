@@ -76,6 +76,9 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 :focus-visible { outline: 2px solid var(--faisca); outline-offset: 3px; }
 
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+/* O atributo hidden SEMPRE esconde — mesmo em elemento com display definido por classe
+   (.btn é inline-flex; sem isto o botão "Simular (demo)" aparecia no modo real). */
+[hidden] { display: none !important; }
 .ic { width: 1.15em; height: 1.15em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .ic--pix, symbol.cheio, .cheio { fill: currentColor; stroke: none; }
 svg.ic use[href="#i-pix"], svg.ic use[href="#i-discord"], svg.ic use[href="#i-whatsapp"], svg.ic use[href="#i-tiktok"] { fill: currentColor; stroke: none; }

@@ -620,7 +620,11 @@
       timerStatus = setTimeout(consultar, A.intervaloDeConsulta || 4000);
     }
 
-    $("[data-simular]", modal).addEventListener("click", () => aprovado(chaveDeDemonstracao()));
+    // Só existe no modo demonstração: no Pix real o botão não faz nada, mesmo que alguém o revele.
+    $("[data-simular]", modal).addEventListener("click", () => {
+      if (!pedido?.demo) return;
+      aprovado(chaveDeDemonstracao());
+    });
     $("[data-copiar-pix]", modal).addEventListener("click", () => copiar($("[data-pix-codigo]", modal).value, "Código Pix copiado!"));
     $("[data-copiar-chave]", modal).addEventListener("click", () => copiar($("[data-chave]", modal).textContent, "Chave copiada!"));
 
