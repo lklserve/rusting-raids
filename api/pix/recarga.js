@@ -40,12 +40,20 @@ export default async function handler(req, res) {
     if (error || !pedido) throw new Error("Falha ao criar o pedido");
 
     const host = process.env.SITE_URL || (req.headers.host ? `https://${req.headers.host}` : null);
-    const cobranca = await criarPix({
-      valor, email,
-      descricao: `Rusting Raids — recarga de ${cupons} cupons`,
-      pedidoId: pedido.id,
-      notificationUrl: host ? `${host}/api/webhooks/mercadopago` : undefined,
-    });
+    let cobranca;
+    try {
+      cobranca = await criarPix({
+        valor, email,
+        descricao: `Rusting Raids — recarga de ${cupons} cupons`,
+        pedidoId: pedido.id,
+        notificationUrl: host ? `${host}/api/webhooks/mercadopago` : undefined,
+      });
+    } catch (e) {
+      // Sem cobrança, o pedido não fica pendente para sempre no painel.
+      await sb.from("pedidos").update({ status: "cancelado" }).eq("id", pedido.id).eq("status", "pendente");
+      console.error("pix/recarga Mercado Pago", e);
+      return res.status(502).json({ erro: "O Mercado Pago recusou o Pix. Confira o e-mail (use um e-mail de verdade) e tente de novo." });
+    }
 
     await sb.from("pedidos").update({
       payment_id: cobranca.paymentId,
