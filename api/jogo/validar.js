@@ -3,6 +3,7 @@
 import { cabecalhos, ipDe, texto, normalizarCodigo } from "../_lib/http.js";
 import { supabase } from "../_lib/supabase.js";
 import { limitar } from "../_lib/rate-limit.js";
+import { banDoAparelho } from "../_lib/banimento.js";
 
 export default async function handler(req, res) {
   if (cabecalhos(req, res)) return;
@@ -18,6 +19,10 @@ export default async function handler(req, res) {
     if (!codigo || !deviceId) return res.status(400).json({ ok: false, erro: "Dados inválidos." });
 
     const sb = supabase();
+    // Aparelho banido (com esta ou com outra chave): bloqueia antes de olhar a chave.
+    const ban = await banDoAparelho(sb, deviceId);
+    if (ban) return res.status(200).json({ ok: false, banido: true, motivo: ban.motivo });
+
     const { data: chave } = await sb.from("chaves").select("id, status").eq("codigo", codigo).maybeSingle();
     if (!chave) return res.status(200).json({ ok: false, erro: "Chave não encontrada." });
     if (chave.status === "banida") return res.status(200).json({ ok: false, banido: true, motivo: "Chave banida." });

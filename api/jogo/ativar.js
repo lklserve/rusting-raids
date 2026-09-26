@@ -4,6 +4,7 @@
 import { cabecalhos, ipDe, texto, normalizarCodigo } from "../_lib/http.js";
 import { supabase } from "../_lib/supabase.js";
 import { limitar } from "../_lib/rate-limit.js";
+import { banDoAparelho } from "../_lib/banimento.js";
 
 const MAX_DISPOSITIVOS = 3; // um jogador pode trocar de aparelho algumas vezes
 
@@ -24,6 +25,10 @@ export default async function handler(req, res) {
     if (!deviceId) return res.status(400).json({ ok: false, erro: "Aparelho não identificado." });
 
     const sb = supabase();
+    // Aparelho banido (com esta ou com outra chave): nenhuma chave abre o jogo nele.
+    const ban = await banDoAparelho(sb, deviceId);
+    if (ban) return res.status(403).json({ ok: false, banido: true, erro: `Este aparelho foi banido: ${ban.motivo}`, motivo: ban.motivo });
+
     const { data: chave } = await sb.from("chaves").select("id, status").eq("codigo", codigo).maybeSingle();
     if (!chave) return res.status(404).json({ ok: false, erro: "Chave não encontrada." });
     if (chave.status === "banida") return res.status(403).json({ ok: false, erro: "Esta chave foi banida." });
