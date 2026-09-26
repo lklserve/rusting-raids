@@ -4,7 +4,7 @@
 import { cabecalhos } from "../_lib/http.js";
 import { supabase } from "../_lib/supabase.js";
 import { consultarPagamento } from "../_lib/mercadopago.js";
-import { emitirChave } from "../_lib/emitir.js";
+import { emitirChave, processarAprovado } from "../_lib/emitir.js";
 
 // UUID v4 solto não se adivinha; ainda assim, só o dono (o navegador que criou) tem o id.
 const uuidOk = (s) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s || "");
@@ -18,6 +18,20 @@ export default async function handler(req, res) {
     const sb = supabase();
     const { data: pedido } = await sb.from("pedidos").select("*").eq("id", pedidoId).maybeSingle();
     if (!pedido) return res.status(200).json({ status: "pendente" });
+
+    // Recarga de cupons: { status, tipo: "recarga", cupons, saldo } — sem chave nova.
+    if (pedido.tipo === "recarga") {
+      if (pedido.status === "expirado" || pedido.status === "cancelado") return res.status(200).json({ status: "expirado" });
+      if (pedido.status === "aprovado" || (pedido.payment_id && (await consultarPagamento(pedido.payment_id))?.status === "approved")) {
+        const r = await processarAprovado(pedido.id);
+        return res.status(200).json({ status: "aprovado", tipo: "recarga", cupons: r.cupons, saldo: r.saldo });
+      }
+      if (pedido.expira_em && new Date(pedido.expira_em) < new Date()) {
+        await sb.from("pedidos").update({ status: "expirado" }).eq("id", pedido.id).eq("status", "pendente");
+        return res.status(200).json({ status: "expirado" });
+      }
+      return res.status(200).json({ status: "pendente" });
+    }
 
     if (pedido.status === "aprovado" && pedido.chave_id) {
       const { data: chave } = await sb.from("chaves").select("codigo").eq("id", pedido.chave_id).maybeSingle();

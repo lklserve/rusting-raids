@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Recarga de cupons — Rusting Raids</title>
+  <meta name="description" content="Recarregue cupons na sua chave do Rusting Raids pelo Pix. As skins são só visuais e valem em todos os aparelhos da sua chave.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#09090a">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@500;700&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/estilo.css?v=6">
+  <link rel="stylesheet" href="assets/css/recarga.css?v=1">
+</head>
+<body class="pagina-recarga">
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-copiar" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-chave" viewBox="0 0 24 24"><path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/></symbol>
+</svg>
+
+<header class="recarga-topo">
+  <a class="marca" href="/" aria-label="Rusting Raids — início"><span class="marca__texto">RUST<b>I</b>NG RA<b>I</b>DS</span></a>
+</header>
+
+<main class="container container--estreito recarga">
+  <p class="kicker kicker--tnt">// loja do jogo</p>
+  <h1 class="titulo">Recarga de cupons</h1>
+  <p class="recarga__lead">20 cupons = R$ 1. Toda skin custa <b>300 cupons</b>. As skins são só visuais, são suas para sempre e valem em todos os aparelhos da sua chave.</p>
+
+  <!-- 1: chave, pacote e e-mail -->
+  <form class="recarga__caixa" data-etapa="pedido" novalidate>
+    <label class="campo">
+      <span>Sua chave</span>
+      <input type="text" name="chave" data-chave placeholder="RR-XXXX-XXXX" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" required>
+    </label>
+    <fieldset class="pacotes" data-pacotes>
+      <legend>Pacote</legend>
+      <div class="carregando"></div>
+    </fieldset>
+    <label class="campo">
+      <span>E-mail <small>(para o comprovante do Pix)</small></span>
+      <input type="email" name="email" data-email placeholder="voce@email.com" autocomplete="email" required>
+    </label>
+    <p class="erro" data-erro hidden></p>
+    <button class="btn btn--tnt btn--largo btn--grande" type="submit" data-gerar><svg class="ic"><use href="#i-chave"/></svg><span>Gerar Pix</span></button>
+  </form>
+
+  <!-- 2: Pix -->
+  <section class="recarga__caixa" data-etapa="pix" hidden>
+    <h2 class="modal__titulo modal__titulo--menor">Pague com Pix</h2>
+    <div class="pix">
+      <div class="pix__qr" data-qr><div class="carregando"></div></div>
+      <div class="pix__info">
+        <div class="pix__valor">Valor: <strong data-pix-valor>R$ 0,00</strong></div>
+        <div class="pix__valor">Cupons: <strong data-pix-cupons>0</strong></div>
+        <div class="pix__tempo">Expira em <strong data-pix-tempo>30:00</strong></div>
+        <div class="pix__status"><span class="radar"></span> Aguardando pagamento…</div>
+      </div>
+    </div>
+    <label class="campo campo--copia">
+      <span>Pix copia e cola</span>
+      <div class="copia">
+        <input type="text" readonly data-pix-codigo value="">
+        <button class="btn btn--aco btn--peq" type="button" data-copiar><svg class="ic"><use href="#i-copiar"/></svg><span>Copiar</span></button>
+      </div>
+    </label>
+    <ol class="pix__como">
+      <li>Abra o app do seu banco e escolha <b>Pix</b>.</li>
+      <li>Leia o QR ou cole o código copia e cola.</li>
+      <li>Confirme. Os cupons entram na sua chave sozinhos.</li>
+    </ol>
+    <button class="link-discreto" type="button" data-voltar>Voltar e mudar o pacote</button>
+  </section>
+
+  <!-- 3: pronto -->
+  <section class="recarga__caixa recarga__pronto" data-etapa="pronto" hidden>
+    <div class="recarga__ok"><svg class="ic"><use href="#i-check"/></svg></div>
+    <h2 class="modal__titulo modal__titulo--menor">Cupons creditados!</h2>
+    <p><b data-pronto-cupons>0</b> cupons entraram na chave <b data-pronto-chave>RR-XXXX-XXXX</b>.</p>
+    <p>Saldo agora: <b data-pronto-saldo>0</b> cupons.</p>
+    <p class="recarga__lead">Volte ao jogo e abra a loja: o saldo já aparece lá.</p>
+    <a class="btn btn--aco btn--largo" href="/">Voltar ao site</a>
+  </section>
+
+  <p class="recarga__rodape">Problema com a recarga? Chame a gente no Discord, no grupo do WhatsApp ou no Telegram com o e-mail do Pix.</p>
+</main>
+
+<script src="assets/js/recarga.js?v=1" defer></script>
+</body>
+</html>

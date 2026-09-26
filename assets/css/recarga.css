@@ -1,0 +1,36 @@
+/* Página /recarga — só o que o estilo.css não tem. */
+.pagina-recarga { background: var(--preto); min-height: 100vh; }
+.recarga-topo { padding: 18px 16px; border-bottom: 1px solid var(--linha); }
+.recarga { padding-top: 32px; padding-bottom: 48px; }
+.recarga .titulo { margin: 4px 0 8px; }
+.recarga__lead { color: var(--aco-2); margin: 0 0 20px; line-height: 1.55; }
+.recarga__caixa { background: var(--painel); border: 1px solid var(--linha); padding: 20px; margin-bottom: 20px; }
+.recarga__rodape { color: var(--aco-3); font-size: 14px; }
+
+.pacotes { border: 0; margin: 0 0 14px; padding: 0; }
+.pacotes legend {
+  font-family: var(--fonte-rotulo); font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  font-size: 13px; color: var(--aco); margin-bottom: 8px; padding: 0;
+}
+.pacotes__grade { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (min-width: 640px) { .pacotes__grade { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.pacote { position: relative; display: block; cursor: pointer; }
+.pacote input { position: absolute; opacity: 0; pointer-events: none; }
+.pacote__cartao {
+  display: flex; flex-direction: column; gap: 4px; min-height: 104px; padding: 12px;
+  background: #0b0b0d; border: 1px solid var(--linha-2); transition: border-color .15s, box-shadow .15s;
+}
+.pacote__cupons { font-family: var(--fonte-titulo); font-size: 30px; line-height: 1; color: var(--aco); }
+.pacote__cupons small { font-size: 16px; color: var(--aco-3); }
+.pacote__bonus { font-size: 13px; color: var(--verde); min-height: 18px; }
+.pacote__preco { margin-top: auto; font-family: var(--fonte-rotulo); font-weight: 700; color: var(--faisca); }
+.pacote input:checked + .pacote__cartao { border-color: var(--faisca); box-shadow: 0 0 0 3px rgba(255, 176, 46, .15); }
+.pacote input:focus-visible + .pacote__cartao { outline: 2px solid var(--faisca); outline-offset: 2px; }
+
+.recarga__pronto { text-align: center; }
+.recarga__pronto p { color: var(--aco-2); }
+.recarga__ok {
+  width: 64px; height: 64px; margin: 0 auto 8px; display: grid; place-items: center;
+  border-radius: 50%; background: rgba(95, 224, 106, .12); color: var(--verde);
+}
+.recarga__ok .ic { width: 32px; height: 32px; }

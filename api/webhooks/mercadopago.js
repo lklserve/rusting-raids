@@ -1,9 +1,9 @@
 // POST /api/webhooks/mercadopago  — aviso do Mercado Pago quando um pagamento muda.
-// Emite a chave. NUNCA confia no corpo: pergunta à MP se o pagamento está mesmo aprovado
+// Emite a chave (apoio) ou credita os cupons (recarga). NUNCA confia no corpo: pergunta à MP se o pagamento está mesmo aprovado
 // (por isso um webhook falso não consegue liberar chave). Responde sempre 200: se der erro,
 // a MP reenvia e a consulta de status ainda emite a chave.
 import { consultarPagamento, assinaturaValida } from "../_lib/mercadopago.js";
-import { emitirChave } from "../_lib/emitir.js";
+import { processarAprovado } from "../_lib/emitir.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
 
     const pag = await consultarPagamento(paymentId);
     if (pag?.status === "approved" && pag.external_reference) {
-      await emitirChave(pag.external_reference);
+      await processarAprovado(pag.external_reference);
     }
     return res.status(200).json({ ok: true });
   } catch (e) {

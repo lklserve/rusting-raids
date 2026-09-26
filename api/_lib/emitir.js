@@ -36,6 +36,22 @@ export async function emitirChave(pedidoId) {
   throw new Error("Falha ao gerar a chave");
 }
 
+// O que fazer com um pedido pago: o apoio emite a chave; a recarga credita os cupons na chave (uma vez só,
+// pelo pedido_id único do livro-caixa). Webhook e consulta de status chamam isto.
+// -> { tipo: "chave", chave }  ou  { tipo: "recarga", cupons, saldo }
+export async function processarAprovado(pedidoId) {
+  const sb = supabase();
+  const { data: pedido } = await sb.from("pedidos").select("id, tipo").eq("id", pedidoId).maybeSingle();
+  if (!pedido) throw new Error("Pedido não encontrado");
+  if (pedido.tipo === "recarga") {
+    const { data, error } = await sb.rpc("creditar_recarga", { p_pedido: pedido.id });
+    if (error) throw error;
+    const r = Array.isArray(data) ? data[0] : data;
+    return { tipo: "recarga", cupons: r?.cupons ?? 0, saldo: r?.saldo ?? 0 };
+  }
+  return { tipo: "chave", chave: await emitirChave(pedido.id) };
+}
+
 async function marcarAprovado(sb, pedidoId, chaveId) {
   await sb.from("pedidos")
     .update({ status: "aprovado", chave_id: chaveId, aprovado_em: new Date().toISOString() })
