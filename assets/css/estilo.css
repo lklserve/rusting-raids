@@ -1106,3 +1106,6 @@ svg.ic use[href="#i-pix"], svg.ic use[href="#i-discord"], svg.ic use[href="#i-wh
 }
 /* subtítulo do post em linha própria */
 .post h3 small { display: block; margin: 6px 0 0; font-size: .55em; line-height: 1.15; }
+
+/* Nota abaixo da chave: dá para comprar outra com o mesmo e-mail. */
+.modal__texto--nota { margin: 18px 0 12px; font-size: 14px; color: var(--aco-2); }

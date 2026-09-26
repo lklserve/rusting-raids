@@ -490,7 +490,14 @@
     const erro = $("[data-erro]", modal);
     const botaoValor = $("[data-valor-botao]", modal);
     const demo = !A.api;
-    const ATIVO = "rr_pedido_ativo", MINHA = "rr_minha_chave";
+    // Todas as chaves compradas neste aparelho (dá para comprar várias com o mesmo e-mail: cada Pix pago é uma chave nova).
+    const ATIVO = "rr_pedido_ativo", MINHA = "rr_minha_chave", MINHAS = "rr_minhas_chaves";
+    function minhasChaves() {
+      const lista = guardar.ler(MINHAS);
+      if (Array.isArray(lista)) return lista;
+      const antiga = guardar.ler(MINHA);   // de antes da lista: só a última chave
+      return antiga?.chave ? [antiga] : [];
+    }
     let valor = Math.min(MAX, Math.max(MIN, A.inicial ?? 10));
     let pedido = null, timerStatus, timerRelogio;
 
@@ -651,7 +658,10 @@
     function aprovado(chave) {
       clearInterval(timerRelogio);
       guardar.apagar(ATIVO);
-      guardar.gravar(MINHA, { chave, em: new Date().toISOString(), demo: !!pedido?.demo });
+      const nova = { chave, em: new Date().toISOString(), demo: !!pedido?.demo };
+      const lista = minhasChaves().filter((c) => c.chave !== chave);
+      guardar.gravar(MINHAS, [...lista, nova]);
+      guardar.gravar(MINHA, nova);
       $("[data-chave]", modal).textContent = chave;
       etapa("chave");
       explodir($(".explosao", modal));
@@ -711,13 +721,12 @@
     }
 
     function mostrarMinhaChave() {
-      const minha = guardar.ler(MINHA);
+      const lista = minhasChaves();
       const el = $("[data-minha-chave]");
-      if (!el) return;
-      if (minha?.chave) {
-        el.innerHTML = `Sua chave neste aparelho: <code>${esc(minha.chave)}</code>${minha.demo ? " (demonstração)" : ""}`;
-        el.hidden = false;
-      }
+      if (!el || !lista.length) return;
+      const codigos = lista.map((c) => `<code>${esc(c.chave)}</code>${c.demo ? " (demonstração)" : ""}`).join(" · ");
+      el.innerHTML = `${lista.length > 1 ? "Suas chaves" : "Sua chave"} neste aparelho: ${codigos}`;
+      el.hidden = false;
     }
     mostrarMinhaChave();
 
