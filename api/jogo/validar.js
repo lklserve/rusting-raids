@@ -4,6 +4,7 @@ import { cabecalhos, ipDe, texto, normalizarCodigo } from "../_lib/http.js";
 import { supabase } from "../_lib/supabase.js";
 import { limitar } from "../_lib/rate-limit.js";
 import { banDoAparelho } from "../_lib/banimento.js";
+import { prazoOuNada } from "../_lib/jogador.js";
 
 export default async function handler(req, res) {
   if (cabecalhos(req, res)) return;
@@ -33,7 +34,8 @@ export default async function handler(req, res) {
     if (jogador.banido) return res.status(200).json({ ok: false, banido: true, motivo: jogador.motivo_ban || "Você foi banido." });
 
     await sb.from("jogadores").update({ ultimo_acesso: new Date().toISOString() }).eq("id", jogador.id);
-    return res.status(200).json({ ok: true, jogadorId: jogador.id });
+    // O prazo da Coleta Automática desta chave (farm_ate e agora, em UTC com "Z").
+    return res.status(200).json({ ok: true, jogadorId: jogador.id, ...(await prazoOuNada(sb, chave.id)) });
   } catch (e) {
     console.error("jogo/validar", e);
     return res.status(500).json({ ok: false, erro: "Erro ao validar." });

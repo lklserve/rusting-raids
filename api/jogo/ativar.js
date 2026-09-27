@@ -5,6 +5,7 @@ import { cabecalhos, ipDe, texto, normalizarCodigo } from "../_lib/http.js";
 import { supabase } from "../_lib/supabase.js";
 import { limitar } from "../_lib/rate-limit.js";
 import { banDoAparelho } from "../_lib/banimento.js";
+import { prazoOuNada } from "../_lib/jogador.js";
 
 const MAX_DISPOSITIVOS = 3; // um jogador pode trocar de aparelho algumas vezes
 
@@ -44,7 +45,7 @@ export default async function handler(req, res) {
         ...(nome ? { nome } : {}),
       }).eq("id", existente.id);
       await sb.from("chaves").update({ ultimo_uso: new Date().toISOString() }).eq("id", chave.id);
-      return res.status(200).json({ ok: true, jogadorId: existente.id });
+      return res.status(200).json({ ok: true, jogadorId: existente.id, ...(await prazoOuNada(sb, chave.id)) });
     }
 
     // Aparelho novo: respeita o limite de dispositivos por chave.
@@ -60,7 +61,7 @@ export default async function handler(req, res) {
     if (error || !novo) throw new Error("Falha ao criar o jogador");
 
     await sb.from("chaves").update({ ultimo_uso: new Date().toISOString() }).eq("id", chave.id);
-    return res.status(200).json({ ok: true, jogadorId: novo.id });
+    return res.status(200).json({ ok: true, jogadorId: novo.id, ...(await prazoOuNada(sb, chave.id)) });
   } catch (e) {
     console.error("jogo/ativar", e);
     return res.status(500).json({ ok: false, erro: "Erro ao ativar a chave." });
