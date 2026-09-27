@@ -26,6 +26,7 @@ export default async function handler(req, res) {
     const { bilhete, exp } = emitirBilhete({
       jogadorId: auth.jogadorId,
       chaveId: auth.chave.id,
+      adm: auth.chave.adm,
       deviceId: String(req.body.deviceId).trim(),
       farmAte: farm_ate,
     });

@@ -1,6 +1,7 @@
 // POST /api/jogo/ativar  { codigo, deviceId, nome }
 // O painel de chaves DENTRO do jogo chama isto quando o jogador cola a chave.
-// Valida a chave, cria/liga a conta do jogador ao aparelho e devolve o id do jogador.
+// Valida a chave, cria/liga a conta do jogador ao aparelho e devolve o id do jogador e se a chave é ADM
+// do jogo (adm, dado no painel de chaves).
 import { cabecalhos, ipDe, texto, normalizarCodigo } from "../_lib/http.js";
 import { supabase } from "../_lib/supabase.js";
 import { limitar } from "../_lib/rate-limit.js";
@@ -30,7 +31,7 @@ export default async function handler(req, res) {
     const ban = await banDoAparelho(sb, deviceId);
     if (ban) return res.status(403).json({ ok: false, banido: true, erro: `Este aparelho foi banido: ${ban.motivo}`, motivo: ban.motivo });
 
-    const { data: chave } = await sb.from("chaves").select("id, status").eq("codigo", codigo).maybeSingle();
+    const { data: chave } = await sb.from("chaves").select("id, status, adm").eq("codigo", codigo).maybeSingle();
     if (!chave) return res.status(404).json({ ok: false, erro: "Chave não encontrada." });
     if (chave.status === "banida") return res.status(403).json({ ok: false, erro: "Esta chave foi banida." });
 
@@ -45,7 +46,7 @@ export default async function handler(req, res) {
         ...(nome ? { nome } : {}),
       }).eq("id", existente.id);
       await sb.from("chaves").update({ ultimo_uso: new Date().toISOString() }).eq("id", chave.id);
-      return res.status(200).json({ ok: true, jogadorId: existente.id, ...(await prazoOuNada(sb, chave.id)) });
+      return res.status(200).json({ ok: true, jogadorId: existente.id, adm: !!chave.adm, ...(await prazoOuNada(sb, chave.id)) });
     }
 
     // Aparelho novo: respeita o limite de dispositivos por chave.
@@ -61,7 +62,7 @@ export default async function handler(req, res) {
     if (error || !novo) throw new Error("Falha ao criar o jogador");
 
     await sb.from("chaves").update({ ultimo_uso: new Date().toISOString() }).eq("id", chave.id);
-    return res.status(200).json({ ok: true, jogadorId: novo.id, ...(await prazoOuNada(sb, chave.id)) });
+    return res.status(200).json({ ok: true, jogadorId: novo.id, adm: !!chave.adm, ...(await prazoOuNada(sb, chave.id)) });
   } catch (e) {
     console.error("jogo/ativar", e);
     return res.status(500).json({ ok: false, erro: "Erro ao ativar a chave." });

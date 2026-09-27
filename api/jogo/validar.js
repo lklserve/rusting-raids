@@ -1,4 +1,4 @@
-// POST /api/jogo/validar  { codigo, deviceId }  ->  { ok, banido, motivo }
+// POST /api/jogo/validar  { codigo, deviceId }  ->  { ok, jogadorId, adm, farm_ate, agora }  ou  { ok:false, banido, motivo }
 // O jogo chama ao abrir para conferir se a chave segue valendo e se o jogador não foi banido.
 import { cabecalhos, ipDe, texto, normalizarCodigo } from "../_lib/http.js";
 import { supabase } from "../_lib/supabase.js";
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     const ban = await banDoAparelho(sb, deviceId);
     if (ban) return res.status(200).json({ ok: false, banido: true, motivo: ban.motivo });
 
-    const { data: chave } = await sb.from("chaves").select("id, status").eq("codigo", codigo).maybeSingle();
+    const { data: chave } = await sb.from("chaves").select("id, status, adm").eq("codigo", codigo).maybeSingle();
     if (!chave) return res.status(200).json({ ok: false, erro: "Chave não encontrada." });
     if (chave.status === "banida") return res.status(200).json({ ok: false, banido: true, motivo: "Chave banida." });
 
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
 
     await sb.from("jogadores").update({ ultimo_acesso: new Date().toISOString() }).eq("id", jogador.id);
     // O prazo da Coleta Automática desta chave (farm_ate e agora, em UTC com "Z").
-    return res.status(200).json({ ok: true, jogadorId: jogador.id, ...(await prazoOuNada(sb, chave.id)) });
+    return res.status(200).json({ ok: true, jogadorId: jogador.id, adm: !!chave.adm, ...(await prazoOuNada(sb, chave.id)) });
   } catch (e) {
     console.error("jogo/validar", e);
     return res.status(500).json({ ok: false, erro: "Erro ao validar." });

@@ -1,6 +1,6 @@
 // A mesma conferência do /api/jogo/validar, para as rotas do jogo que mexem na conta (a loja):
 // aparelho não banido, chave existente e ativa, e este aparelho ativado nela sem ban.
-// -> { ok: true, chave: { id, codigo }, jogadorId }  ou  { ok: false, ...resposta pronta para o jogo }
+// -> { ok: true, chave: { id, codigo, adm }, jogadorId }  ou  { ok: false, ...resposta pronta para o jogo }
 import { normalizarCodigo, texto } from "./http.js";
 import { banDoAparelho } from "./banimento.js";
 
@@ -12,7 +12,7 @@ export async function autenticarJogador(sb, corpo) {
   const ban = await banDoAparelho(sb, deviceId);
   if (ban) return { ok: false, banido: true, motivo: ban.motivo };
 
-  const { data: chave } = await sb.from("chaves").select("id, codigo, status").eq("codigo", codigo).maybeSingle();
+  const { data: chave } = await sb.from("chaves").select("id, codigo, status, adm").eq("codigo", codigo).maybeSingle();
   if (!chave) return { ok: false, erro: "Chave não encontrada." };
   if (chave.status === "banida") return { ok: false, banido: true, motivo: "Chave banida." };
 
@@ -21,7 +21,7 @@ export async function autenticarJogador(sb, corpo) {
   if (!jogador) return { ok: false, erro: "Aparelho não ativado. Cole a chave no painel." };
   if (jogador.banido) return { ok: false, banido: true, motivo: jogador.motivo_ban || "Você foi banido." };
 
-  return { ok: true, chave: { id: chave.id, codigo: chave.codigo }, jogadorId: jogador.id };
+  return { ok: true, chave: { id: chave.id, codigo: chave.codigo, adm: !!chave.adm }, jogadorId: jogador.id };
 }
 
 // Data para o jogo: SEMPRE ISO-8601 em UTC com "Z" (o jogo lê com ParseExact e recusa o "+00:00" cru do Supabase).
