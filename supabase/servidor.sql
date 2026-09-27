@@ -30,3 +30,21 @@ alter table public.servidor_estado    enable row level security;
 alter table public.servidor_historico enable row level security;
 revoke all on table public.servidor_estado, public.servidor_historico from anon, authenticated;
 revoke all on sequence public.servidor_historico_id_seq from anon, authenticated;
+
+-- Suspeitos (2026-09-27): as ocorrências da auditoria do servidor que dizem respeito a trapaça — "vitais" (o servidor
+-- corrigiu o aparelho) e "vitais-desligado" (ignorou 3 correções). O painel lista por jogador, com o botão de banir.
+create table if not exists public.servidor_ocorrencias (
+  id       bigserial primary key,
+  servidor text not null,
+  em       timestamptz not null default now(),
+  jogador  uuid not null,                 -- jogadores.id (a conta do bilhete)
+  role_id  text,
+  nome     text,
+  op       text not null check (op in ('vitais', 'vitais-desligado')),
+  motivo   text
+);
+create index if not exists servidor_ocorrencias_em_idx on public.servidor_ocorrencias (em desc);
+create index if not exists servidor_ocorrencias_jogador_idx on public.servidor_ocorrencias (jogador, em desc);
+alter table public.servidor_ocorrencias enable row level security;
+revoke all on table public.servidor_ocorrencias from anon, authenticated;
+revoke all on sequence public.servidor_ocorrencias_id_seq from anon, authenticated;
