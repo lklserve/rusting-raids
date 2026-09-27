@@ -13,7 +13,7 @@
   font-size: 13px; color: var(--aco); margin-bottom: 8px; padding: 0;
 }
 .pacotes__grade { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-@media (min-width: 640px) { .pacotes__grade { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 640px) { .pacotes__grade { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); } }
 .pacote { position: relative; display: block; cursor: pointer; }
 .pacote input { position: absolute; opacity: 0; pointer-events: none; }
 .pacote__cartao {
