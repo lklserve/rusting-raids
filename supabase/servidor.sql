@@ -48,3 +48,8 @@ create index if not exists servidor_ocorrencias_jogador_idx on public.servidor_o
 alter table public.servidor_ocorrencias enable row level security;
 revoke all on table public.servidor_ocorrencias from anon, authenticated;
 revoke all on sequence public.servidor_ocorrencias_id_seq from anon, authenticated;
+
+-- CPU e quadros por segundo do servidor (2026-09-27, as criaturas da M5-a rodam no servidor): médias entre avisos.
+alter table public.servidor_estado    add column if not exists cpu real;   -- % da máquina inteira
+alter table public.servidor_estado    add column if not exists qps real;   -- quadros por segundo do servidor
+alter table public.servidor_historico add column if not exists cpu real;
