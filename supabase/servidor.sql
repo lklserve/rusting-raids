@@ -53,3 +53,6 @@ revoke all on sequence public.servidor_ocorrencias_id_seq from anon, authenticat
 alter table public.servidor_estado    add column if not exists cpu real;   -- % da máquina inteira
 alter table public.servidor_estado    add column if not exists qps real;   -- quadros por segundo do servidor
 alter table public.servidor_historico add column if not exists cpu real;
+
+-- O teto de conexões do servidor (NetworkManager.maxConnections), para o painel mostrar "online X / máx Y".
+alter table public.servidor_estado add column if not exists maximo integer;
