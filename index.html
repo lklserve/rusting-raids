@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Rusting Raids — Sobrevivência, zumbis e raids no celular</title>
-  <meta name="description" content="Rusting Raids: sobrevivência em mundo aberto com zumbis, construção de base e raids com C4. Sem pay-to-win. Baixe o alpha para Android e apoie o servidor.">
+  <meta name="description" content="Rusting Raids: sobrevivência em mundo aberto com zumbis, construção de base e raids com C4. Sem pay-to-win. Baixe para Android e jogue online no servidor oficial Brasil 1.">
   <meta name="theme-color" content="#09090a">
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/icone-180.png">
@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@500;700&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/estilo.css?v=7">
+  <link rel="stylesheet" href="assets/css/estilo.css?v=8">
 </head>
 <body>
 
@@ -61,6 +61,7 @@
     </a>
     <nav class="menu" id="menu" aria-label="Seções">
       <a href="#jogo" class="menu__link">O jogo</a>
+      <a href="#servidor" class="menu__link">Servidor</a>
       <a href="#galeria" class="menu__link">Galeria</a>
       <a href="#devblog" class="menu__link">Devblog</a>
       <a href="#roadmap" class="menu__link">Em breve</a>
@@ -93,7 +94,7 @@
   <canvas class="brasas" id="brasas" aria-hidden="true"></canvas>
 
   <div class="heroi__conteudo container">
-    <p class="kicker kicker--centro revelar"><span class="ponto-vivo"></span> Alpha · em desenvolvimento</p>
+    <p class="kicker kicker--centro revelar"><span class="ponto-vivo"></span> Servidor oficial online · versão 1.8</p>
     <h1 class="heroi__logo revelar">
       <picture>
         <source srcset="assets/img/logo.webp" type="image/webp">
@@ -162,20 +163,20 @@
       <article class="card revelar" data-inclinar>
         <div class="card__ic"><svg class="ic"><use href="#i-caveira"/></svg></div>
         <span class="card__num">04</span>
-        <h3>Hordas e chefes</h3>
-        <p>Zumbis em bando, elites, a Banshee, o Tirano e a pirâmide do Anúbis. Tanque e helicóptero de guerra patrulham o mapa.</p>
+        <h3>Chefes e inimigos</h3>
+        <p>Zumbis em bando, o Tirano, a Banshee e a pirâmide do Anúbis. Tanque, helicóptero e navio-patrulha armados — e soldados guardando a plataforma de petróleo.</p>
       </article>
       <article class="card revelar" data-inclinar>
         <div class="card__ic"><svg class="ic"><use href="#i-trem"/></svg></div>
         <span class="card__num">05</span>
-        <h3>Um mundo que se move</h3>
-        <p>Um trem que dá a volta na ilha, cavalos selvagens para domar, bicicleta, veículos e airdrops chamados no sinalizador.</p>
+        <h3>Terra e mar</h3>
+        <p>Um trem que dá a volta na ilha, cavalos para domar, bicicleta, veículos, caiaque — e uma plataforma de petróleo em alto-mar.</p>
       </article>
       <article class="card revelar" data-inclinar>
         <div class="card__ic"><svg class="ic"><use href="#i-lua"/></svg></div>
         <span class="card__num">06</span>
-        <h3>Noites de verdade</h3>
-        <p>Quando o sol cai, só a tocha, o lampião e a lanterna te salvam. E a cada 7 dias de jogo, chove.</p>
+        <h3>Noite, chuva e neve</h3>
+        <p>Quando o sol cai, só a tocha, o lampião e a lanterna te salvam. A cada 7 dias de jogo, chove. E no norte, a neve e o frio castigam.</p>
       </article>
     </div>
   </div>
@@ -186,8 +187,40 @@
   <div class="container numeros__grade">
     <div class="numero revelar"><strong data-contar="168">168</strong><span>horas por temporada</span></div>
     <div class="numero revelar"><strong data-contar="24.6" data-casas="1">24,6</strong><span>km de trilhos de trem</span></div>
-    <div class="numero revelar"><strong data-contar="14">14</strong><span>estações pelo mapa</span></div>
+    <div class="numero revelar"><strong data-contar="100">100</strong><span>sobreviventes por servidor</span></div>
     <div class="numero revelar"><strong data-contar="0" class="zero">0</strong><span>pay-to-win</span></div>
+  </div>
+</section>
+
+<!-- ============================================================ SERVIDOR -->
+<section class="secao" id="servidor">
+  <div class="container">
+    <header class="secao__cab revelar">
+      <p class="kicker">// servidor oficial</p>
+      <h2 class="titulo">A ilha está <span class="tnt-txt">online</span></h2>
+      <p class="secao__lead">O servidor oficial roda 24 horas por dia, no Brasil. Ative a sua chave, escolha Online no lobby e entre.</p>
+    </header>
+    <div class="servidor revelar">
+      <div class="servidor__cartao" data-servidor>
+        <div class="servidor__topo">
+          <span class="servidor__luz" data-servidor-luz></span>
+          <div><strong>Brasil 1</strong><span>oficial · Campinas</span></div>
+          <span class="servidor__estado" data-servidor-estado>conferindo…</span>
+        </div>
+        <div class="servidor__numeros">
+          <div><strong data-servidor-online>–</strong><span>online agora</span></div>
+          <div><strong data-servidor-max>100</strong><span>vagas</span></div>
+          <div><strong data-servidor-versao>1.8</strong><span>versão</span></div>
+        </div>
+        <p class="servidor__nota" data-servidor-nota>O número de jogadores é atualizado a cada minuto.</p>
+      </div>
+      <ul class="apoio-bloco__lista servidor__lista">
+        <li><svg class="ic"><use href="#i-servidor"/></svg><div><strong>Temporada de 7 dias</strong><span>168 horas de jogo. No fim, o mundo reinicia e todo mundo começa do zero.</span></div></li>
+        <li><svg class="ic"><use href="#i-coracao"/></svg><div><strong>Equipes de até 4</strong><span>Chat, chat de voz e a base dividida com quem você chamar.</span></div></li>
+        <li><svg class="ic"><use href="#i-escudo"/></svg><div><strong>Conferido pelo servidor</strong><span>Construção, raid, saque e chefes passam pelo servidor. Trapaça é corrigida — e banida.</span></div></li>
+        <li><svg class="ic"><use href="#i-download"/></svg><div><strong>Atualiza sozinho</strong><span>Quando sai versão nova, o jogo baixa só o que mudou.</span></div></li>
+      </ul>
+    </div>
   </div>
 </section>
 
@@ -229,7 +262,7 @@
     <header class="secao__cab revelar">
       <p class="kicker">// o que vem aí</p>
       <h2 class="titulo">Em breve</h2>
-      <p class="secao__lead">O caminho até o servidor online. Cada apoio encurta essa estrada.</p>
+      <p class="secao__lead">O servidor já está no ar. Agora, a versão completa — e cada apoio encurta essa estrada.</p>
     </header>
     <ol class="linha-tempo" data-roadmap></ol>
   </div>
@@ -265,7 +298,7 @@
         <span class="passo__num">4</span>
         <svg class="ic"><use href="#i-celular"/></svg>
         <h3>Ative e sobreviva</h3>
-        <p>No painel de chaves do jogo, cole a sua. Pronto: a ilha é sua. Por enquanto.</p>
+        <p>No painel de chaves do jogo, cole a sua e escolha Online. Pronto: a ilha é sua. Por enquanto.</p>
       </li>
     </ol>
     <div class="passos__ctas revelar">
@@ -292,8 +325,8 @@
         <button class="btn btn--tnt btn--grande" type="button" data-abrir-apoio><svg class="ic"><use href="#i-coracao"/></svg><span>Apoiar agora</span></button>
       </div>
       <ul class="apoio-bloco__lista">
-        <li><svg class="ic"><use href="#i-servidor"/></svg><div><strong>Servidor online</strong><span>A máquina que segura a temporada de 7 dias, 24 horas por dia.</span></div></li>
-        <li><svg class="ic"><use href="#i-codigo"/></svg><div><strong>Desenvolvimento</strong><span>Multiplayer, equipes, correções e o que a comunidade pedir.</span></div></li>
+        <li><svg class="ic"><use href="#i-servidor"/></svg><div><strong>Servidor online</strong><span>O Brasil 1, ligado 24 horas por dia, com a temporada de 7 dias.</span></div></li>
+        <li><svg class="ic"><use href="#i-codigo"/></svg><div><strong>Desenvolvimento</strong><span>A versão completa, correções e o que a comunidade pedir.</span></div></li>
         <li><svg class="ic"><use href="#i-escudo"/></svg><div><strong>Jogo limpo</strong><span>Painel de chaves com banimento de quem usar hack.</span></div></li>
         <li><svg class="ic"><use href="#i-chave"/></svg><div><strong>Sua chave de acesso</strong><span>Todo apoio a partir de R$ 5 libera a sua chave para jogar.</span></div></li>
       </ul>
@@ -330,7 +363,7 @@
       <p>© <span data-ano>2026</span> Rusting Raids. Todos os direitos reservados.</p>
       <p>Um jogo de sobrevivência para Android, feito no Brasil.</p>
     </div>
-    <div class="rodape__status"><span class="ponto-vivo"></span> Em desenvolvimento</div>
+    <div class="rodape__status"><span class="ponto-vivo"></span> Servidor oficial online</div>
   </div>
 </footer>
 
@@ -466,8 +499,8 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="assets/js/config.js?v=8"></script>
-<script src="assets/js/dados.js?v=7"></script>
-<script src="assets/js/app.js?v=7" defer></script>
+<script src="assets/js/config.js?v=9"></script>
+<script src="assets/js/dados.js?v=8"></script>
+<script src="assets/js/app.js?v=8" defer></script>
 </body>
 </html>

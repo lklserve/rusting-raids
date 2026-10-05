@@ -478,6 +478,38 @@
     }
   })();
 
+  /* ------------------------------------------------------------ servidor oficial (status ao vivo) */
+  (function servidor() {
+    const S = CFG.servidor;
+    const cartao = $("[data-servidor]");
+    if (!cartao || !S?.api) return;
+    const luz = $("[data-servidor-luz]", cartao), estado = $("[data-servidor-estado]", cartao);
+    const online = $("[data-servidor-online]", cartao), vagas = $("[data-servidor-max]", cartao);
+    const versao = $("[data-servidor-versao]", cartao), nota = $("[data-servidor-nota]", cartao);
+    if (versao && CFG.versao) versao.textContent = CFG.versao;
+
+    function mostrar(s) {
+      const noAr = !!s?.no_ar;
+      const classe = !s ? "" : noAr ? "no-ar" : "fora";
+      luz.className = `servidor__luz ${classe}`;
+      estado.className = `servidor__estado ${classe}`;
+      estado.textContent = !s ? "sem resposta" : noAr ? "no ar" : "fora do ar";
+      online.textContent = s && noAr ? String(Math.max(0, Number(s.online) || 0)) : "–";
+      if (s && Number(s.maximo) > 0) vagas.textContent = String(s.maximo);
+      nota.textContent = !s ? "Não deu para consultar o servidor agora. Tente de novo em instantes."
+        : noAr ? "O número de jogadores é atualizado a cada minuto."
+        : "O servidor está reiniciando ou em manutenção. Volta em instantes.";
+    }
+    function consultar() {
+      fetch(S.api, { headers: { Accept: "application/json" } })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((j) => { const l = j?.servidores || []; mostrar(l.find((x) => x.servidor === "principal") || l[0] || null); })
+        .catch(() => mostrar(null));
+    }
+    consultar();
+    if (S.intervalo > 0) setInterval(() => { if (!document.hidden) consultar(); }, S.intervalo);
+  })();
+
   /* ------------------------------------------------------------ APOIO (Pix) */
   const apoio = (function montarApoio() {
     const A = CFG.apoio || {};

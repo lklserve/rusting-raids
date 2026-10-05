@@ -7,6 +7,17 @@ window.RR_DADOS = {
   /* ------------------------------------------------------------ GALERIA
      img: arquivo em assets/img/galeria/ (1920×1080 em .webp) — miniatura em .../mini/ com o mesmo nome. */
   galeria: [
+    { img: "11.webp", titulo: "Plataforma de petróleo", texto: "No meio do mar, longe de tudo. Sala de cartão, caixas de loot e muito aço para escalar." },
+    { img: "12.webp", titulo: "Céu vigiado", texto: "O helicóptero de guerra ronda a plataforma. Ele não ataca à toa — mas, se você mexer com ele, revida." },
+    { img: "13.webp", titulo: "A guarda do convés", texto: "Soldados de escopeta vigiam a plataforma. Suba preparado." },
+    { img: "14.webp", titulo: "Ao anoitecer", texto: "Quando o sol some, a plataforma vira uma silhueta no céu vermelho." },
+    { img: "15.webp", titulo: "Navio-patrulha", texto: "Metralhadora no convés e mira em quem estiver nadando. Afunde-o e o saque fica boiando." },
+    { img: "16.webp", titulo: "Tanque de guerra", texto: "Canhão e metralhadora. Ele aparece pelo deserto do Aeroporto — junte a equipe antes de encarar." },
+    { img: "17.webp", titulo: "Chefes de guerra", texto: "Tanque em terra, helicóptero no ar. Quem derruba um deles leva o saque da carcaça." },
+    { img: "18.webp", titulo: "O Tirano", texto: "O gigante da horda. Bate forte, aguenta muito e não desiste." },
+    { img: "19.webp", titulo: "A Banshee", texto: "Ela chora dormindo no meio da floresta. Não acorde." },
+    { img: "20.webp", titulo: "Lago Kahar", texto: "No norte gelado, a Máquina de Mineração trabalha sobre o lago congelado. Leve roupa quente." },
+    { img: "21.webp", titulo: "Por baixo do aço", texto: "Chegue de caiaque, suba pela escada do mar e escale as vigas até o convés." },
     { img: "01.webp", titulo: "A ilha", texto: "Mundo aberto: floresta, praia, deserto e cidades abandonadas." },
     { img: "02.webp", titulo: "Noites de verdade", texto: "Sem luz, você não enxerga um palmo. A tocha é sua melhor amiga." },
     { img: "03.webp", titulo: "A horda", texto: "Zumbis andam em bando, e alguns cospem ácido. Mire bem." },
@@ -23,6 +34,25 @@ window.RR_DADOS = {
      tipo: "devblog" | "atualizacao" | "patch" | "noticia"
      O primeiro da lista aparece em destaque. */
   devblog: [
+    {
+      id: "devblog-6",
+      data: "2026-10-05",
+      tipo: "atualizacao",
+      titulo: "Devblog 6",
+      sub: "O servidor está no ar",
+      img: "11.webp",
+      resumo: "O Brasil 1 está online 24 horas, o jogo se atualiza sozinho e o mapa ganhou o mar: plataforma de petróleo, navio-patrulha e chefes de guerra.",
+      conteudo: [
+        { h: "Servidor oficial" },
+        { ul: ["Brasil 1 (oficial) no ar 24 horas, com vaga para até 100 sobreviventes.", "Entre com a sua chave: a sua base e a sua mochila ficam guardadas no servidor.", "Equipes de até 4, chat e chat de voz.", "Construção, raid, saque, airdrop e chefes conferidos pelo servidor — quem tenta trapacear é corrigido e pode ser banido.", "Temporadas de 7 dias (168 horas)."] },
+        { h: "Atualização automática" },
+        { ul: ["Quando sai versão nova, o jogo avisa, baixa só o que mudou e o Android pede para instalar por cima.", "Versão 1.8: a fornalha e a fechadura de código funcionando online."] },
+        { h: "O mar" },
+        { ul: ["Plataforma de petróleo em alto-mar, com sala de cartão, soldados e o helicóptero rondando.", "Navio-patrulha armado perto do Porto e da Base Militar.", "Caiaque para chegar lá — e escada do mar para subir."] },
+        { h: "Mais mundo" },
+        { ul: ["O norte gelado: neve, frio e fogueira para se aquecer.", "Máquina de Mineração no Lago Kahar.", "Sede de volta: água doce de lago e rio, e o cantil.", "Algemas, resgate e escolta.", "Bicicleta, cavalos e o trem que dá a volta na ilha."] },
+      ],
+    },
     {
       id: "site-no-ar",
       data: "2026-09-25",
@@ -122,11 +152,11 @@ window.RR_DADOS = {
      estado: "feito" | "fazendo" | "proximo" */
   roadmap: [
     { estado: "feito", titulo: "Alpha no Android", texto: "O mundo inteiro rodando no celular: construção, raid, zumbis, veículos e o ciclo de dia e noite." },
-    { estado: "feito", titulo: "Primeira pessoa", texto: "Câmera nos olhos do sobrevivente, com braços e animações de arma." },
-    { estado: "fazendo", titulo: "Site e apoio via Pix", texto: "Download oficial, devblog e o apoio que paga o servidor — com a chave entregue na hora." },
-    { estado: "proximo", titulo: "Painel de chaves e contas", texto: "Sua chave ligada à sua conta e ao ID do seu sobrevivente. Banimento de quem usar hack." },
-    { estado: "proximo", titulo: "Multiplayer e equipes", texto: "Jogar com os amigos em equipes de até 4, com a base e a mochila guardadas no servidor." },
-    { estado: "proximo", titulo: "Servidor online de 7 dias", texto: "Temporadas de 168 horas. No fim, o mundo acaba — e quem segurar a medalha na base leva a glória." },
+    { estado: "feito", titulo: "Site, apoio via Pix e painel de chaves", texto: "Download oficial, devblog e a chave entregue na hora. Banimento de quem usar hack." },
+    { estado: "feito", titulo: "Servidor online", texto: "O Brasil 1 no ar 24 horas, com temporadas de 7 dias, equipes de até 4, chat e voz." },
+    { estado: "feito", titulo: "Atualização automática", texto: "O jogo baixa só o que mudou, sem precisar baixar o APK inteiro de novo." },
+    { estado: "fazendo", titulo: "Versão completa", texto: "Tudo o que funciona no modo solo funcionando igual online: bancada, armadilhas, eletricidade e mais." },
+    { estado: "proximo", titulo: "Lista de amigos", texto: "Adicione os amigos dentro do jogo e veja quem está online." },
     { estado: "proximo", titulo: "Versão para PC", texto: "Mouse, teclado e tela grande, no mesmo servidor." },
   ],
 
@@ -134,7 +164,8 @@ window.RR_DADOS = {
   faq: [
     { p: "Quanto custa para jogar?", r: "O download é livre. Para jogar, você ativa uma chave de acesso, que recebe ao apoiar o projeto com qualquer valor a partir de R$ 5. O dinheiro paga a hospedagem do servidor." },
     { p: "Em qual celular roda?", r: "Android 6.0 ou mais novo. O jogo foi testado num celular intermediário (Galaxy A05s). Por enquanto não há versão para iPhone." },
-    { p: "Já dá para jogar online com os amigos?", r: "Ainda não. O alpha atual é para explorar e testar. O multiplayer com equipes está em desenvolvimento — e é exatamente isso que o seu apoio financia." },
+    { p: "Já dá para jogar online com os amigos?", r: "Dá! O servidor oficial Brasil 1 está no ar 24 horas. Ative a sua chave, escolha Online no lobby e entre. Lá dentro, monte uma equipe de até 4 com os amigos." },
+    { p: "O jogo pediu para atualizar. E agora?", r: "É normal. Quando sai versão nova, o jogo baixa só o que mudou e o Android pede para instalar por cima — não precisa baixar o APK inteiro de novo. O que é seu no servidor continua lá." },
     { p: "Tem pay-to-win?", r: "Não. Nada que dá vantagem em combate é vendido. Sem talentos, sem pets voadores, sem mechas. O apoio paga o servidor, não compra poder." },
     { p: "Como recebo minha chave?", r: "Na hora, na tela, assim que o Pix é confirmado. Ela também fica guardada neste aparelho. Anote num lugar seguro." },
     { p: "Posso comprar mais de uma chave com o mesmo e-mail?", r: "Pode, quantas quiser — para um amigo ou para outro celular. Cada Pix pago gera uma chave nova, e todas ficam ligadas ao seu e-mail. Cada chave abre o jogo em até 3 aparelhos." },

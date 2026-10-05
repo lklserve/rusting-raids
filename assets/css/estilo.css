@@ -1006,6 +1006,24 @@ svg.ic use[href="#i-pix"], svg.ic use[href="#i-discord"], svg.ic use[href="#i-wh
 /* ==========================================================================
    Telas maiores
    ========================================================================== */
+/* ------------------------------------------------------------------ servidor oficial (status ao vivo pelo painel) */
+.servidor { display: grid; gap: 18px; }
+.servidor__cartao { padding: 22px; background: linear-gradient(160deg, var(--painel-2), var(--painel)); border: 1px solid var(--linha-2); box-shadow: var(--sombra); }
+.servidor__topo { display: flex; align-items: center; gap: 14px; }
+.servidor__topo strong { display: block; font-family: var(--fonte-titulo); font-size: 34px; line-height: .9; color: var(--aco); letter-spacing: .02em; }
+.servidor__topo div span { font-family: var(--fonte-rotulo); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; color: var(--aco-3); }
+.servidor__luz { width: 14px; height: 14px; border-radius: 50%; background: var(--aco-4); flex: none; }
+.servidor__luz.no-ar { background: var(--verde); box-shadow: 0 0 0 0 rgba(95, 224, 106, .6); animation: vivo 2s infinite; }
+.servidor__luz.fora { background: var(--tnt-claro); }
+.servidor__estado { margin-left: auto; font-family: var(--fonte-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--aco-3); text-align: right; }
+.servidor__estado.no-ar { color: var(--verde); }
+.servidor__estado.fora { color: var(--tnt-claro); }
+.servidor__numeros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+.servidor__numeros div { padding: 12px 6px; text-align: center; background: rgba(0, 0, 0, .3); border: 1px solid var(--linha); }
+.servidor__numeros strong { display: block; font-family: var(--fonte-titulo); font-size: clamp(36px, 9vw, 52px); line-height: .9; color: var(--aco); font-weight: 600; }
+.servidor__numeros span { font-family: var(--fonte-rotulo); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; font-size: 11.5px; color: var(--aco-3); }
+.servidor__nota { margin: 14px 0 0; font-size: 13px; color: var(--aco-3); }
+
 @media (min-width: 560px) {
   .heroi__ctas { flex-direction: row; max-width: none; justify-content: center; }
   .heroi__ctas .btn { width: auto; }
@@ -1018,6 +1036,7 @@ svg.ic use[href="#i-pix"], svg.ic use[href="#i-discord"], svg.ic use[href="#i-wh
 }
 
 @media (min-width: 760px) {
+  .servidor { grid-template-columns: 1.1fr 1fr; align-items: start; }
   .cards { grid-template-columns: repeat(2, 1fr); }
   .blog { grid-template-columns: repeat(2, 1fr); }
   .passos { grid-template-columns: repeat(2, 1fr); }

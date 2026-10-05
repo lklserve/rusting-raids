@@ -5,8 +5,9 @@
 window.RR_CONFIG = {
   /* Link do APK no Mediafire. Enquanto estiver vazio, o botão "Baixar" avisa que o link sai em breve. */
   linkDownload: "https://www.mediafire.com/file/kebgzk9iwi5tpnk/RustingRaids.apk/file",
-  versao: "alpha 0.1",
-  tamanhoApk: "886 MB",    // aparece junto do botão (o APK de 27/09/2026 no Mediafire tem 885,88 MB)
+  versao: "1.8",
+  tamanhoApk: "912 MB",    // aparece junto do botão. O APK no Mediafire é a v6 (03/10/2026, 911,76 MB): ao abrir,
+                           // ele se atualiza sozinho para a versão do servidor (1.8 em 05/10).
 
   /* Apoio via Pix (Mercado Pago). */
   apoio: {
@@ -41,6 +42,13 @@ window.RR_CONFIG = {
     objetivo: 1500,
     api: "/api/meta",
     arrecadado: 0,
+  },
+
+  /* Servidor oficial: o cartão "A ilha está online" lê o status público do painel (no ar, online, vagas) a cada
+     "intervalo" ms. O painel só libera a leitura para a origem do site; sem resposta, o cartão diz "sem resposta". */
+  servidor: {
+    api: "https://rusting-raids-painel.vercel.app/api/servidor?publico=1",
+    intervalo: 60000,
   },
 
   /* O convite de apoio abre sozinho ao entrar no site (uma vez por sessão). */
