@@ -42,6 +42,23 @@ export async function prazoOuNada(sb, chaveId) {
   catch (e) { console.error("prazoDoFarm", e?.message || e); return {}; }
 }
 
+// As fórmulas de veículo que a chave comprou (loja_itens de categoria 'formula'; supabase/formulas.sql), para o
+// bilhete. Nunca derruba a entrada: com erro, vai sem fórmulas (o servidor só não ensina a receita desta vez).
+export async function formulasDaChave(sb, chaveId) {
+  try {
+    const [{ data: meus, error: e1 }, { data: formulas, error: e2 }] = await Promise.all([
+      sb.from("itens_da_chave").select("item_id").eq("chave_id", chaveId),
+      sb.from("loja_itens").select("id").eq("categoria", "formula"),
+    ]);
+    if (e1 || e2) throw e1 || e2;
+    const daLoja = new Set((formulas || []).map((f) => f.id));
+    return (meus || []).map((m) => m.item_id).filter((id) => Number.isInteger(id) && id > 0 && daLoja.has(id));
+  } catch (e) {
+    console.error("formulasDaChave", e?.message || e);
+    return [];
+  }
+}
+
 // O que a loja mostra para uma chave: saldo, itens à venda, os que ela já tem, os pacotes de recarga,
 // os planos da Coleta Automática e o prazo dela.
 export async function estadoDaLoja(sb, chaveId) {

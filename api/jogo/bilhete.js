@@ -5,7 +5,7 @@
 import { cabecalhos, ipDe } from "../_lib/http.js";
 import { supabase } from "../_lib/supabase.js";
 import { limitar } from "../_lib/rate-limit.js";
-import { autenticarJogador, prazoOuNada, isoZ } from "../_lib/jogador.js";
+import { autenticarJogador, prazoOuNada, formulasDaChave, isoZ } from "../_lib/jogador.js";
 import { emitirBilhete, bilheteDisponivel } from "../_lib/bilhete.js";
 
 export default async function handler(req, res) {
@@ -22,13 +22,14 @@ export default async function handler(req, res) {
     if (!auth.ok) return res.status(auth.erro === "Dados inválidos." ? 400 : 200).json(auth);
 
     // Sem o prazo da coleta o bilhete sai do mesmo jeito (farm_ate vazio = coleta paga desligada no servidor).
-    const { farm_ate } = await prazoOuNada(sb, auth.chave.id);
+    const [{ farm_ate }, formulas] = await Promise.all([prazoOuNada(sb, auth.chave.id), formulasDaChave(sb, auth.chave.id)]);
     const { bilhete, exp } = emitirBilhete({
       jogadorId: auth.jogadorId,
       chaveId: auth.chave.id,
       adm: auth.chave.adm,
       deviceId: String(req.body.deviceId).trim(),
       farmAte: farm_ate,
+      formulas,
     });
     await sb.from("jogadores").update({ ultimo_acesso: new Date().toISOString() }).eq("id", auth.jogadorId);
     return res.status(200).json({ ok: true, bilhete, exp: isoZ(exp * 1000), agora: isoZ(Date.now()) });

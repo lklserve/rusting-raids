@@ -3,8 +3,9 @@
 // chamar o site a cada entrada.
 //
 // Formato: base64url(JSON da carga) + "." + base64url(assinatura RSA-2048, SHA-256, PKCS#1 v1.5 dos bytes ASCII da
-// primeira parte). Carga: { v, jogador, chave, disp, adm, farm_ate, iat, exp } — iat/exp em segundos Unix (UTC);
-// adm = a chave é ADM do jogo (painel de chaves), para o servidor aceitar os comandos de ADM só dela.
+// primeira parte). Carga: { v, jogador, chave, disp, adm, farm_ate, formulas, iat, exp } — iat/exp em segundos Unix
+// (UTC); adm = a chave é ADM do jogo (painel de chaves), para o servidor aceitar os comandos de ADM só dela; formulas =
+// os ids das fórmulas de veículo que a chave comprou na loja (supabase/formulas.sql; o servidor de antes ignora).
 // A chave PRIVADA mora só na variável de ambiente BILHETE_CHAVE_PRIVADA da Vercel (PEM PKCS#8).
 import { createHash, createPrivateKey, sign } from "node:crypto";
 
@@ -29,7 +30,7 @@ const b64url = (buf) => Buffer.from(buf).toString("base64url");
 export const resumoDoAparelho = (deviceId) => createHash("sha256").update(deviceId, "utf8").digest("hex").slice(0, 16);
 
 // -> { bilhete, exp (segundos Unix) }
-export function emitirBilhete({ jogadorId, chaveId, deviceId, adm, farmAte }) {
+export function emitirBilhete({ jogadorId, chaveId, deviceId, adm, farmAte, formulas }) {
   const chave = chavePrivada();
   if (!chave) throw new Error("BILHETE_CHAVE_PRIVADA ausente");
   const iat = Math.floor(Date.now() / 1000);
@@ -40,6 +41,7 @@ export function emitirBilhete({ jogadorId, chaveId, deviceId, adm, farmAte }) {
     disp: resumoDoAparelho(deviceId),
     adm: !!adm,
     farm_ate: farmAte || "",
+    formulas: Array.isArray(formulas) ? formulas.filter((id) => Number.isInteger(id) && id > 0).slice(0, 64) : [],
     iat,
     exp: iat + VALIDADE_DO_BILHETE,
   };
