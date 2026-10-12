@@ -4,6 +4,7 @@
 // e o outro cai na leitura da chave que já existe.
 import { supabase } from "./supabase.js";
 import { gerarCodigo } from "./keygen.js";
+import { enviarChaves } from "./email.js";
 
 export async function emitirChave(pedidoId) {
   const sb = supabase();
@@ -25,7 +26,13 @@ export async function emitirChave(pedidoId) {
       observacao: `Apoio no site · R$ ${pedido.valor}`,
     }).select("id, codigo").single();
 
-    if (data) { await marcarAprovado(sb, pedido.id, data.id); return data.codigo; }
+    if (data) {
+      await marcarAprovado(sb, pedido.id, data.id);
+      // Só quem CRIOU a chave manda o e-mail: o webhook e a consulta da tela podem chegar juntos, e o segundo cai
+      // na leitura da chave que já existe (acima ou abaixo), sem mandar de novo.
+      await enviarChaves(pedido.email, [{ codigo: data.codigo, status: "ativa" }], { novo: true });
+      return data.codigo;
+    }
 
     // Insert falhou. Se foi corrida no mesmo pedido, a chave já está lá: usa ela.
     const { data: agora } = await sb.from("chaves").select("id, codigo").eq("pedido_id", pedidoId).maybeSingle();

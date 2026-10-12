@@ -21,7 +21,8 @@ window.RR_CONFIG = {
      *   "/api/pix" = PIX DE VERDADE. As funções ficam em /api/pix/criar e /api/pix/status.
      * Contrato:
      *   POST {api}/criar   { valor, email }  -> { pedidoId, valor, qrBase64, copiaECola, expiraEm }
-     *   GET  {api}/status?pedido=ID          -> { status: "pendente"|"aprovado"|"expirado", chave? }
+     *   GET  {api}/status?pedido=ID          -> { status: "pendente"|"aprovado"|"expirado", chave?, porEmail? }
+     *   POST {api}/status  { acao: "recuperar", email } -> { ok, mensagem }  (manda as chaves do e-mail para ele)
      */
     api: "/api/pix",
     intervaloDeConsulta: 4000,   // ms entre as consultas de status

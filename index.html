@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@500;700&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/estilo.css?v=8">
+  <link rel="stylesheet" href="assets/css/estilo.css?v=10">
 </head>
 <body>
 
@@ -67,6 +67,7 @@
       <a href="#roadmap" class="menu__link">Em breve</a>
       <a href="#como-jogar" class="menu__link">Como jogar</a>
       <a href="#faq" class="menu__link">Dúvidas</a>
+      <a href="#minha-chave" class="menu__link menu__link--chave" data-abrir-recuperar>Minha chave</a>
       <div class="menu__redes" data-redes></div>
     </nav>
     <div class="topo__acoes">
@@ -82,6 +83,21 @@
     </div>
   </div>
 </header>
+
+<!-- A chave comprada neste aparelho, GRANDE, logo abaixo do topo — e o aviso de "conferindo o pagamento" enquanto
+     um Pix gerado aqui não foi confirmado (12/10: apoiadores pagavam e não achavam a chave). -->
+<div class="faixa-chave" data-faixa-chave hidden role="region" aria-label="Sua chave de acesso">
+  <div class="faixa-chave__barra container">
+    <div class="faixa-chave__texto">
+      <span class="faixa-chave__rotulo" data-faixa-rotulo>Sua chave de acesso</span>
+      <div class="faixa-chave__codigos" data-faixa-codigos></div>
+    </div>
+    <div class="faixa-chave__acoes">
+      <a class="btn btn--aco btn--peq" href="#como-jogar" data-faixa-como>Como usar</a>
+      <button class="faixa-chave__fechar" type="button" data-faixa-fechar aria-label="Esconder a faixa"><svg class="ic"><use href="#i-x"/></svg></button>
+    </div>
+  </div>
+</div>
 
 <main id="conteudo">
 
@@ -306,6 +322,7 @@
       <a class="btn btn--aco btn--grande" data-baixar href="#como-jogar"><svg class="ic"><use href="#i-download"/></svg><span>Baixar o APK</span><small data-versao>alpha</small></a>
     </div>
     <p class="nota revelar" data-minha-chave hidden></p>
+    <p class="nota revelar"><button class="link-discreto link-discreto--forte" type="button" data-abrir-recuperar>Já pagou e não achou a sua chave? Receba no seu e-mail</button></p>
   </div>
 </section>
 
@@ -411,7 +428,7 @@
         <button type="button" data-valor="100">R$ 100</button>
       </div>
       <label class="campo">
-        <span>Seu e-mail <small>(o Pix e a chave ficam ligados a ele)</small></span>
+        <span>Seu e-mail <small>(a chave fica ligada a ele — confira se está certo)</small></span>
         <input type="email" id="apoio-email" autocomplete="email" inputmode="email" placeholder="voce@email.com" required>
       </label>
       <p class="erro" data-erro hidden></p>
@@ -442,9 +459,11 @@
       <ol class="pix__como">
         <li>Abra o app do seu banco e escolha <b>Pix</b>.</li>
         <li>Leia o QR ou cole o código copia e cola.</li>
-        <li>Confirme. A chave aparece aqui sozinha.</li>
+        <li>Confirme e <b>volte para esta página</b>: a chave aparece aqui e no topo do site assim que o Pix cair.</li>
       </ol>
+      <p class="modal__texto modal__texto--nota">Pode fechar esta janela ou sair para o app do banco: este aparelho continua conferindo o pagamento e mostra a chave quando você voltar.</p>
       <button class="btn btn--aco btn--largo" type="button" data-simular hidden>Simular pagamento aprovado (demo)</button>
+      <button class="link-discreto" type="button" data-ir="recuperar">Já paguei e a chave não apareceu</button>
       <button class="link-discreto" type="button" data-ir="valor">Voltar e mudar o valor</button>
     </div>
 
@@ -453,11 +472,12 @@
       <div class="explosao" aria-hidden="true"></div>
       <p class="kicker kicker--verde">// pagamento confirmado</p>
       <h2 class="modal__titulo modal__titulo--menor">Valeu, sobrevivente!</h2>
-      <p class="modal__texto">Esta é a sua chave de acesso. Ela fica guardada neste aparelho, mas anote num lugar seguro.</p>
+      <p class="modal__texto">Esta é a sua chave de acesso. Ela fica guardada neste aparelho e no topo do site, mas anote num lugar seguro.</p>
       <div class="chave">
         <code data-chave>RR-XXXX-XXXX</code>
         <button class="btn btn--aco btn--peq" type="button" data-copiar-chave><svg class="ic"><use href="#i-copiar"/></svg><span>Copiar</span></button>
       </div>
+      <p class="modal__texto modal__texto--nota" data-por-email hidden>Também mandamos a chave para o seu e-mail. Não achou? Olhe o spam e a aba Promoções.</p>
       <a class="btn btn--tnt btn--largo" data-baixar href="#como-jogar"><svg class="ic"><use href="#i-download"/></svg><span>Baixar o jogo</span></a>
       <ol class="pix__como">
         <li>Instale o APK e abra o Rusting Raids.</li>
@@ -466,6 +486,25 @@
       </ol>
       <p class="modal__texto modal__texto--nota">Quer mais uma, para um amigo ou para outro celular? Pode comprar quantas quiser com o mesmo e-mail: cada Pix pago gera uma chave nova.</p>
       <button class="btn btn--aco btn--largo" type="button" data-ir="valor"><svg class="ic"><use href="#i-chave"/></svg><span>Comprar outra chave</span></button>
+    </div>
+
+    <!-- Não achou a chave: as deste aparelho + receber todas as do e-mail -->
+    <div class="etapa" data-etapa="recuperar" hidden>
+      <p class="kicker">// minha chave</p>
+      <h2 class="modal__titulo modal__titulo--menor">Não achou sua chave?</h2>
+      <div data-recuperar-locais hidden>
+        <p class="modal__texto">Chaves compradas neste aparelho:</p>
+        <div data-recuperar-lista></div>
+      </div>
+      <p class="modal__texto">Digite o e-mail que você usou no Pix. A gente manda <b>todas</b> as chaves compradas com ele para a sua caixa de entrada.</p>
+      <label class="campo">
+        <span>E-mail do Pix</span>
+        <input type="email" id="recuperar-email" autocomplete="email" inputmode="email" placeholder="voce@email.com">
+      </label>
+      <p class="erro" data-recuperar-erro hidden></p>
+      <p class="aviso-ok" data-recuperar-ok hidden></p>
+      <button class="btn btn--tnt btn--largo" type="button" data-recuperar-enviar><svg class="ic"><use href="#i-chave"/></svg><span>Mandar minhas chaves por e-mail</span></button>
+      <p class="modal__texto modal__texto--nota">Não chegou nem no spam? Chame a gente no <a data-link-discord href="#" target="_blank" rel="noopener">Discord</a> com o comprovante do Pix e o e-mail que você usou.</p>
     </div>
 
     <!-- Erro -->
@@ -499,8 +538,8 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="assets/js/config.js?v=9"></script>
-<script src="assets/js/dados.js?v=8"></script>
-<script src="assets/js/app.js?v=8" defer></script>
+<script src="assets/js/config.js?v=10"></script>
+<script src="assets/js/dados.js?v=10"></script>
+<script src="assets/js/app.js?v=10" defer></script>
 </body>
 </html>

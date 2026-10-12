@@ -530,8 +530,27 @@
       const antiga = guardar.ler(MINHA);   // de antes da lista: só a última chave
       return antiga?.chave ? [antiga] : [];
     }
+    // Os Pix gerados neste aparelho que ainda não viraram chave (12/10: o apoiador pagava no app do banco e voltava com
+    // a aba recarregada, a janela fechada ou o relógio zerado — e a tela nunca mais conferia). Ficam até virar chave,
+    // expirar no servidor ou passar de 2 dias, e são conferidos ao abrir a página, ao voltar para ela e a cada poucos
+    // segundos, com a janela aberta ou fechada.
+    const PENDENTES = "rr_pedidos_pendentes", GUARDA_PENDENTE = 48 * 3600 * 1000;
+    function pendentes() {
+      const l = guardar.ler(PENDENTES), agora = Date.now();
+      return (Array.isArray(l) ? l : []).filter((p) => p?.pedidoId && agora - new Date(p.criadoEm || 0) < GUARDA_PENDENTE);
+    }
+    function lembrarPendente(p, criadoEm = new Date().toISOString()) {
+      if (!p?.pedidoId || p.demo) return;
+      const l = pendentes().filter((x) => x.pedidoId !== p.pedidoId);
+      l.push({ pedidoId: p.pedidoId, valor: p.valor, expiraEm: p.expiraEm, criadoEm });
+      guardar.gravar(PENDENTES, l.slice(-5));
+    }
+    function esquecerPendente(id) {
+      guardar.gravar(PENDENTES, pendentes().filter((x) => x.pedidoId !== id));
+      if (guardar.ler(ATIVO)?.pedidoId === id) guardar.apagar(ATIVO);
+    }
     let valor = Math.min(MAX, Math.max(MIN, A.inicial ?? 10));
-    let pedido = null, timerStatus, timerRelogio;
+    let pedido = null, timerRelogio, timerVigia, vigiando = false;
 
     slider.min = MIN; slider.max = MAX; slider.value = valor;
     $(".deslizante__marcas", modal).innerHTML = `<span>${brl.format(MIN).replace(",00", "")}</span><span>${brl.format(Math.round((MIN + MAX) / 2)).replace(",00", "")}</span><span>${brl.format(MAX).replace(",00", "")}</span>`;
@@ -568,6 +587,7 @@
       $(".modal__caixa", modal).scrollTop = 0;
       if (nome === "valor") setTimeout(() => slider.focus({ preventScroll: true }), 60);
     }
+    const etapaAtual = () => $$(".etapa", modal).find((el) => !el.hidden)?.dataset.etapa;
     function abrir(qual) {
       const ativo = guardar.ler(ATIVO);
       if (!qual && ativo && new Date(ativo.expiraEm) > new Date()) {
@@ -579,10 +599,12 @@
     }
     modal.addEventListener("click", (e) => {
       const ir = e.target.closest("[data-ir]");
-      if (ir) etapa(ir.dataset.ir);
+      if (ir) ir.dataset.ir === "recuperar" ? abrirRecuperar() : etapa(ir.dataset.ir);
       if (e.target.closest("[data-mais-tarde]")) guardar.gravar("rr_convite_visto", true, sessionStorage);
+      const copiarEsta = e.target.closest("[data-copiar-esta]");
+      if (copiarEsta) copiar(copiarEsta.dataset.copiarEsta, "Chave copiada!");
     });
-    modal.addEventListener("close", () => { clearInterval(timerRelogio); clearTimeout(timerStatus); });
+    modal.addEventListener("close", () => clearInterval(timerRelogio));
     $$("[data-abrir-apoio]").forEach((b) => b.addEventListener("click", () => { fecharMenu(); abrir(); }));
 
     /* --- gerar o Pix */
@@ -604,6 +626,7 @@
       try {
         const p = demo ? await pixDeDemonstracao(valor) : await pixDeVerdade(valor, em);
         guardar.gravar(ATIVO, p);
+        lembrarPendente(p);
         mostrarPix(p);
         etapa("pix");
       } catch (err) {
@@ -647,7 +670,7 @@
       if (p.qrBase64) qr.innerHTML = `<img src="data:image/png;base64,${p.qrBase64}" alt="QR Code do Pix">`;
       else { qr.innerHTML = ""; qr.appendChild(qrDeDemonstracao(p.pedidoId)); }
       relogio(p.expiraEm);
-      if (!p.demo) consultar();
+      if (!p.demo) vigiar();
     }
 
     function relogio(ate) {
@@ -658,25 +681,45 @@
         el.textContent = `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
         if (s <= 0) {
           clearInterval(timerRelogio);
-          guardar.apagar(ATIVO);
-          $("[data-erro-texto]", modal).textContent = "O Pix expirou. Gere um novo — leva um segundo.";
-          etapa("erro");
+          // O relógio da tela zerou, mas o Pix pago no último segundo ainda pode cair: quem decide é o servidor.
+          if (pedido?.demo) { guardar.apagar(ATIVO); expirou(); }
+          else vigiar();
         }
       };
       tick();
       timerRelogio = setInterval(tick, 1000);
     }
 
-    async function consultar() {
-      clearTimeout(timerStatus);
-      if (!pedido || pedido.demo || !modal.open) return;
+    function expirou() {
+      if (!modal.open || etapaAtual() !== "pix") return;
+      $("[data-erro-texto]", modal).textContent = "O Pix expirou sem pagamento. Gere um novo — leva um segundo.";
+      etapa("erro");
+    }
+
+    /* --- a vigia dos Pix deste aparelho (com a janela aberta ou fechada) */
+    async function vigiar() {
+      clearTimeout(timerVigia);
+      if (demo || vigiando) return;
+      const lista = pendentes();
+      guardar.gravar(PENDENTES, lista);   // tira os de mais de 2 dias
+      atualizarFaixa();
+      if (!lista.length || document.hidden) return;   // escondida: volta pelo visibilitychange
+      vigiando = true;
       try {
-        const r = await fetch(`${A.api}/status?pedido=${encodeURIComponent(pedido.pedidoId)}`);
-        const j = await r.json();
-        if (j.status === "aprovado" && j.chave) { aprovado(j.chave); return; }
-        if (j.status === "expirado") { guardar.apagar(ATIVO); etapa("erro"); return; }
-      } catch { /* rede instável: segue tentando */ }
-      timerStatus = setTimeout(consultar, A.intervaloDeConsulta || 4000);
+        for (const p of lista) {
+          let j;
+          try {
+            const r = await fetch(`${A.api}/status?pedido=${encodeURIComponent(p.pedidoId)}`, { cache: "no-store" });
+            j = await r.json();
+          } catch { continue; }   // rede instável: tenta na próxima volta
+          if (j.status === "aprovado" && j.chave) { esquecerPendente(p.pedidoId); aprovado(j.chave, !!j.porEmail, p.pedidoId); }
+          else if (j.status === "expirado") { esquecerPendente(p.pedidoId); if (pedido?.pedidoId === p.pedidoId) expirou(); }
+        }
+      } finally {
+        vigiando = false;
+      }
+      atualizarFaixa();
+      if (pendentes().length) timerVigia = setTimeout(vigiar, A.intervaloDeConsulta || 4000);
     }
 
     // Só existe no modo demonstração: no Pix real o botão não faz nada, mesmo que alguém o revele.
@@ -687,16 +730,22 @@
     $("[data-copiar-pix]", modal).addEventListener("click", () => copiar($("[data-pix-codigo]", modal).value, "Código Pix copiado!"));
     $("[data-copiar-chave]", modal).addEventListener("click", () => copiar($("[data-chave]", modal).textContent, "Chave copiada!"));
 
-    function aprovado(chave) {
-      clearInterval(timerRelogio);
-      guardar.apagar(ATIVO);
-      const nova = { chave, em: new Date().toISOString(), demo: !!pedido?.demo };
+    function aprovado(chave, porEmail = false, pedidoId = pedido?.pedidoId) {
+      const doQrNaTela = pedido?.pedidoId === pedidoId;
+      if (doQrNaTela) clearInterval(timerRelogio);
+      const nova = { chave, em: new Date().toISOString(), demo: !!(doQrNaTela && pedido?.demo) };
       const lista = minhasChaves().filter((c) => c.chave !== chave);
       guardar.gravar(MINHAS, [...lista, nova]);
       guardar.gravar(MINHA, nova);
+      guardar.apagar(FAIXA_FECHADA, sessionStorage);   // chave nova: a faixa volta mesmo se foi fechada
       $("[data-chave]", modal).textContent = chave;
-      etapa("chave");
-      explodir($(".explosao", modal));
+      $("[data-por-email]", modal).hidden = !porEmail;
+      // A chave GRANDE na janela — aberta de novo se o apoiador a fechou e não há outra janela por cima.
+      if (modal.open || !$$("dialog[open]").length) {
+        etapa("chave");
+        if (!modal.open) modal.showModal();
+        explodir($(".explosao", modal));
+      }
       mostrarMinhaChave();
     }
 
@@ -753,6 +802,7 @@
     }
 
     function mostrarMinhaChave() {
+      atualizarFaixa();
       const lista = minhasChaves();
       const el = $("[data-minha-chave]");
       if (!el || !lista.length) return;
@@ -760,10 +810,99 @@
       el.innerHTML = `${lista.length > 1 ? "Suas chaves" : "Sua chave"} neste aparelho: ${codigos}`;
       el.hidden = false;
     }
+
+    /* --- a faixa GRANDE do topo: as chaves deste aparelho, ou "conferindo o seu pagamento" */
+    const faixa = $("[data-faixa-chave]");
+    const FAIXA_FECHADA = "rr_faixa_fechada";
+    function atualizarFaixa() {
+      if (!faixa) return;
+      const chaves = minhasChaves().filter((c) => !c.demo);
+      const esperando = !demo && pendentes().length > 0;
+      if ((!chaves.length && !esperando) || guardar.ler(FAIXA_FECHADA, sessionStorage)) {
+        faixa.hidden = true;
+      } else {
+        faixa.classList.toggle("faixa-chave--espera", !chaves.length);
+        $("[data-faixa-rotulo]", faixa).textContent = chaves.length
+          ? (chaves.length > 1 ? "Suas chaves de acesso" : "Sua chave de acesso")
+          : "Conferindo o seu pagamento";
+        $("[data-faixa-codigos]", faixa).innerHTML = chaves.length
+          ? chaves.map((c) => `<span class="faixa-chave__item"><code>${esc(c.chave)}</code><button type="button" data-copiar-esta="${esc(c.chave)}">Copiar</button></span>`).join("")
+          : `<span class="faixa-chave__espera"><span class="radar"></span> Já pagou? A chave aparece aqui em instantes.</span>`;
+        faixa.hidden = false;
+      }
+      document.documentElement.style.setProperty("--faixa-altura", faixa.hidden ? "0px" : `${faixa.offsetHeight}px`);
+    }
+    faixa?.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-copiar-esta]");
+      if (b) copiar(b.dataset.copiarEsta, "Chave copiada!");
+      if (e.target.closest("[data-faixa-fechar]")) {
+        guardar.gravar(FAIXA_FECHADA, true, sessionStorage);
+        atualizarFaixa();
+      }
+    });
+
+    /* --- "Não achou sua chave?": as deste aparelho + mandar todas as do e-mail (POST {api}/status) */
+    const recEmail = $("#recuperar-email");
+    const recErro = $("[data-recuperar-erro]", modal), recOk = $("[data-recuperar-ok]", modal);
+    const linkDiscord = $("[data-link-discord]", modal);
+    if (linkDiscord && CFG.redes?.discord) linkDiscord.href = CFG.redes.discord;
+    function abrirRecuperar() {
+      fecharMenu();
+      const lista = minhasChaves().filter((c) => !c.demo);
+      $("[data-recuperar-locais]", modal).hidden = !lista.length;
+      $("[data-recuperar-lista]", modal).innerHTML = `<div class="recuperar-lista">${lista.map((c) =>
+        `<div class="chave"><code>${esc(c.chave)}</code><button class="btn btn--aco btn--peq" type="button" data-copiar-esta="${esc(c.chave)}"><svg class="ic"><use href="#i-copiar"/></svg><span>Copiar</span></button></div>`).join("")}</div>`;
+      if (!recEmail.value) recEmail.value = guardar.ler("rr_email") || "";
+      recErro.hidden = recOk.hidden = true;
+      etapa("recuperar");
+      if (!modal.open) modal.showModal();
+      vigiar();
+    }
+    $$("[data-abrir-recuperar]").forEach((b) => b.addEventListener("click", (e) => { e.preventDefault(); abrirRecuperar(); }));
+    $("[data-recuperar-enviar]", modal).addEventListener("click", async (e) => {
+      const b = e.currentTarget, em = recEmail.value.trim();
+      recErro.hidden = recOk.hidden = true;
+      if (!emailOk(em)) {
+        recErro.textContent = "Digite o e-mail que você usou no Pix.";
+        recErro.hidden = false;
+        recEmail.focus();
+        return;
+      }
+      if (demo) { recOk.textContent = "Modo de demonstração: nenhum e-mail foi enviado."; recOk.hidden = false; return; }
+      b.disabled = true;
+      try {
+        const r = await fetch(`${A.api}/status`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ acao: "recuperar", email: em }),
+        });
+        const j = await r.json().catch(() => ({}));
+        if (r.ok && j.ok) { recOk.textContent = j.mensagem || "Pronto! Confira o seu e-mail."; recOk.hidden = false; }
+        else { recErro.textContent = j.erro || "Não consegui mandar agora. Tente de novo daqui a pouco."; recErro.hidden = false; }
+      } catch {
+        recErro.textContent = "Sem conexão. Confira a internet e tente de novo.";
+        recErro.hidden = false;
+      } finally {
+        b.disabled = false;
+      }
+    });
+    recEmail.addEventListener("input", () => { recErro.hidden = true; });
+    addEventListener("hashchange", () => { if (location.hash === "#minha-chave") abrirRecuperar(); });
+
+    /* --- ao abrir a página e ao voltar para ela (do app do banco, de outra aba) */
+    // O Pix de antes desta versão (só o rr_pedido_ativo, sem a lista) entra na vigia.
+    const ativoAntigo = guardar.ler(ATIVO);
+    if (ativoAntigo?.pedidoId && !ativoAntigo.demo && !pendentes().some((p) => p.pedidoId === ativoAntigo.pedidoId))
+      lembrarPendente(ativoAntigo, new Date(new Date(ativoAntigo.expiraEm || Date.now()) - 30 * 60 * 1000).toISOString());
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) vigiar(); });
+    addEventListener("pageshow", () => vigiar());
+    addEventListener("resize", () => { if (faixa && !faixa.hidden) atualizarFaixa(); });
     mostrarMinhaChave();
+    vigiar();
+    if (location.hash === "#minha-chave") setTimeout(abrirRecuperar, 300);
 
     /* convite ao abrir (uma vez por sessão) */
-    const semConvite = /[?&]semconvite\b/.test(location.search);
+    const semConvite = /[?&]semconvite\b/.test(location.search) || location.hash === "#minha-chave";
     if (CFG.conviteAoAbrir && !semConvite && !guardar.ler("rr_convite_visto", sessionStorage)) {
       setTimeout(() => {
         if ($$("dialog[open]").length) return;
