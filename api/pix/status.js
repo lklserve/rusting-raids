@@ -7,7 +7,7 @@ import { supabase } from "../_lib/supabase.js";
 import { consultarPagamento } from "../_lib/mercadopago.js";
 import { emitirChave, processarAprovado } from "../_lib/emitir.js";
 import { emailConfigurado } from "../_lib/email.js";
-import { recuperarPorEmail } from "../_lib/recuperar.js";
+import { recuperarPorEmail, reenviarParaUm } from "../_lib/recuperar.js";
 
 // UUID v4 solto não se adivinha; ainda assim, só o dono (o navegador que criou) tem o id.
 const uuidOk = (s) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s || "");
@@ -19,6 +19,7 @@ export default async function handler(req, res) {
     let corpo;
     try { corpo = req.body || {}; } catch { return res.status(400).json({ ok: false, erro: "JSON inválido." }); }
     if (corpo.acao === "recuperar") return recuperarPorEmail(req, res);
+    if (corpo.acao === "reenviar") return reenviarParaUm(req, res);
     return res.status(400).json({ ok: false, erro: "Ação inválida." });
   }
   const pedidoId = req.query?.pedido;

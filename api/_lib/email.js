@@ -30,8 +30,9 @@ function transportador() {
 
 const escapar = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-// chaves: [{ codigo, status }]. novo = acabou de pagar (o texto muda um pouco do "você pediu de novo").
-export function montarEmail(chaves, { novo }) {
+// chaves: [{ codigo, status }]. novo = acabou de pagar; motivo "reenvio" = o reenvio a todos os apoiadores de 12/10 (o
+// texto explica por que chegou); sem os dois, é o "Não achou sua chave?" que o próprio apoiador pediu.
+export function montarEmail(chaves, { novo, motivo } = {}) {
   const ativas = chaves.filter((c) => c.status !== "banida");
   const uma = ativas.length === 1;
   const assunto = uma
@@ -39,7 +40,9 @@ export function montarEmail(chaves, { novo }) {
     : `Suas ${ativas.length} chaves do Rusting Raids`;
   const abertura = novo
     ? "Pagamento confirmado! Valeu por apoiar o Rusting Raids."
-    : "Você pediu para reenviar as chaves deste e-mail.";
+    : motivo === "reenvio"
+      ? `Estamos reenviando ${uma ? "a sua chave" : "as suas chaves"} do Rusting Raids para não se perder: alguns apoiadores pagaram o Pix e não viram a chave na tela. Se foi o seu caso, aqui está. Valeu pelo apoio!`
+      : "Você pediu para reenviar as chaves deste e-mail.";
   const texto = [
     abertura,
     "",
@@ -83,10 +86,11 @@ export function montarEmail(chaves, { novo }) {
   return { assunto, texto, html };
 }
 
-// -> true se o servidor de e-mail aceitou. Nunca lança (quem chama segue com a chave na tela).
-export async function enviarChaves(para, chaves, { novo }) {
+// -> true se o servidor de e-mail aceitou. Não lança (quem chama segue com a chave na tela), a não ser com lancarErro:
+// o reenvio em lote precisa do código do Gmail para parar no primeiro sinal de limite.
+export async function enviarChaves(para, chaves, { novo, motivo, lancarErro } = {}) {
   if (!emailConfigurado() || !para || !chaves?.some((c) => c.status !== "banida")) return false;
-  const { assunto, texto, html } = montarEmail(chaves, { novo });
+  const { assunto, texto, html } = montarEmail(chaves, { novo, motivo });
   try {
     await transportador().sendMail({
       from: process.env.EMAIL_DE || `Rusting Raids <${process.env.SMTP_USER}>`,
@@ -98,6 +102,7 @@ export async function enviarChaves(para, chaves, { novo }) {
     return true;
   } catch (e) {
     console.error("email: falha ao enviar", e?.code || "", e?.message || e);
+    if (lancarErro) throw e;
     return false;
   }
 }
