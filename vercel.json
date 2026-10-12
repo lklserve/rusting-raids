@@ -1,6 +1,11 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    { "source": "/api/auth/google", "destination": "/api/conta/google" },
+    { "source": "/api/auth/link-google", "destination": "/api/conta/vincular" },
+    { "source": "/api/player/progress", "destination": "/api/conta/progresso" }
+  ],
   "headers": [
     {
       "source": "/assets/img/(.*)",

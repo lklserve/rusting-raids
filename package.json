@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Site do Rusting Raids: landing page + apoio via Pix + chaves de acesso.",
+  "description": "Site do Rusting Raids: landing page + apoio via Pix + chaves de acesso + conta Google e save na nuvem.",
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
+    "google-auth-library": "^11.1.0",
     "nodemailer": "10.0.11"
   }
 }

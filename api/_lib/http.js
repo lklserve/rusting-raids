@@ -12,11 +12,20 @@ export function cabecalhos(req, res) {
   }
   res.setHeader("Vary", "Origin");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-RR-App");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-RR-App");
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("Cache-Control", "no-store");
   if (req.method === "OPTIONS") { res.status(204).end(); return true; }
   return false;
+}
+
+// O trecho dinâmico de uma função "[acao].js": a Vercel põe em req.query.acao; numa reescrita do vercel.json pode
+// chegar só a URL original, então vale o último pedaço do caminho.
+export function acaoDaRota(req) {
+  const q = req.query?.acao;
+  if (typeof q === "string" && q) return q;
+  try { return new URL(req.url || "/", "http://local").pathname.split("/").filter(Boolean).pop() || ""; }
+  catch { return ""; }
 }
 
 // IP do cliente (a Vercel põe o real em x-forwarded-for).

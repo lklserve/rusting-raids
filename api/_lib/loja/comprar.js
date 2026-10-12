@@ -1,10 +1,10 @@
 // POST /api/jogo/loja/comprar  { codigo, deviceId, itemId }
 //   -> { ok: true, cupons, meus }  ou  { ok: false, erro: "Cupons insuficientes." | "Você já tem este item." | "Item indisponível.", cupons }
 // O preço sai SÓ da tabela loja_itens; a função comprar_item trava o saldo e não deixa ficar negativo.
-import { cabecalhos, ipDe } from "../../_lib/http.js";
-import { supabase } from "../../_lib/supabase.js";
-import { limitar } from "../../_lib/rate-limit.js";
-import { autenticarJogador } from "../../_lib/jogador.js";
+import { cabecalhos, ipDe } from "../http.js";
+import { supabase } from "../supabase.js";
+import { limitar } from "../rate-limit.js";
+import { autenticarJogador } from "../jogador.js";
 
 export default async function handler(req, res) {
   if (cabecalhos(req, res)) return;

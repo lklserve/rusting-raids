@@ -5,10 +5,10 @@
 // A Coleta Automática comprada em cupons. Preço e dias saem SÓ da tabela loja_planos; a função assinar_plano trava o
 // saldo da chave, soma o prazo (max(fim, agora) + dias, até 90 dias) e é idempotente pelo compraId (o jogo reenvia a
 // mesma compra se a resposta se perder, e o site não cobra de novo: repetida = true).
-import { cabecalhos, ipDe } from "../../_lib/http.js";
-import { supabase } from "../../_lib/supabase.js";
-import { limitar } from "../../_lib/rate-limit.js";
-import { autenticarJogador, isoZ } from "../../_lib/jogador.js";
+import { cabecalhos, ipDe } from "../http.js";
+import { supabase } from "../supabase.js";
+import { limitar } from "../rate-limit.js";
+import { autenticarJogador, isoZ } from "../jogador.js";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
