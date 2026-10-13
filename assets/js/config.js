@@ -5,8 +5,8 @@
 window.RR_CONFIG = {
   /* Link do APK no Mediafire. Enquanto estiver vazio, o botão "Baixar" avisa que o link sai em breve. */
   linkDownload: "https://www.mediafire.com/file/kebgzk9iwi5tpnk/RustingRaids.apk/file",
-  versao: "1.20",
-  tamanhoApk: "886 MB",    // aparece junto do botão. O APK no Mediafire é a 1.20 FINAL (13/10/2026, 886,09 MB), a de
+  versao: "1.21",
+  tamanhoApk: "886 MB",    // aparece junto do botão. O APK no Mediafire é a 1.21 FINAL (13/10/2026, 886,47 MB), da linha de
                            // lançamento: pede a chave e se atualiza sozinho pela linha final.
 
   /* Apoio via Pix (Mercado Pago). */
