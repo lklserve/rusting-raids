@@ -7,6 +7,16 @@ window.RR_DADOS = {
   /* ------------------------------------------------------------ GALERIA
      img: arquivo em assets/img/galeria/ (1920×1080 em .webp) — miniatura em .../mini/ com o mesmo nome. */
   galeria: [
+    { img: "22.webp", titulo: "Seu visual", texto: "Skins de personagem para vestir o seu sobrevivente, e os outros jogadores também veem. Só visual: nada dá vantagem." },
+    { img: "23.webp", titulo: "A caverna", texto: "Lá embaixo é escuro de verdade. Leve a tocha: há minério, caixas e infectados nos salões." },
+    { img: "24.webp", titulo: "Savana", texto: "Girafas, zebras, elefantes e avestruzes andam pelo deserto da ilha." },
+    { img: "25.webp", titulo: "Cargueiro da Morte", texto: "De tempos em tempos ele ancora perto da ilha, com carga no convés. Por enquanto, só no modo solo." },
+    { img: "26.webp", titulo: "Guardas do cargueiro", texto: "Soldados de escopeta vigiam a carga. Eles só atacam quem mexer com eles." },
+    { img: "27.webp", titulo: "Mergulho", texto: "Com máscara e tanque, dá para enxergar longe debaixo d'água e ficar minutos sem subir." },
+    { img: "28.webp", titulo: "Pesca", texto: "Lance a vara na beira d'água e acerte o anel na hora certa para fisgar o peixe." },
+    { img: "29.webp", titulo: "Pinguins na neve", texto: "No norte gelado, os pinguins andam em grupo. O leopardo das neves também mora lá." },
+    { img: "30.webp", titulo: "Máquinas de venda", texto: "Na Zona de Comércio, troque Peças por suprimentos, munição e armas. Ou monte a sua e venda para os outros." },
+    { img: "31.webp", titulo: "Fogos de artifício", texto: "Ponha os fogos na base e solte todos de uma vez para comemorar." },
     { img: "11.webp", titulo: "Plataforma de petróleo", texto: "No meio do mar, longe de tudo. Sala de cartão, caixas de loot e muito aço para escalar." },
     { img: "12.webp", titulo: "Céu vigiado", texto: "O helicóptero de guerra ronda a plataforma. Ele não ataca à toa — mas, se você mexer com ele, revida." },
     { img: "13.webp", titulo: "A guarda do convés", texto: "Soldados de escopeta vigiam a plataforma. Suba preparado." },
@@ -45,7 +55,7 @@ window.RR_DADOS = {
       conteudo: [
         { p: "Uma semana inteira de trabalho na versão 1.21. Tudo o que você faz no modo solo agora funciona no Brasil 1, e o jogo saiu do celular." },
         { h: "Jogue no PC" },
-        { ul: ["Instale o mesmo APK num emulador de Android (BlueStacks, LDPlayer, MuMu ou outro) e entre com a sua chave: é o mesmo servidor e o mesmo personagem.", "Teclado e mouse: WASD anda, Shift corre, Espaço pula, C agacha, E interage, X deita, L acende a lanterna, os números trocam o item da barra e Q prende o mouse na câmera (Esc solta).", "O emulador conta como um dos 3 aparelhos da sua chave."] },
+        { ul: ["Instale o mesmo APK num emulador de Android (BlueStacks, LDPlayer, MuMu ou outro) e entre com a sua chave: é o mesmo servidor e o mesmo personagem.", "Teclado: WASD anda, Shift corre, Espaço pula, C agacha, E interage, X deita, L acende a lanterna e os números trocam o item da barra. O mouse depende do emulador: em muitos ele vira toque, e aí a câmera gira arrastando. Onde o mouse chega como mouse, o Q o prende na câmera (Esc solta).", "O emulador conta como um dos 3 aparelhos da sua chave."] },
         { h: "Amigos e equipe" },
         { ul: ["Lista de amigos dentro do jogo: toque no rosto de quem falou no chat ou abra o perfil e peça amizade. Os pedidos chegam no Social.", "Doe a sua cama ou o seu saco de dormir a um amigo ou a alguém da equipe. Ele escolhe se aceita.", "Convites de equipe sem spam.", "Emoji no chat.", "A sua conta não pode ser tomada por outro aparelho enquanto você joga."] },
         { h: "Tudo online" },
@@ -53,15 +63,15 @@ window.RR_DADOS = {
         { h: "Sua base" },
         { ul: ["Peças novas: arredondadas, portões deslizantes, Portão Duplo Grande e telhados.", "Gabinete com alcance de 60 m, senha em todas as portas de uma vez e a tela de permissões para liberar a obra a amigos.", "Relatório de perdas: quem destruiu o quê, o que caiu por falta de material e o que levaram de você enquanto dormia.", "Central Automática: abastece até 4 forjas e refinadoras e recolhe o que fica pronto.", "Caixa de Coleta Automática com 108 casas.", "No máximo 5 Gabinetes por jogador no servidor."] },
         { h: "Mais mundo" },
-        { ul: ["Uma caverna subterrânea no mapa.", "Mergulho com tanque e roupa de mergulho, e pesca.", "Máquinas de venda espalhadas pelo mapa, e a sua própria Máquina de Venda.", "Cargueiro da Morte, refinadoras de óleo nos lugares do mapa e mais salas de cartão roxas.", "Falcão caçando pombos, borboletas e predadores atrás das presas.", "Pegadas, cascos e pneus marcando o chão, e grama que fica pisada.", "Mapa grande com grade de A1 a T20, para combinar o ponto com a equipe."] },
+        { ul: ["Uma caverna subterrânea no mapa.", "Mergulho com tanque e roupa de mergulho, e pesca.", "Máquinas de venda espalhadas pelo mapa, e a sua própria Máquina de Venda.", "Cargueiro da Morte (por enquanto só no modo solo), refinadoras de óleo nos lugares do mapa e mais salas de cartão roxas.", "Falcão caçando pombos, borboletas e predadores atrás das presas.", "Pegadas, cascos e pneus marcando o chão, e grama que fica pisada.", "Mapa grande com grade de A1 a T20, para combinar o ponto com a equipe."] },
         { h: "Progresso" },
         { ul: ["Nível da partida, Manual de Sobrevivência, missões diárias e guia do novato.", "Passe de temporada com missões semanais e recompensas.", "Mercado entre jogadores: venda, troque e receba.", "Ranking do servidor pelas medalhas guardadas no Gabinete.", "Fogos de artifício para comemorar."] },
         { h: "Visual" },
         { ul: ["Skins de personagem novas, armas evolutivas animadas, skins de mochila, emotes e danças. Tudo só visual: nada dá vantagem.", "Avatares, molduras e balões de chat grátis para todos.", "Corpo feminino na criação do personagem.", "Apelido de até 10 letras, com caracteres especiais."] },
         { h: "Equilíbrio" },
         { ul: ["O servidor agora é 3x.", "Queda alta machuca de acordo com a altura.", "Zona vermelha no chão antes das habilidades dos chefes: dá para sair.", "Base Militar mais justa: o foguete dos soldados não mata mais de longe.", "Os veículos do mapa voltam em 24 horas."] },
-        { h: "Já pronto para a próxima atualização" },
-        { ul: ["Efeitos de abate das armas evolutivas: quem abate com uma delas ganha uma faixa exclusiva na lista de abates, que o servidor inteiro vê, e o efeito aparece no corpo.", "Roda de emotes e Classificação do Gabinete embaixo do minimapa.", "Mover qualquer peça do HUD.", "Fundos do lobby grátis para todos.", "No PC: V troca a vista, B abre o binóculo, R recarrega e o botão direito mira.", "Amigos aparecem na lista de convidar para a equipe de qualquer distância.", "A skin dos outros jogadores aparece mesmo que você não tenha a mesma."] },
+        { h: "E na 1.24" },
+        { ul: ["Efeitos de abate das armas evolutivas: quem abate com uma delas ganha uma faixa exclusiva na lista de abates, que o servidor inteiro vê, e o efeito aparece no corpo.", "Roda de emotes e Classificação do Gabinete embaixo do minimapa.", "Mover qualquer peça do HUD.", "Fundos do lobby grátis para todos.", "No PC: V troca a vista, B abre o binóculo e R recarrega. Onde o mouse chega como mouse, o botão direito mira.", "Amigos aparecem na lista de convidar para a equipe de qualquer distância.", "A skin dos outros jogadores aparece mesmo que você não tenha a mesma.", "Quem reinstala o jogo volta direto ao Brasil 1, com o mesmo personagem.", "Corrigida a loja que fechava o jogo."] },
       ],
     },
     {
@@ -187,15 +197,15 @@ window.RR_DADOS = {
     { estado: "feito", titulo: "Atualização automática", texto: "O jogo baixa só o que mudou, sem precisar baixar o APK inteiro de novo." },
     { estado: "feito", titulo: "Versão completa", texto: "Tudo o que funciona no modo solo funcionando igual online: bancada, armadilhas, eletricidade, defesas e mais." },
     { estado: "feito", titulo: "Lista de amigos", texto: "Adicione os amigos dentro do jogo, chame para a equipe e doe a sua cama." },
-    { estado: "feito", titulo: "Versão para PC", texto: "Pelo emulador de Android, com teclado, mouse e tela grande, no mesmo servidor e com a mesma chave." },
-    { estado: "fazendo", titulo: "Próxima atualização", texto: "Efeitos de abate das armas evolutivas, roda de emotes, Classificação do Gabinete e o HUD que você monta do seu jeito." },
+    { estado: "feito", titulo: "Versão para PC", texto: "Pelo emulador de Android, com teclado e tela grande, no mesmo servidor e com a mesma chave." },
+    { estado: "feito", titulo: "Versão 1.24", texto: "Efeitos de abate das armas evolutivas, roda de emotes, Classificação do Gabinete e o HUD que você monta do seu jeito." },
   ],
 
   /* ------------------------------------------------------------ DÚVIDAS */
   faq: [
     { p: "Quanto custa para jogar?", r: "O download é livre. Para jogar, você ativa uma chave de acesso, que recebe ao apoiar o projeto com qualquer valor a partir de R$ 5. O dinheiro paga a hospedagem do servidor." },
     { p: "Em qual aparelho roda?", r: "Android 6.0 ou mais novo. O jogo foi testado num celular intermediário (Galaxy A05s). No computador, ele roda num emulador de Android. Por enquanto não há versão para iPhone." },
-    { p: "Dá para jogar no PC?", r: "Dá! Instale um emulador de Android (BlueStacks, LDPlayer, MuMu ou outro), baixe o APK pelo botão Baixar, instale no emulador e entre com a sua chave. É o mesmo servidor e o mesmo personagem do celular. Teclado: WASD anda, Shift corre, Espaço pula, C agacha, E interage, X deita, L acende a lanterna, os números trocam o item da barra e Q prende o mouse na câmera (Esc solta). Se o seu emulador transforma o mouse em toque, gire a câmera segurando e arrastando. O emulador conta como um dos 3 aparelhos da chave." },
+    { p: "Dá para jogar no PC?", r: "Dá! Instale um emulador de Android (BlueStacks, LDPlayer, MuMu ou outro), baixe o APK pelo botão Baixar, instale no emulador e entre com a sua chave. É o mesmo servidor e o mesmo personagem do celular. Teclado: WASD anda, Shift corre, Espaço pula, C agacha, E interage, X deita, L acende a lanterna, os números trocam o item da barra, V troca a vista, B abre o binóculo e R recarrega. O mouse depende do emulador: na maioria ele vira toque, e aí você gira a câmera segurando e arrastando. Onde o mouse chega como mouse, o Q o prende na câmera (Esc solta) e o botão direito mira. O emulador conta como um dos 3 aparelhos da chave." },
     { p: "Já dá para jogar online com os amigos?", r: "Dá! O servidor oficial Brasil 1 está no ar 24 horas. Ative a sua chave, escolha Online no lobby e entre. Lá dentro, monte uma equipe de até 4 com os amigos." },
     { p: "Como adiciono um amigo?", r: "No chat, toque no rosto de quem falou: o menu do jogador tem Ver perfil, Adicionar amigo, Convidar para a equipe e Bloquear. O pedido chega no Social do outro jogador. Amigos podem receber a sua cama e ganhar permissão para construir na sua base, pelo botão Gerenciar Permissões do Gabinete. Cada amigo precisa da própria chave." },
     { p: "O jogo pediu para atualizar. E agora?", r: "É normal. Quando sai versão nova, o jogo baixa só o que mudou e o Android pede para instalar por cima — não precisa baixar o APK inteiro de novo. O que é seu no servidor continua lá." },
