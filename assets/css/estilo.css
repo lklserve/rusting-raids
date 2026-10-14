@@ -1080,6 +1080,10 @@ svg.ic use[href="#i-pix"], svg.ic use[href="#i-discord"], svg.ic use[href="#i-wh
 .servidor__numeros span { font-family: var(--fonte-rotulo); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; font-size: 11.5px; color: var(--aco-3); }
 .servidor__nota { margin: 14px 0 0; font-size: 13px; color: var(--aco-3); }
 
+/* ------------------------------------------------------------------ novidades (13/10: jogo completo, PC e amigos) */
+@media (min-width: 760px) { .novidades { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .novidades { grid-template-columns: repeat(3, 1fr); } }
+
 @media (min-width: 560px) {
   .heroi__ctas { flex-direction: row; max-width: none; justify-content: center; }
   .heroi__ctas .btn { width: auto; }
@@ -1184,3 +1188,14 @@ svg.ic use[href="#i-pix"], svg.ic use[href="#i-discord"], svg.ic use[href="#i-wh
 
 /* Nota abaixo da chave: dá para comprar outra com o mesmo e-mail. */
 .modal__texto--nota { margin: 18px 0 12px; font-size: 14px; color: var(--aco-2); }
+
+/* Menu de 8 links numa linha só a partir de 1280 px (antes "Como jogar" e "Minha chave" quebravam em duas). */
+@media (min-width: 1280px) {
+  .menu__link { white-space: nowrap; letter-spacing: .1em; padding-inline: 9px; }
+  .menu__link::after { left: 9px; right: 9px; }
+}
+
+/* "Baixar para Android e PC" + versão não cabem num celular estreito: a versão sai só do botão do topo (13/10). */
+@media (max-width: 419px) {
+  .heroi__ctas small[data-versao] { display: none; }
+}

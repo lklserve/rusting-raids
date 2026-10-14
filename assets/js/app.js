@@ -395,8 +395,17 @@
     const corpo = $("[data-post]", modal);
     grade.addEventListener("click", (e) => {
       const b = e.target.closest("[data-post]");
-      if (!b) return;
-      const p = posts.find((x) => x.id === b.dataset.post);
+      if (b) abrir(b.dataset.post);
+    });
+    // Botões de fora do devblog (a seção Novidades) abrem um post pelo id.
+    document.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-abrir-post]");
+      if (!b || !posts.some((x) => x.id === b.dataset.abrirPost)) return;
+      e.preventDefault();
+      abrir(b.dataset.abrirPost);
+    });
+    function abrir(id) {
+      const p = posts.find((x) => x.id === id);
       if (!p) return;
       const blocos = (p.conteudo || []).map((c) => {
         if (c.h) return `<h4>${esc(c.h)}</h4>`;
@@ -413,7 +422,7 @@
         </article>`;
       modal.showModal();
       $(".modal__caixa", modal).scrollTop = 0;
-    });
+    }
   })();
 
   /* ------------------------------------------------------------ roadmap e FAQ */
