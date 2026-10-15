@@ -59,12 +59,27 @@ export async function formulasDaChave(sb, chaveId) {
   }
 }
 
+// O Supabase devolve no máximo 1.000 linhas por consulta (o "max rows" do PostgREST, medido em 15/10). A loja passou
+// disso com os trajes de personagem de 2026: os itens ativos vêm em páginas de 1.000, na mesma ordem de antes.
+export const PAGINA_DA_LOJA = 1000;
+
+export async function itensAtivos(sb) {
+  const todos = [];
+  for (let de = 0; ; de += PAGINA_DA_LOJA) {
+    const { data, error } = await sb.from("loja_itens").select("id, categoria, nome, preco_cupons")
+      .eq("ativo", true).order("ordem").order("id").range(de, de + PAGINA_DA_LOJA - 1);
+    if (error) return { data: todos.length ? todos : null, error };
+    todos.push(...(data || []));
+    if (!data || data.length < PAGINA_DA_LOJA) return { data: todos, error: null };
+  }
+}
+
 // O que a loja mostra para uma chave: saldo, itens à venda, os que ela já tem, os pacotes de recarga,
 // os planos da Coleta Automática e o prazo dela.
 export async function estadoDaLoja(sb, chaveId) {
   const [{ data: saldo }, { data: itens }, { data: meus }, { data: pacotes }, { data: planos }, prazo] = await Promise.all([
     sb.from("cupons_saldo").select("saldo").eq("chave_id", chaveId).maybeSingle(),
-    sb.from("loja_itens").select("id, categoria, nome, preco_cupons").eq("ativo", true).order("ordem").order("id"),
+    itensAtivos(sb),
     sb.from("itens_da_chave").select("item_id").eq("chave_id", chaveId),
     sb.from("loja_pacotes").select("id, reais, cupons, bonus").eq("ativo", true).order("ordem"),
     sb.from("loja_planos").select("id, nome, preco_cupons, dias").eq("ativo", true).order("ordem"),
