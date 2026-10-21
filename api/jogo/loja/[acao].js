@@ -3,11 +3,13 @@
 // cada uma não mudaram — moram em api/_lib/loja/ (pasta com "_" não vira função).
 import comprar from "../../_lib/loja/comprar.js";
 import assinar from "../../_lib/loja/assinar.js";
+import apelido from "../../_lib/loja/apelido.js";
 import { cabecalhos, acaoDaRota } from "../../_lib/http.js";
 
 const ROTAS = new Map([
   ["comprar", comprar],
   ["assinar", assinar],
+  ["apelido", apelido],
 ]);
 
 export default async function handler(req, res) {

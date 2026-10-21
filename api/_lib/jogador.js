@@ -3,6 +3,7 @@
 // -> { ok: true, chave: { id, codigo, adm }, jogadorId }  ou  { ok: false, ...resposta pronta para o jogo }
 import { normalizarCodigo, texto } from "./http.js";
 import { banDoAparelho } from "./banimento.js";
+import { apelidoDaChave, PRECO_DO_APELIDO } from "./apelido.js";
 
 export async function autenticarJogador(sb, corpo) {
   const codigo = normalizarCodigo(corpo?.codigo);
@@ -85,7 +86,11 @@ export async function estadoDaLoja(sb, chaveId) {
     sb.from("loja_planos").select("id, nome, preco_cupons, dias").eq("ativo", true).order("ordem"),
     prazoOuNada(sb, chaveId),
   ]);
+  const apelido = await apelidoDaChave(sb, chaveId);
   return {
+    // O Cartão de Renomear (supabase/apelido.sql): o apelido da chave ("" = ainda sem) e o preço da troca.
+    apelido,
+    preco_apelido: PRECO_DO_APELIDO,
     cupons: saldo?.saldo ?? 0,
     itens: (itens || []).map((i) => ({ id: i.id, categoria: i.categoria, nome: i.nome, preco: i.preco_cupons })),
     meus: (meus || []).map((m) => m.item_id),
