@@ -33,28 +33,54 @@
   }
   try { const e = localStorage.getItem("rr_recarga_email"); if (e) campoEmail.value = e; } catch { /* sem armazenamento */ }
 
-  // Pacotes do servidor.
+  // Pacotes do servidor. Com a chave digitada, o servidor diz se ela ainda tem a PRIMEIRA RECARGA EM DOBRO: aí o aviso
+  // aparece e cada pacote mostra o dobro (quem dá o dobro é o banco, na hora do crédito; aqui é só o que se vê).
   const grade = $("[data-pacotes]");
-  fetch("/api/loja/pacotes", { headers: { Accept: "application/json" } })
-    .then((r) => (r.ok ? r.json() : Promise.reject()))
-    .then((j) => {
-      const lista = j.pacotes || [];
-      grade.querySelector(".carregando")?.remove();
-      const g = document.createElement("div"); g.className = "pacotes__grade";
-      lista.forEach((p, i) => {
-        const total = p.cupons + p.bonus;
-        const rotulo = document.createElement("label"); rotulo.className = "pacote";
-        rotulo.innerHTML = `<input type="radio" name="pacote" value="${p.id}" ${i === 0 ? "checked" : ""}>
-          <span class="pacote__cartao">
-            <span class="pacote__cupons">${num.format(total)} <small>cupons</small></span>
-            <span class="pacote__bonus">${p.bonus ? `+${num.format(p.bonus)} de bônus` : ""}</span>
-            <span class="pacote__preco">${brl.format(p.reais)}</span>
-          </span>`;
-        g.appendChild(rotulo);
-      });
-      grade.appendChild(g);
-    })
-    .catch(() => { grade.querySelector(".carregando")?.remove(); erro("Não foi possível carregar os pacotes. Recarregue a página."); });
+  const aviso = $("[data-dobro]");
+  let chavePedida = null;
+  function desenhar(lista, emDobro) {
+    const marcado = $('input[name="pacote"]:checked')?.value;
+    grade.querySelector(".pacotes__grade")?.remove();
+    const g = document.createElement("div"); g.className = "pacotes__grade";
+    lista.forEach((p, i) => {
+      const total = p.cupons + p.bonus;
+      const recebe = emDobro ? total * 2 : total;
+      const rotulo = document.createElement("label"); rotulo.className = "pacote" + (emDobro ? " pacote--dobro" : "");
+      const escolhido = marcado ? marcado === p.id : i === 0;
+      rotulo.innerHTML = `<input type="radio" name="pacote" value="${p.id}" ${escolhido ? "checked" : ""}>
+        <span class="pacote__cartao">
+          ${emDobro ? `<span class="pacote__antes">${num.format(total)}</span>` : ""}
+          <span class="pacote__cupons">${num.format(recebe)} <small>cupons</small></span>
+          <span class="pacote__bonus">${emDobro ? "em dobro na 1ª recarga" : p.bonus ? `+${num.format(p.bonus)} de bônus` : ""}</span>
+          <span class="pacote__preco">${brl.format(p.reais)}</span>
+        </span>`;
+      g.appendChild(rotulo);
+    });
+    grade.appendChild(g);
+    aviso.hidden = !emDobro;
+  }
+  function carregarPacotes(chave) {
+    chavePedida = chave || "";
+    const pedidoDaVez = chavePedida;
+    const url = chave ? `/api/loja/pacotes?chave=${encodeURIComponent(chave)}` : "/api/loja/pacotes";
+    return fetch(url, { headers: { Accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((j) => {
+        if (pedidoDaVez !== chavePedida) return;   // a pessoa já trocou a chave
+        grade.querySelector(".carregando")?.remove();
+        desenhar(j.pacotes || [], !!j.emDobro);
+      })
+      .catch(() => { grade.querySelector(".carregando")?.remove(); erro("Não foi possível carregar os pacotes. Recarregue a página."); });
+  }
+  carregarPacotes(normalizar(campoChave.value));
+  let espera = null;
+  campoChave.addEventListener("input", () => {
+    clearTimeout(espera);
+    espera = setTimeout(() => {
+      const c = normalizar(campoChave.value);
+      if (c !== chavePedida) carregarPacotes(c);
+    }, 400);
+  });
 
   etapas.pedido.addEventListener("submit", async (ev) => {
     ev.preventDefault();
@@ -88,7 +114,7 @@
 
   function abrirPix() {
     $("[data-pix-valor]").textContent = brl.format(pedido.valor);
-    $("[data-pix-cupons]").textContent = num.format(pedido.cupons);
+    $("[data-pix-cupons]").textContent = num.format(pedido.cupons) + (pedido.emDobro ? " (primeira recarga em dobro)" : "");
     $("[data-pix-codigo]").value = pedido.copiaECola || "";
     const qr = $("[data-qr]");
     qr.innerHTML = "";

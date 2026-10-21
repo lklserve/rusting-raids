@@ -4,6 +4,7 @@
 import { normalizarCodigo, texto } from "./http.js";
 import { banDoAparelho } from "./banimento.js";
 import { apelidoDaChave, PRECO_DO_APELIDO } from "./apelido.js";
+import { recargaEmDobro } from "./recarga.js";
 
 export async function autenticarJogador(sb, corpo) {
   const codigo = normalizarCodigo(corpo?.codigo);
@@ -78,13 +79,14 @@ export async function itensAtivos(sb) {
 // O que a loja mostra para uma chave: saldo, itens à venda, os que ela já tem, os pacotes de recarga,
 // os planos da Coleta Automática e o prazo dela.
 export async function estadoDaLoja(sb, chaveId) {
-  const [{ data: saldo }, { data: itens }, { data: meus }, { data: pacotes }, { data: planos }, prazo] = await Promise.all([
+  const [{ data: saldo }, { data: itens }, { data: meus }, { data: pacotes }, { data: planos }, prazo, emDobro] = await Promise.all([
     sb.from("cupons_saldo").select("saldo").eq("chave_id", chaveId).maybeSingle(),
     itensAtivos(sb),
     sb.from("itens_da_chave").select("item_id").eq("chave_id", chaveId),
     sb.from("loja_pacotes").select("id, reais, cupons, bonus").eq("ativo", true).order("ordem"),
     sb.from("loja_planos").select("id, nome, preco_cupons, dias").eq("ativo", true).order("ordem"),
     prazoOuNada(sb, chaveId),
+    recargaEmDobro(sb, chaveId),
   ]);
   const apelido = await apelidoDaChave(sb, chaveId);
   return {
@@ -96,6 +98,8 @@ export async function estadoDaLoja(sb, chaveId) {
     meus: (meus || []).map((m) => m.item_id),
     pacotes: (pacotes || []).map((p) => ({ id: p.id, reais: Number(p.reais), cupons: p.cupons, bonus: p.bonus })),
     planos: (planos || []).map((p) => ({ id: p.id, nome: p.nome, preco: p.preco_cupons, dias: p.dias })),
+    // A primeira recarga em dobro (supabase/recarga_em_dobro.sql): esta chave ainda não recarregou nenhuma vez.
+    recarga_em_dobro: emDobro,
     ...prazo,
   };
 }

@@ -1,10 +1,13 @@
-// POST /api/pix/recarga  { chave, pacote, email }  ->  { pedidoId, valor, cupons, qrBase64, copiaECola, expiraEm }
+// POST /api/pix/recarga  { chave, pacote, email }  ->  { pedidoId, valor, cupons, emDobro, qrBase64, copiaECola, expiraEm }
 // Pix de recarga de cupons para uma chave. O navegador manda só o ID do pacote: preço e cupons saem da
 // tabela loja_pacotes. Antes de cobrar, confere se a chave existe e não está banida.
+// A PRIMEIRA RECARGA EM DOBRO (supabase/recarga_em_dobro.sql): se a chave ainda não recarregou, "cupons" já vem dobrado
+// e emDobro = true. O pedido guarda os cupons do pacote; o dobro é dado pelo banco na hora do crédito (uma vez só).
 import { cabecalhos, ipDe, emailValido, normalizarCodigo, texto } from "../_lib/http.js";
 import { supabase } from "../_lib/supabase.js";
 import { criarPix } from "../_lib/mercadopago.js";
 import { limitar } from "../_lib/rate-limit.js";
+import { recargaEmDobro } from "../_lib/recarga.js";
 
 export default async function handler(req, res) {
   if (cabecalhos(req, res)) return;
@@ -33,6 +36,8 @@ export default async function handler(req, res) {
     if (!pacote) return res.status(400).json({ erro: "Pacote indisponível." });
     const valor = Number(pacote.reais);
     const cupons = pacote.cupons + pacote.bonus;
+    const emDobro = await recargaEmDobro(sb, chave.id);
+    const vaiReceber = emDobro ? cupons * 2 : cupons;
 
     const { data: pedido, error } = await sb.from("pedidos")
       .insert({ email, valor, status: "pendente", tipo: "recarga", recarga_chave_id: chave.id, pacote_id: pacote.id, cupons })
@@ -44,7 +49,8 @@ export default async function handler(req, res) {
     try {
       cobranca = await criarPix({
         valor, email,
-        descricao: `Rusting Raids — recarga de ${cupons} cupons`,
+        descricao: emDobro ? `Rusting Raids — recarga de ${cupons} cupons (primeira em dobro: ${vaiReceber})`
+                           : `Rusting Raids — recarga de ${cupons} cupons`,
         pedidoId: pedido.id,
         notificationUrl: host ? `${host}/api/webhooks/mercadopago` : undefined,
       });
@@ -63,7 +69,7 @@ export default async function handler(req, res) {
     }).eq("id", pedido.id);
 
     return res.status(200).json({
-      pedidoId: pedido.id, valor, cupons,
+      pedidoId: pedido.id, valor, cupons: vaiReceber, emDobro,
       qrBase64: cobranca.qrBase64, copiaECola: cobranca.copiaCola, expiraEm: cobranca.expiraEm,
     });
   } catch (e) {

@@ -34,3 +34,13 @@
   border-radius: 50%; background: rgba(95, 224, 106, .12); color: var(--verde);
 }
 .recarga__ok .ic { width: 32px; height: 32px; }
+
+/* A primeira recarga em dobro (supabase/recarga_em_dobro.sql): o aviso em cima dos pacotes e o número antigo riscado. */
+.recarga__dobro {
+  display: flex; align-items: center; gap: 10px; margin: 0 0 12px; padding: 10px 12px;
+  background: rgba(255, 176, 46, .1); border: 1px solid var(--faisca); color: var(--aco);
+  font-family: var(--fonte-rotulo); font-weight: 700; letter-spacing: .04em; line-height: 1.35;
+}
+.recarga__dobro b { font-family: var(--fonte-titulo); font-size: 26px; line-height: 1; color: var(--faisca); }
+.pacote__antes { font-size: 13px; color: var(--aco-3); text-decoration: line-through; min-height: 16px; }
+.pacote--dobro .pacote__bonus { color: var(--faisca); }
