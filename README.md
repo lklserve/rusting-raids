@@ -21,7 +21,7 @@ supabase/schema.sql            → o banco (rode uma vez no projeto novo)
 
 | Arquivo | O que tem |
 |---|---|
-| `assets/js/config.js` | link do Mediafire, versão, redes, meta do mês, e o **liga/desliga do Pix real** |
+| `assets/js/config.js` | link do Mediafire, versão, redes e o **liga/desliga do Pix real** |
 | `assets/js/dados.js` | posts do devblog, galeria, roadmap e dúvidas |
 | `assets/img/galeria/` | fotos 1920×1080 `.webp`, com miniatura de mesmo nome em `mini/` |
 
