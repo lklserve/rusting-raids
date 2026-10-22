@@ -24,6 +24,7 @@ import { supabase } from "../_lib/supabase.js";
 import { limitar } from "../_lib/rate-limit.js";
 import { banDoAparelho, aparelhoConfiavel } from "../_lib/banimento.js";
 import { autenticarJogador, isoZ } from "../_lib/jogador.js";
+import { MAX_DISPOSITIVOS, aparelhosDaChave, trocarAparelho } from "../_lib/aparelhos.js";
 import { resumoDoAparelho } from "../_lib/bilhete.js";
 import { conferirTokenDoGoogle, googleDisponivel } from "../_lib/google.js";
 import { emitirSessao, lerSessao, tokenDoPedido, sessaoDisponivel } from "../_lib/sessao.js";
@@ -85,7 +86,24 @@ async function entrarComGoogle(req, res, corpo, sb) {
   if (data.bloqueada) return res.status(403).json({ ok: false, banido: true, motivo: "Conta bloqueada." });
   if (data.chave_status === "banida") return res.status(403).json({ ok: false, banido: true, motivo: "Chave banida." });
 
+  if (data.chave && aparelhoConfiavel(deviceId)) await abrirLugarNaChave(sb, data.chave, deviceId);
   return res.status(200).json(respostaDaConta(data, deviceId));
+}
+
+// Troca de aparelho pela conta Google (pedido do Ronni, 22/10): num aparelho novo, com a chave da conta já cheia, este
+// aparelho toma na hora o lugar do aparelho parado há mais tempo. Logo depois o jogo ativa a chave (/api/jogo/ativar,
+// ContaGoogle.Entrar), e ela já acha este aparelho. Nunca derruba a entrada: com erro, o /ativar responde como antes.
+async function abrirLugarNaChave(sb, codigo, deviceId) {
+  try {
+    const { data: chave, error } = await sb.from("chaves").select("id").eq("codigo", codigo).maybeSingle();
+    if (error) throw error;
+    if (!chave) return;
+    const aparelhos = await aparelhosDaChave(sb, chave.id);
+    if (aparelhos.length < MAX_DISPOSITIVOS || aparelhos.some((j) => j.device_id === deviceId)) return;
+    await trocarAparelho(sb, aparelhos, deviceId, { paradoHaMs: 0 });
+  } catch (e) {
+    console.error("conta/google: troca de aparelho", e?.message || e);
+  }
 }
 
 // ================================================================== ligar à chave

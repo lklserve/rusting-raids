@@ -1,14 +1,14 @@
 // POST /api/jogo/ativar  { codigo, deviceId, nome }
 // O painel de chaves DENTRO do jogo chama isto quando o jogador cola a chave.
 // Valida a chave, cria/liga a conta do jogador ao aparelho e devolve o id do jogador e se a chave é ADM
-// do jogo (adm, dado no painel de chaves).
+// do jogo (adm, dado no painel de chaves). Com a chave cheia, o aparelho novo toma o lugar do aparelho parado há mais
+// de 24 h (trocado: true; ver _lib/aparelhos.js).
 import { cabecalhos, ipDe, texto, normalizarCodigo } from "../_lib/http.js";
 import { supabase } from "../_lib/supabase.js";
 import { limitar } from "../_lib/rate-limit.js";
 import { banDoAparelho } from "../_lib/banimento.js";
 import { prazoOuNada } from "../_lib/jogador.js";
-
-const MAX_DISPOSITIVOS = 3; // um jogador pode trocar de aparelho algumas vezes
+import { MAX_DISPOSITIVOS, CHAVE_CHEIA, aparelhosDaChave, trocarAparelho } from "../_lib/aparelhos.js";
 
 export default async function handler(req, res) {
   if (cabecalhos(req, res)) return;
@@ -49,11 +49,14 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, jogadorId: existente.id, adm: !!chave.adm, ...(await prazoOuNada(sb, chave.id)) });
     }
 
-    // Aparelho novo: respeita o limite de dispositivos por chave.
-    const { count } = await sb.from("jogadores")
-      .select("id", { count: "exact", head: true }).eq("chave_id", chave.id);
-    if ((count ?? 0) >= MAX_DISPOSITIVOS)
-      return res.status(409).json({ ok: false, erro: "Esta chave já está em uso no número máximo de aparelhos." });
+    // Aparelho novo com a chave cheia: troca o aparelho parado há mais tempo, se ele está parado há 24 h.
+    const aparelhos = await aparelhosDaChave(sb, chave.id);
+    if (aparelhos.length >= MAX_DISPOSITIVOS) {
+      const trocado = await trocarAparelho(sb, aparelhos, deviceId, { nome });
+      if (!trocado) return res.status(409).json({ ok: false, erro: CHAVE_CHEIA });
+      await sb.from("chaves").update({ ultimo_uso: new Date().toISOString() }).eq("id", chave.id);
+      return res.status(200).json({ ok: true, jogadorId: trocado.id, adm: !!chave.adm, trocado: true, ...(await prazoOuNada(sb, chave.id)) });
+    }
 
     const { data: novo, error } = await sb.from("jogadores").insert({
       chave_id: chave.id, device_id: deviceId, nome,
