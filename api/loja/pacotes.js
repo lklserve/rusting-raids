@@ -1,5 +1,5 @@
 // GET /api/loja/pacotes[?chave=RR-XXXX-XXXX]  ->  { pacotes: [{ id, reais, cupons, bonus }], emDobro }
-// Os pacotes de recarga à venda (para a página /recarga). Com a chave, diz também se ela ainda tem a PRIMEIRA RECARGA EM
+// Os pacotes de recarga à venda (para a página /recarga). Com a chave, diz também se ela ainda tem a RECARGA EM
 // DOBRO (supabase/recarga_em_dobro.sql): só um sim ou não, nada da conta. Sem chave (ou chave que não existe), emDobro
 // é falso.
 import { cabecalhos, ipDe, normalizarCodigo } from "../_lib/http.js";

@@ -33,7 +33,7 @@
   }
   try { const e = localStorage.getItem("rr_recarga_email"); if (e) campoEmail.value = e; } catch { /* sem armazenamento */ }
 
-  // Pacotes do servidor. Com a chave digitada, o servidor diz se ela ainda tem a PRIMEIRA RECARGA EM DOBRO: aí o aviso
+  // Pacotes do servidor. Com a chave digitada, o servidor diz se ela ainda tem a RECARGA EM DOBRO: aí o aviso
   // aparece e cada pacote mostra o dobro (quem dá o dobro é o banco, na hora do crédito; aqui é só o que se vê).
   const grade = $("[data-pacotes]");
   const aviso = $("[data-dobro]");
@@ -51,7 +51,7 @@
         <span class="pacote__cartao">
           ${emDobro ? `<span class="pacote__antes">${num.format(total)}</span>` : ""}
           <span class="pacote__cupons">${num.format(recebe)} <small>cupons</small></span>
-          <span class="pacote__bonus">${emDobro ? "em dobro na 1ª recarga" : p.bonus ? `+${num.format(p.bonus)} de bônus` : ""}</span>
+          <span class="pacote__bonus">${emDobro ? "em dobro nesta recarga" : p.bonus ? `+${num.format(p.bonus)} de bônus` : ""}</span>
           <span class="pacote__preco">${brl.format(p.reais)}</span>
         </span>`;
       g.appendChild(rotulo);
@@ -114,7 +114,7 @@
 
   function abrirPix() {
     $("[data-pix-valor]").textContent = brl.format(pedido.valor);
-    $("[data-pix-cupons]").textContent = num.format(pedido.cupons) + (pedido.emDobro ? " (primeira recarga em dobro)" : "");
+    $("[data-pix-cupons]").textContent = num.format(pedido.cupons) + (pedido.emDobro ? " (recarga em dobro)" : "");
     $("[data-pix-codigo]").value = pedido.copiaECola || "";
     const qr = $("[data-qr]");
     qr.innerHTML = "";

@@ -98,7 +98,7 @@ export async function estadoDaLoja(sb, chaveId) {
     meus: (meus || []).map((m) => m.item_id),
     pacotes: (pacotes || []).map((p) => ({ id: p.id, reais: Number(p.reais), cupons: p.cupons, bonus: p.bonus })),
     planos: (planos || []).map((p) => ({ id: p.id, nome: p.nome, preco: p.preco_cupons, dias: p.dias })),
-    // A primeira recarga em dobro (supabase/recarga_em_dobro.sql): esta chave ainda não recarregou nenhuma vez.
+    // A recarga em dobro (supabase/recarga_em_dobro.sql): esta chave ainda não ganhou o dobro (uma vez por chave).
     recarga_em_dobro: emDobro,
     ...prazo,
   };

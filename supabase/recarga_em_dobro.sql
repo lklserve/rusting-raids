@@ -2,8 +2,12 @@
 -- funciona uma vez").
 --
 -- A primeira recarga APROVADA de cada chave credita o dobro do pacote (cupons + bônus, × 2). As seguintes creditam o
--- pacote normal. "Primeira" = a chave não tem nenhuma recarga no livro-caixa (as chaves que já recarregaram antes deste
--- arquivo NÃO ganham). Vale por chave: é a chave que recebe os cupons.
+-- pacote normal. Vale por chave: é a chave que recebe os cupons.
+--
+-- DOBRO PARA TODOS (Ronni, 21/10 à noite: "ative o dobro para todos a partir de hoje"): antes, "primeira" era a chave sem
+-- NENHUMA recarga no livro-caixa, e as chaves que já tinham recarregado antes do dobro não ganhavam. Agora toda chave ganha
+-- o dobro UMA vez, na próxima recarga aprovada: o que conta é a chave ainda não ter um crédito com a marca "primeira
+-- recarga em dobro" (a observação do livro-caixa). Quem já ganhou o dobro antes desta troca não ganha de novo.
 --
 -- O dobro é decidido AQUI, na hora do crédito, e não na hora do Pix: duas recargas da mesma chave pagas juntas não
 -- ganham o dobro duas vezes (o saldo da chave fica travado com "for update" enquanto se confere). O pedido continua com
@@ -33,7 +37,9 @@ begin
     return query select false, v_ja, v_saldo; return;
   end if;
 
-  v_primeira := not exists (select 1 from cupons_movimentos m where m.chave_id = v_chave and m.tipo = 'recarga');
+  -- Ainda não ganhou o dobro (ver "DOBRO PARA TODOS" no topo): a marca é a observação que o crédito em dobro deixa.
+  v_primeira := not exists (select 1 from cupons_movimentos m where m.chave_id = v_chave and m.tipo = 'recarga'
+                            and m.observacao = 'primeira recarga em dobro');
   v_credito := case when v_primeira then v_cupons * 2 else v_cupons end;
   insert into cupons_movimentos (chave_id, tipo, cupons, pedido_id, observacao)
     values (v_chave, 'recarga', v_credito, p_pedido, case when v_primeira then 'primeira recarga em dobro' end)

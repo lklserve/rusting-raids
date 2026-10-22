@@ -1,7 +1,7 @@
 // POST /api/pix/recarga  { chave, pacote, email }  ->  { pedidoId, valor, cupons, emDobro, qrBase64, copiaECola, expiraEm }
 // Pix de recarga de cupons para uma chave. O navegador manda só o ID do pacote: preço e cupons saem da
 // tabela loja_pacotes. Antes de cobrar, confere se a chave existe e não está banida.
-// A PRIMEIRA RECARGA EM DOBRO (supabase/recarga_em_dobro.sql): se a chave ainda não recarregou, "cupons" já vem dobrado
+// A RECARGA EM DOBRO (supabase/recarga_em_dobro.sql): se a chave ainda não ganhou o dobro, "cupons" já vem dobrado
 // e emDobro = true. O pedido guarda os cupons do pacote; o dobro é dado pelo banco na hora do crédito (uma vez só).
 import { cabecalhos, ipDe, emailValido, normalizarCodigo, texto } from "../_lib/http.js";
 import { supabase } from "../_lib/supabase.js";
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
     try {
       cobranca = await criarPix({
         valor, email,
-        descricao: emDobro ? `Rusting Raids — recarga de ${cupons} cupons (primeira em dobro: ${vaiReceber})`
+        descricao: emDobro ? `Rusting Raids — recarga de ${cupons} cupons (em dobro: ${vaiReceber})`
                            : `Rusting Raids — recarga de ${cupons} cupons`,
         pedidoId: pedido.id,
         notificationUrl: host ? `${host}/api/webhooks/mercadopago` : undefined,
