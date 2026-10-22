@@ -1,5 +1,5 @@
 // POST /api/jogo/loja/magnatas  { codigo, deviceId }
-//   -> { ok: true, lista: [{ pos, nome, cupons }], eu: { pos, cupons } | null, total, atualizado }
+//   -> { ok: true, lista: [{ pos, nome, cupons, eu, id, avatar, moldura }], eu: { pos, cupons } | null, total, atualizado }
 // OS MAGNATAS (pedido do Ronni, 22/10: "um sistema de rank de quem mais gastou em conta, mais fez recarga, um botão no
 // lobby que mostre esse rank dos jogadores mais magnatas do jogo"): as chaves que mais recarregaram cupons.
 // - Conta as recargas APROVADAS, pelo valor pago: 20 cupons por R$ 1. O bônus dos pacotes e o dobro da primeira recarga
@@ -7,6 +7,8 @@
 // - Ficam de fora as chaves banidas e as de teste (observação "CHAVE DE TESTE").
 // - O nome é o apelido da chave (o Cartão de Renomear); sem apelido, o último nome que um aparelho dela mandou; sem nenhum,
 //   "Sobrevivente". O código da chave nunca sai daqui.
+// - O avatar, a moldura e o ID (roleId do servidor, para o jogo abrir o perfil) vêm da vitrine que o jogo de cada um conta
+//   ao site (supabase/vitrines.sql); quem ainda não contou vai com id "" e 0 (a cabeça padrão).
 // - Os TAMANHO_DA_LISTA primeiros; "eu" é a posição de quem pediu, mesmo fora da lista (nulo sem nenhuma recarga).
 // A conta inteira fica guardada GUARDAR_MS na memória da função: a lista não muda a cada segundo.
 import { cabecalhos, ipDe } from "../http.js";
@@ -32,12 +34,18 @@ async function tudo(consulta) {
 }
 
 export async function calcularRanking(sb) {
-  const [pedidos, chaves, apelidos, jogadores] = await Promise.all([
+  const [pedidos, chaves, apelidos, jogadores, vitrines] = await Promise.all([
     tudo(() => sb.from("pedidos").select("recarga_chave_id, valor").eq("tipo", "recarga").eq("status", "aprovado").order("id")),
     tudo(() => sb.from("chaves").select("id, status, observacao").order("id")),
     tudo(() => sb.from("apelidos_da_chave").select("chave_id, apelido").order("chave_id")),
     tudo(() => sb.from("jogadores").select("chave_id, nome, ultimo_acesso").order("id")),
+    // Sem a tabela (o vitrines.sql ainda não rodou), os Magnatas continuam como antes.
+    tudo(() => sb.from("vitrines").select("chave_id, role_id, dados").order("chave_id")).catch((e) => {
+      console.error("magnatas: vitrines", e?.message || e);
+      return [];
+    }),
   ]);
+  const vitrine = new Map(vitrines.map((v) => [v.chave_id, v]));
   const fora = new Set(chaves.filter((c) => c.status === "banida" || /CHAVE DE TESTE/i.test(c.observacao || "")).map((c) => c.id));
   const soma = new Map();
   for (const p of pedidos) {
@@ -52,7 +60,14 @@ export async function calcularRanking(sb) {
     if (!antes || String(j.ultimo_acesso || "") > String(antes.em || "")) ultimoNome.set(j.chave_id, { nome: j.nome, em: j.ultimo_acesso });
   }
   return [...soma.entries()]
-    .map(([chaveId, cupons]) => ({ chaveId, cupons, nome: apelido.get(chaveId) || ultimoNome.get(chaveId)?.nome || "Sobrevivente" }))
+    .map(([chaveId, cupons]) => {
+      const v = vitrine.get(chaveId);
+      const d = v?.dados || {};
+      return {
+        chaveId, cupons, nome: apelido.get(chaveId) || ultimoNome.get(chaveId)?.nome || "Sobrevivente",
+        id: v ? String(v.role_id) : "", avatar: Number(d.avatar) || 0, moldura: Number(d.moldura) || 0,
+      };
+    })
     .sort((a, b) => b.cupons - a.cupons || String(a.chaveId).localeCompare(String(b.chaveId)));
 }
 
@@ -72,7 +87,9 @@ export default async function handler(req, res) {
     const minha = ranking.findIndex((r) => r.chaveId === auth.chave.id);
     return res.status(200).json({
       ok: true,
-      lista: ranking.slice(0, TAMANHO_DA_LISTA).map((r, i) => ({ pos: i + 1, nome: r.nome, cupons: r.cupons, eu: r.chaveId === auth.chave.id })),
+      lista: ranking.slice(0, TAMANHO_DA_LISTA).map((r, i) => ({
+        pos: i + 1, nome: r.nome, cupons: r.cupons, eu: r.chaveId === auth.chave.id, id: r.id, avatar: r.avatar, moldura: r.moldura,
+      })),
       eu: minha >= 0 ? { pos: minha + 1, cupons: ranking[minha].cupons } : null,
       total: ranking.length,
       atualizado: new Date(guardado.em).toISOString(),
