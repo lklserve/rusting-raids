@@ -14,7 +14,7 @@
 create table if not exists public.vitrines (
   chave_id      uuid primary key references public.chaves(id) on delete cascade,
   role_id       bigint not null unique,
-  dados         jsonb not null default '{}'::jsonb,   -- nome, avatar, moldura, balao, mochila, skin, arma, espera, papel, cabelo, masc, segundos, pecas
+  dados         jsonb not null default '{}'::jsonb,   -- nome, avatar, moldura, balao, mochila, skin, arma, espera, papel, cabelo, masc, segundos, trocas
   skins         integer[] not null default '{}',      -- a coleção (à parte: os Magnatas leem os dados sem ela)
   atualizado_em timestamptz not null default now()
 );

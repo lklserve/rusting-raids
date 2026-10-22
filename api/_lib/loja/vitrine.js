@@ -2,13 +2,13 @@
 // perfil no rank de magnata, e quando eu clico no perfil deles não abre", "no esquadrão não aparece o perfil deles".
 //
 // POST /api/jogo/loja/vitrine  { codigo, deviceId, roleId, vitrine: { nome, avatar, moldura, balao, mochila, skin, arma,
-//                                espera, papel, cabelo, masc, segundos, skins: [id], pecas: [id] } }
+//                                espera, papel, cabelo, masc, segundos, skins: [id], trocas: "116=150023;…" } }
 //   -> { ok: true }  ou  { ok: false, erro }
 //   O jogo conta a sua vitrine (ao abrir o lobby e quando ela muda). O roleId tem de ser o hash de um jogador DESTA chave
 //   (o do servidor do jogo: BilheteDoSite.IdDoJogador), senão é recusado: ninguém grava a vitrine de outro.
 // POST /api/jogo/loja/perfis   { codigo, deviceId, ids: ["roleId", ...] }   (até MAX_IDS)
 //   -> { ok: true, perfis: [{ id, nome, avatar, moldura, balao, mochila, skin, arma, espera, papel, cabelo, masc, segundos,
-//                             skins, pecas, em }] }
+//                             skins, trocas, em }] }
 //   As vitrines dos outros (só quem já contou a sua; chave banida fica de fora). O nome é o apelido da chave, senão o que o
 //   aparelho mandou. Só para quem tem chave (a mesma conferência do /validar).
 import { createHash } from "node:crypto";
@@ -19,7 +19,7 @@ import { autenticarJogador } from "../jogador.js";
 
 export const MAX_IDS = 50;
 export const MAX_SKINS = 5000;
-export const MAX_PECAS = 32;
+export const MAX_TROCAS = 256;
 const PRIMEIRO_JOGADOR = 1000000000n, ULTIMO_JOGADOR = 9999999999n;
 const INTEIROS = ["avatar", "moldura", "balao", "mochila", "skin", "arma", "espera", "papel", "cabelo"];
 
@@ -64,7 +64,8 @@ export function limparVitrine(v) {
   d.masc = v?.masc !== false;
   const s = Number(v?.segundos);
   d.segundos = Number.isFinite(s) && s > 0 ? Math.min(Math.floor(s), 1e10) : 0;
-  d.pecas = lista(v?.pecas, MAX_PECAS);
+  // As partes de outras skins vestidas (a skin por partes: "vaga=id" separados), como o jogo manda; só dígitos e separadores.
+  d.trocas = typeof v?.trocas === "string" && v.trocas.length <= MAX_TROCAS && /^[0-9=,;|]*$/.test(v.trocas) ? v.trocas : "";
   return { dados: d, skins: lista(v?.skins, MAX_SKINS) };
 }
 
@@ -126,7 +127,7 @@ export async function pedirPerfis(req, res) {
       p.masc = d.masc !== false;
       p.segundos = Number(d.segundos) || 0;
       p.skins = Array.isArray(v.skins) ? v.skins : [];
-      p.pecas = Array.isArray(d.pecas) ? d.pecas : [];
+      p.trocas = typeof d.trocas === "string" ? d.trocas : "";
       p.em = v.atualizado_em ? new Date(v.atualizado_em).toISOString() : "";
       return p;
     });
