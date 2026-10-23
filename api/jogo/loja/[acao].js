@@ -6,6 +6,7 @@ import assinar from "../../_lib/loja/assinar.js";
 import apelido from "../../_lib/loja/apelido.js";
 import magnatas from "../../_lib/loja/magnatas.js";
 import { mandarVitrine, pedirPerfis } from "../../_lib/loja/vitrine.js";
+import roleta from "../../_lib/loja/roleta.js";
 import { cabecalhos, acaoDaRota } from "../../_lib/http.js";
 
 const ROTAS = new Map([
@@ -15,6 +16,7 @@ const ROTAS = new Map([
   ["magnatas", magnatas],
   ["vitrine", mandarVitrine],
   ["perfis", pedirPerfis],
+  ["roleta", roleta],
 ]);
 
 export default async function handler(req, res) {
