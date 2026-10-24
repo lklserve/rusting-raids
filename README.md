@@ -68,8 +68,10 @@ ninguém paga de verdade. Nada de segredo é necessário nesse modo.
 ## Privacidade, termos e acessibilidade (24/10)
 
 - **Páginas legais:** `privacidade.html`, `termos.html` e `reembolso.html` (estilo em `assets/css/legal.css`), com links no
-  rodapé de todas as páginas. Os dados de quem vende (Decreto 7.962/2013) e da Política estão marcados com
-  `<span class="preencher">[PREENCHER: …]</span>`, que aparece em destaque laranja na página.
+  rodapé de todas as páginas. Classificação declarada: não recomendado para menores de 18 anos (escolha do Ronni, 24/10).
+  Quem vende aparece só como "jogo independente" + o e-mail de atendimento, por escolha do Ronni (24/10): nome, CPF/CNPJ e
+  endereço (Decreto 7.962/2013, art. 2º) entram no rodapé de todas as páginas, nos Termos (seção 1) e na Política (seção 1)
+  quando ele mandar. Para marcar um dado que falta, use `<span class="preencher">[PREENCHER: …]</span>` (destaque laranja).
 - **Aviso de privacidade** (`assets/js/consentimento.js`, em todas as páginas antes do app.js): o site não usa cookies nem
   rastreamento, só o armazenamento necessário (lista na Política, seção 8). Script de estatística ou anúncio, se um dia
   entrar, só roda com `RR_CONSENTIMENTO.permitido("<categoria>")` e ganha o interruptor no aviso.
@@ -89,8 +91,7 @@ ninguém paga de verdade. Nada de segredo é necessário nesse modo.
 
 ### Antes de publicar esta parte
 
-1. Trocar todos os `[PREENCHER…]` (nome ou razão social, CPF/CNPJ, endereço, encarregado, classificação indicativa):
-   `grep -n "PREENCHER" *.html` tem de sair vazio.
+1. `grep -n "PREENCHER" *.html` tem de sair vazio.
 2. Rodar `supabase/conformidade.sql` no banco do jogo e agendar a faxina no pg_cron (instruções no fim do arquivo). Sem
    isso, os prazos da Política (90 dias, 2 dias, 1 dia) não se cumprem.
 3. Pôr `RATE_LIMIT_SEGREDO` (32+ caracteres aleatórios) nas variáveis da Vercel (opcional; sem ela vale a service role).
