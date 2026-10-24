@@ -15,7 +15,7 @@
 
   --aco: #eceef1;
   --aco-2: #b7bcc4;
-  --aco-3: #80858e;
+  --aco-3: #8a8f98;   /* texto fraco: ≥ 4,5:1 em todos os fundos do site (era #80858e, 4,2:1 no painel-3) */
   --aco-4: #555a62;
 
   --tnt: #d6231c;
@@ -534,7 +534,7 @@ svg.ic use[href="#i-pix"], svg.ic use[href="#i-discord"], svg.ic use[href="#i-wh
 }
 .miniatura img { width: 100%; height: 100%; object-fit: cover; }
 .miniatura:hover { opacity: .85; }
-.miniatura[aria-selected="true"] { opacity: 1; border-color: var(--tnt); }
+.miniatura[aria-current="true"] { opacity: 1; border-color: var(--tnt); }
 
 /* ------------------------------------------------------------------ devblog */
 .abas { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 16px; margin-bottom: 26px; border-bottom: 1px solid var(--linha); scrollbar-width: none; }
@@ -552,8 +552,8 @@ svg.ic use[href="#i-pix"], svg.ic use[href="#i-discord"], svg.ic use[href="#i-wh
   transition: color var(--transicao), border-color var(--transicao), background var(--transicao);
 }
 .aba:hover { color: var(--aco); }
-.aba[aria-selected="true"] { color: var(--faisca); border-color: rgba(255, 176, 46, .5); background: rgba(255, 176, 46, .06); }
-.aba sup { font-family: var(--fonte-mono); font-size: 10px; margin-left: 4px; color: var(--aco-4); }
+.aba[aria-pressed="true"] { color: var(--faisca); border-color: rgba(255, 176, 46, .5); background: rgba(255, 176, 46, .06); }
+.aba sup { font-family: var(--fonte-mono); font-size: 10px; margin-left: 4px; color: var(--aco-3); }
 
 .blog { display: grid; gap: 18px; grid-template-columns: 1fr; }
 .post {
@@ -718,7 +718,7 @@ svg.ic use[href="#i-pix"], svg.ic use[href="#i-discord"], svg.ic use[href="#i-wh
 .rodape { background: #060607; border-top: 1px solid var(--linha); padding-bottom: 90px; }
 .rodape__grade { display: grid; gap: 24px; padding-block: 36px; text-align: center; justify-items: center; }
 .rodape__marca img { width: 150px; margin-inline: auto; }
-.rodape__marca p { font-family: var(--fonte-mono); font-size: 12px; color: var(--aco-4); letter-spacing: .1em; margin-top: 6px; }
+.rodape__marca p { font-family: var(--fonte-mono); font-size: 12px; color: var(--aco-3); letter-spacing: .1em; margin-top: 6px; }
 .rodape__meio { display: grid; gap: 8px; font-size: 13px; color: var(--aco-3); }
 .rodape__status { display: inline-flex; align-items: center; gap: 8px; font-family: var(--fonte-rotulo); font-weight: 700; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; color: var(--aco-2); }
 .redes { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 6px; }
@@ -802,7 +802,7 @@ svg.ic use[href="#i-pix"], svg.ic use[href="#i-discord"], svg.ic use[href="#i-wh
 .modal__titulo span { color: var(--tnt-claro); }
 .modal__titulo--menor { font-size: clamp(34px, 8vw, 44px); margin-right: 44px; }
 .modal__texto { margin-bottom: 18px; }
-.modal__rodape { margin-top: 14px; font-size: 12.5px; color: var(--aco-4); text-align: center; }
+.modal__rodape { margin-top: 14px; font-size: 12.5px; color: var(--aco-3); text-align: center; }
 .etapa { animation: surgir .35s ease both; }
 .meta--modal { margin-bottom: 20px; }
 
@@ -860,7 +860,7 @@ svg.ic use[href="#i-pix"], svg.ic use[href="#i-discord"], svg.ic use[href="#i-wh
   transform: rotate(45deg);
 }
 .deslizante input[type="range"]:active::-webkit-slider-thumb { box-shadow: 0 0 0 7px rgba(255, 176, 46, .3), 0 4px 12px rgba(0, 0, 0, .6); }
-.deslizante__marcas { display: flex; justify-content: space-between; font-family: var(--fonte-mono); font-size: 11px; color: var(--aco-4); margin-top: 2px; }
+.deslizante__marcas { display: flex; justify-content: space-between; font-family: var(--fonte-mono); font-size: 11px; color: var(--aco-3); margin-top: 2px; }
 .rapidos { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 14px 0 18px; }
 .rapidos button {
   min-height: 42px;
@@ -1198,4 +1198,78 @@ svg.ic use[href="#i-pix"], svg.ic use[href="#i-discord"], svg.ic use[href="#i-wh
 /* "Baixar para Android e PC" + versão não cabem num celular estreito: a versão sai só do botão do topo (13/10). */
 @media (max-width: 419px) {
   .heroi__ctas small[data-versao] { display: none; }
+}
+
+/* ------------------------------------------------------------------ acessibilidade e privacidade (24/10) */
+/* Botão pequeno de controle (pausar a galeria e as animações). */
+.btn-mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 0 12px;
+  background: rgba(9, 9, 10, .78);
+  border: 1px solid var(--linha-2);
+  color: var(--aco);
+  font-family: var(--fonte-rotulo);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.btn-mini:hover { border-color: var(--faisca); }
+.galeria__pausar { position: absolute; top: 12px; left: 12px; z-index: 3; }
+.heroi__animacoes { position: absolute; right: 14px; bottom: 14px; z-index: 3; }
+
+/* "Pausar animações" (WCAG 2.2.2): tudo o que se move sozinho para. */
+html.animacoes-paradas .heroi__fundo,
+html.animacoes-paradas .heroi__fundo *,
+html.animacoes-paradas .faisca,
+html.animacoes-paradas .ponto-vivo,
+html.animacoes-paradas .pavio__chama,
+html.animacoes-paradas .faixa-perigo,
+html.animacoes-paradas .marco--fazendo::before,
+html.animacoes-paradas .servidor__luz { animation: none !important; }
+html.animacoes-paradas .brasas { display: none; }
+
+/* Rodapé: links legais e os dados de quem vende (Decreto 7.962/2013, art. 2º). */
+.rodape__legal { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; font-size: 13px; }
+.rodape__legal a, .rodape__legal button { color: var(--aco-2); text-decoration: underline; text-underline-offset: 3px; }
+.rodape__legal a:hover, .rodape__legal button:hover { color: var(--aco); }
+.rodape__empresa { font-size: 12px; line-height: 1.5; color: var(--aco-3); max-width: 62ch; margin-inline: auto; }
+.rodape__empresa a { color: var(--aco-2); text-decoration: underline; text-underline-offset: 3px; }
+.rodape__status .ponto-vivo { display: none; }
+.rodape__status.no-ar .ponto-vivo { display: inline-block; }
+.rodape__status.fora { color: var(--tnt-claro); }
+
+/* Dado da empresa que falta preencher antes de publicar: aparece em destaque para não passar despercebido. */
+.preencher { background: rgba(255, 176, 46, .15); color: var(--faisca); outline: 1px dashed var(--faisca); padding: 0 4px; }
+
+/* Aceite dos Termos e aviso de dados nos formulários de compra. */
+.aceite { display: flex; gap: 10px; align-items: flex-start; margin: 2px 0 12px; font-size: 14px; line-height: 1.45; color: var(--aco-2); cursor: pointer; }
+.aceite input { flex: none; width: 22px; height: 22px; margin: 0; accent-color: var(--tnt); }
+.aceite a, .aviso-dados a { color: var(--faisca); text-decoration: underline; text-underline-offset: 3px; }
+.aceite.invalido input { outline: 2px solid var(--tnt-claro); outline-offset: 2px; }
+.aviso-dados { font-size: 13px; line-height: 1.5; color: var(--aco-3); margin: 0 0 14px; }
+/* link no meio do texto tem de se distinguir sem depender da cor (WCAG 1.4.1) */
+.modal__texto a, .faq details > div a { color: var(--faisca); text-decoration: underline; text-underline-offset: 3px; }
+
+/* Aviso de privacidade (não é um pedido de permissão: o site só guarda o necessário). */
+/* Faixa no pé da tela (no PC, uma linha: não cobre os botões do topo). */
+.aviso-cookies {
+  position: fixed;
+  z-index: 60;
+  inset: auto 0 0 0;
+  padding: 14px clamp(16px, 4vw, 32px) calc(14px + env(safe-area-inset-bottom));
+  background: linear-gradient(170deg, #1b1b20, #121215 60%);
+  border-top: 3px solid var(--tnt);
+  box-shadow: 0 -20px 50px -20px rgba(0, 0, 0, .8);
+}
+.aviso-cookies h2 { font-family: var(--fonte-rotulo); font-weight: 700; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; color: var(--aco); margin-bottom: 4px; }
+.aviso-cookies p { font-size: 14px; line-height: 1.45; color: var(--aco-2); }
+.aviso-cookies__acoes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+@media (min-width: 900px) {
+  .aviso-cookies { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 4px 20px; }
+  .aviso-cookies h2 { margin: 0; }
+  .aviso-cookies__acoes { margin: 0; flex-wrap: nowrap; }
 }

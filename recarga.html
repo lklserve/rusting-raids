@@ -4,15 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Recarga de cupons — Rusting Raids</title>
-  <meta name="description" content="Recarregue cupons na sua chave do Rusting Raids pelo Pix. As skins são só visuais e valem em todos os aparelhos da sua chave.">
+  <meta name="description" content="Recarregue cupons na sua chave do Rusting Raids pelo Pix e use na loja do jogo.">
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#09090a">
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@500;700&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/estilo.css?v=10">
-  <link rel="stylesheet" href="assets/css/recarga.css?v=3">
+  <link rel="stylesheet" href="assets/css/fontes.css?v=1">
+  <link rel="stylesheet" href="assets/css/estilo.css?v=12">
+  <link rel="stylesheet" href="assets/css/recarga.css?v=4">
+  <link rel="stylesheet" href="assets/css/legal.css?v=1">
 </head>
 <body class="pagina-recarga">
 
@@ -29,7 +28,7 @@
 <main class="container container--estreito recarga">
   <p class="kicker kicker--tnt">// loja do jogo</p>
   <h1 class="titulo">Recarga de cupons</h1>
-  <p class="recarga__lead">20 cupons = R$ 1. Toda skin custa <b>300 cupons</b>. As skins são só visuais, são suas para sempre e valem em todos os aparelhos da sua chave.</p>
+  <p class="recarga__lead">20 cupons = R$ 1. Os cupons ficam na sua chave e servem para comprar itens na loja do jogo, que mostra o preço e as regras de cada item antes da compra. Skins são só visuais; alguns itens de conveniência valem só até o fim da temporada. O que você comprar fica na sua chave, em todos os aparelhos dela, enquanto o jogo estiver no ar. Cupons não voltam em dinheiro, a não ser nos casos da <a href="/reembolso">Política de Reembolso</a>.</p>
 
   <!-- 1: chave, pacote e e-mail -->
   <form class="recarga__caixa" data-etapa="pedido" novalidate>
@@ -43,10 +42,15 @@
       <div class="carregando"></div>
     </fieldset>
     <label class="campo">
-      <span>E-mail <small>(para o comprovante do Pix)</small></span>
-      <input type="email" name="email" data-email placeholder="voce@email.com" autocomplete="email" required>
+      <span>E-mail <small>(o Mercado Pago pede o e-mail de quem paga)</small></span>
+      <input type="email" name="email" data-email placeholder="voce@email.com" autocomplete="email" required aria-describedby="recarga-dados">
     </label>
-    <p class="erro" data-erro hidden></p>
+    <p class="aviso-dados" id="recarga-dados">Usamos o e-mail só para gerar o Pix no Mercado Pago e para falar com você sobre esta recarga. Detalhes na <a href="/privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
+    <label class="aceite">
+      <input type="checkbox" data-aceite value="2026-10-24" required>
+      <span>Li e aceito os <a href="/termos" target="_blank" rel="noopener">Termos de Serviço</a> e a <a href="/reembolso" target="_blank" rel="noopener">Política de Reembolso</a>.</span>
+    </label>
+    <p class="erro" data-erro role="alert" hidden></p>
     <button class="btn btn--tnt btn--largo btn--grande" type="submit" data-gerar><svg class="ic"><use href="#i-chave"/></svg><span>Gerar Pix</span></button>
   </form>
 
@@ -87,9 +91,20 @@
     <a class="btn btn--aco btn--largo" href="/">Voltar ao site</a>
   </section>
 
-  <p class="recarga__rodape">Problema com a recarga? Chame a gente no Discord, no grupo do WhatsApp ou no Telegram com o e-mail do Pix.</p>
+  <p class="recarga__rodape">Problema com a recarga? Escreva para <a href="mailto:rustingraids.suporte@gmail.com">rustingraids.suporte@gmail.com</a> ou chame a gente no Discord, no grupo do WhatsApp ou no Telegram, com o e-mail do Pix.</p>
 </main>
 
-<script src="assets/js/recarga.js?v=3" defer></script>
+<footer class="legal-rodape container">
+  <nav class="rodape__legal" aria-label="Informações legais">
+    <a href="/termos">Termos de Serviço</a>
+    <a href="/privacidade">Política de Privacidade</a>
+    <a href="/reembolso">Reembolso</a>
+    <button type="button" data-abrir-aviso-privacidade>Cookies e armazenamento</button>
+  </nav>
+  <p class="rodape__empresa">Rusting Raids é vendido por <span class="preencher">[PREENCHER: nome completo ou razão social]</span>, CPF/CNPJ <span class="preencher">[PREENCHER]</span>, <span class="preencher">[PREENCHER: endereço completo]</span>. Atendimento: <a href="mailto:rustingraids.suporte@gmail.com">rustingraids.suporte@gmail.com</a>.</p>
+</footer>
+
+<script src="assets/js/consentimento.js?v=1" defer></script>
+<script src="assets/js/recarga.js?v=4" defer></script>
 </body>
 </html>

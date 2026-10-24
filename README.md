@@ -65,6 +65,37 @@ ninguém paga de verdade. Nada de segredo é necessário nesse modo.
 - O ID do jogador e o aparelho ficam na tabela `jogadores`, que o painel de administração usa para
   banir.
 
+## Privacidade, termos e acessibilidade (24/10)
+
+- **Páginas legais:** `privacidade.html`, `termos.html` e `reembolso.html` (estilo em `assets/css/legal.css`), com links no
+  rodapé de todas as páginas. Os dados de quem vende (Decreto 7.962/2013) e da Política estão marcados com
+  `<span class="preencher">[PREENCHER: …]</span>`, que aparece em destaque laranja na página.
+- **Aviso de privacidade** (`assets/js/consentimento.js`, em todas as páginas antes do app.js): o site não usa cookies nem
+  rastreamento, só o armazenamento necessário (lista na Política, seção 8). Script de estatística ou anúncio, se um dia
+  entrar, só roda com `RR_CONSENTIMENTO.permitido("<categoria>")` e ganha o interruptor no aviso.
+- **Fontes servidas pelo site** (`assets/fonts`, OFL 1.1 em `assets/fonts/OFL.txt`; `assets/css/fontes.css`): sem Google
+  Fonts, o navegador do visitante não fala com terceiros. O CSP do `vercel.json` não libera mais o Google.
+- **Aceite dos Termos antes do Pix:** a caixa de aceite na janela de apoio e na recarga; o `value` dela é a versão dos Termos
+  (trocar junto com a data do `termos.html`). As rotas guardam `termos_versao`/`termos_aceitos_em` no pedido
+  (`api/_lib/pedido.js`; sem as colunas, o pedido entra sem elas).
+- **Limite de tentativas sem IP e e-mail em claro:** `api/_lib/rate-limit.js` guarda o identificador cifrado (HMAC com
+  `RATE_LIMIT_SEGREDO`, ou a service role se ela faltar) e apaga as linhas com mais de 1 dia.
+- **Prazos de guarda:** `supabase/conformidade.sql` (colunas do aceite + `limpar_dados_vencidos()` + o agendamento no
+  pg_cron, comentado no fim).
+- **Galeria:** foto com personagem, marca ou logotipo de terceiros não entra (comentário no `dados.js`).
+- **Acessibilidade:** auditoria axe-core WCAG 2.1 AA sem violações em todas as páginas (celular e PC), Tab por todo o site,
+  botões "Pausar animações" e "Pausar imagens" (WCAG 2.2.2). Ferramentas no repositório do jogo, em
+  `_Placeholder/site/ferramentas/conformidade/`.
+
+### Antes de publicar esta parte
+
+1. Trocar todos os `[PREENCHER…]` (nome ou razão social, CPF/CNPJ, endereço, encarregado, classificação indicativa):
+   `grep -n "PREENCHER" *.html` tem de sair vazio.
+2. Rodar `supabase/conformidade.sql` no banco do jogo e agendar a faxina no pg_cron (instruções no fim do arquivo). Sem
+   isso, os prazos da Política (90 dias, 2 dias, 1 dia) não se cumprem.
+3. Pôr `RATE_LIMIT_SEGREDO` (32+ caracteres aleatórios) nas variáveis da Vercel (opcional; sem ela vale a service role).
+4. Na VPS do jogo, o journald guardando até 6 meses (`MaxRetentionSec=6month`), como diz a Política.
+
 ## Falta (próxima etapa)
 
 - **Painel de administração** (página protegida por senha): ver chaves, jogadores, quanto

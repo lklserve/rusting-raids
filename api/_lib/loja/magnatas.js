@@ -4,7 +4,8 @@
 // lobby que mostre esse rank dos jogadores mais magnatas do jogo"): as chaves que mais recarregaram cupons.
 // - Conta as recargas APROVADAS, pelo valor pago: 20 cupons por R$ 1. O bônus dos pacotes e o dobro da primeira recarga
 //   não contam, para o ranking ser de quem pagou mais.
-// - Ficam de fora as chaves banidas e as de teste (observação "CHAVE DE TESTE").
+// - Ficam de fora as chaves banidas, as de teste (observação "CHAVE DE TESTE") e as de quem pediu para sair do ranking
+//   (observação com "FORA DOS MAGNATAS": a oposição da LGPD, art. 18, § 2º — Política de Privacidade, seção 9).
 // - O nome é o apelido da chave (o Cartão de Renomear); sem apelido, o último nome que um aparelho dela mandou; sem nenhum,
 //   "Sobrevivente". O código da chave nunca sai daqui.
 // - O avatar, a moldura e o ID (roleId do servidor, para o jogo abrir o perfil) vêm da vitrine que o jogo de cada um conta
@@ -46,7 +47,7 @@ export async function calcularRanking(sb) {
     }),
   ]);
   const vitrine = new Map(vitrines.map((v) => [v.chave_id, v]));
-  const fora = new Set(chaves.filter((c) => c.status === "banida" || /CHAVE DE TESTE/i.test(c.observacao || "")).map((c) => c.id));
+  const fora = new Set(chaves.filter((c) => c.status === "banida" || /CHAVE DE TESTE|FORA DOS MAGNATAS/i.test(c.observacao || "")).map((c) => c.id));
   const soma = new Map();
   for (const p of pedidos) {
     if (!p.recarga_chave_id || fora.has(p.recarga_chave_id)) continue;

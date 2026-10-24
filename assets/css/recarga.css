@@ -6,6 +6,7 @@
 .recarga__lead { color: var(--aco-2); margin: 0 0 20px; line-height: 1.55; }
 .recarga__caixa { background: var(--painel); border: 1px solid var(--linha); padding: 20px; margin-bottom: 20px; }
 .recarga__rodape { color: var(--aco-3); font-size: 14px; }
+.recarga__lead a, .recarga__rodape a { color: var(--faisca); text-decoration: underline; text-underline-offset: 3px; }
 
 .pacotes { border: 0; margin: 0 0 14px; padding: 0; }
 .pacotes legend {

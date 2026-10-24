@@ -11,6 +11,7 @@
   const campoEmail = $("[data-email]");
   const caixaErro = $("[data-erro]");
   const botaoGerar = $("[data-gerar]");
+  const campoAceite = $("[data-aceite]");   // value = a versão dos Termos aceita (vai no pedido como prova)
   let pedido = null, consulta = null, relogio = null;
 
   function mostrar(nome) {
@@ -89,9 +90,19 @@
     const email = campoEmail.value.trim();
     const pacote = $('input[name="pacote"]:checked')?.value;
     campoChave.classList.toggle("invalido", !chave);
-    if (!chave) return erro("Digite sua chave no formato RR-XXXX-XXXX.");
+    campoChave.setAttribute("aria-invalid", String(!chave));
+    if (!chave) { campoChave.focus(); return erro("Digite sua chave no formato RR-XXXX-XXXX."); }
     if (!pacote) return erro("Escolha um pacote.");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return erro("Digite um e-mail válido.");
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    campoEmail.setAttribute("aria-invalid", String(!emailOk));
+    if (!emailOk) { campoEmail.focus(); return erro("Digite um e-mail válido."); }
+    // Decreto 7.962/2013, art. 4º: o comprador vê e aceita as condições antes de pagar.
+    if (campoAceite && !campoAceite.checked) {
+      campoAceite.closest(".aceite")?.classList.add("invalido");
+      campoAceite.setAttribute("aria-invalid", "true");
+      campoAceite.focus();
+      return erro("Para gerar o Pix, marque que leu e aceita os Termos de Serviço e a Política de Reembolso.");
+    }
     campoChave.value = chave;
     try { localStorage.setItem("rr_recarga_email", email); } catch { /* sem armazenamento */ }
 
@@ -99,7 +110,7 @@
     try {
       const r = await fetch("/api/pix/recarga", {
         method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ chave, pacote, email }),
+        body: JSON.stringify({ chave, pacote, email, aceite: campoAceite?.value || "" }),
       });
       const j = await r.json().catch(() => ({}));
       if (!r.ok || !j.pedidoId) throw new Error(j.erro || "Não foi possível gerar o Pix.");
@@ -168,4 +179,9 @@
   });
 
   $("[data-voltar]").addEventListener("click", () => { pararConsulta(); clearInterval(relogio); pedido = null; mostrar("pedido"); });
+  campoAceite?.addEventListener("change", () => {
+    campoAceite.closest(".aceite")?.classList.remove("invalido");
+    campoAceite.setAttribute("aria-invalid", "false");
+    erro("");
+  });
 })();

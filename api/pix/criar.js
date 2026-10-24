@@ -1,10 +1,12 @@
-// POST /api/pix/criar  { valor, email }  ->  { pedidoId, valor, qrBase64, copiaECola, expiraEm }
+// POST /api/pix/criar  { valor, email, aceite? }  ->  { pedidoId, valor, qrBase64, copiaECola, expiraEm }
 // Cria o pedido e a cobrança Pix no Mercado Pago. O VALOR é validado no servidor:
-// o navegador não decide preço (mínimo R$ 5, máximo R$ 100).
+// o navegador não decide preço (mínimo R$ 5, máximo R$ 100). "aceite" = a versão dos Termos que a pessoa marcou
+// (fica no pedido como prova; _lib/pedido.js).
 import { cabecalhos, ipDe, emailValido } from "../_lib/http.js";
 import { supabase } from "../_lib/supabase.js";
 import { criarPix } from "../_lib/mercadopago.js";
 import { limitar } from "../_lib/rate-limit.js";
+import { inserirPedido } from "../_lib/pedido.js";
 
 const MIN = 5;
 const MAX = 100;
@@ -29,9 +31,7 @@ export default async function handler(req, res) {
       return res.status(429).json({ erro: "Muitas tentativas. Espere alguns minutos." });
 
     const sb = supabase();
-    const { data: pedido, error } = await sb.from("pedidos")
-      .insert({ email, valor, status: "pendente" })
-      .select("id").single();
+    const { data: pedido, error } = await inserirPedido(sb, { email, valor, status: "pendente" }, corpo.aceite);
     if (error || !pedido) throw new Error("Falha ao criar o pedido");
 
     const host = process.env.SITE_URL || (req.headers.host ? `https://${req.headers.host}` : null);

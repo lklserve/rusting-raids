@@ -22,6 +22,25 @@
 
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
+  /* ------------------------------------------------------------ pausar animações (WCAG 2.2.2)
+     O que se move sozinho por mais de 5 s (brasas, faixas, troca da galeria) para por um botão, e a escolha fica
+     guardada neste navegador. Com "reduzir movimento" no sistema nada disso roda, e o botão some. */
+  const ANIMACOES = "rr_animacoes_paradas";
+  const animacoes = { paradas: guardar.ler(ANIMACOES) === true, ouvintes: [] };
+  function pararAnimacoes(parar) {
+    animacoes.paradas = parar;
+    document.documentElement.classList.toggle("animacoes-paradas", parar);
+    if (parar) guardar.gravar(ANIMACOES, true); else guardar.apagar(ANIMACOES);
+    // o texto do botão diz o que ele faz (sem aria-pressed: o nome muda junto, WCAG 2.5.3)
+    $$("[data-alternar-animacoes]").forEach((b) => { $("span", b).textContent = parar ? "Retomar animações" : "Pausar animações"; });
+    animacoes.ouvintes.forEach((f) => f(parar));
+  }
+  $$("[data-alternar-animacoes]").forEach((b) => {
+    if (movimentoReduzido) { b.hidden = true; return; }
+    b.addEventListener("click", () => pararAnimacoes(!animacoes.paradas));
+  });
+  pararAnimacoes(animacoes.paradas);
+
   /* ------------------------------------------------------------ toast */
   const toastEl = $("#toast");
   let toastTimer;
@@ -170,18 +189,17 @@
     tamanho();
     parts = Array.from({ length: QTD }, () => nova(true));
     addEventListener("resize", tamanho);
-    const obs = new IntersectionObserver(([e]) => {
-      rodando = e.isIntersecting && !document.hidden;
+    let naTela = true;
+    function religar() {
+      rodando = naTela && !document.hidden && !animacoes.paradas;
       cancelAnimationFrame(raf);
       if (rodando) raf = requestAnimationFrame(passo);
-    });
+    }
+    const obs = new IntersectionObserver(([e]) => { naTela = e.isIntersecting; religar(); });
     obs.observe(cv);
-    document.addEventListener("visibilitychange", () => {
-      rodando = !document.hidden;
-      cancelAnimationFrame(raf);
-      if (rodando) raf = requestAnimationFrame(passo);
-    });
-    raf = requestAnimationFrame(passo);
+    document.addEventListener("visibilitychange", religar);
+    animacoes.ouvintes.push(religar);
+    religar();
   })();
 
   /* ------------------------------------------------------------ revelar e contadores */
@@ -250,7 +268,7 @@
         <span class="slide__ampliar" aria-hidden="true"><svg class="ic"><use href="#i-expandir"/></svg></span>
       </figure>`).join("");
     minis.innerHTML = itens.map((it, n) => `
-      <button class="miniatura" type="button" role="tab" aria-selected="false" aria-label="${esc(it.titulo)}" data-n="${n}">
+      <button class="miniatura" type="button" aria-current="false" aria-label="Imagem ${n + 1}: ${esc(it.titulo)}" data-n="${n}">
         <img alt="" decoding="async" data-mini="${n}">
       </button>`).join("");
     // Sem handler inline (o CSP proíbe): a miniatura tenta a versão pequena e cai na grande.
@@ -260,37 +278,66 @@
       img.src = mini(it);
     });
 
-    let atual = 0, timer, t0 = 0, pausado = false;
+    // pausado = mouse em cima ou lightbox aberta; comFoco = teclado dentro da galeria; pausadoPeloBotao = botão Pausar.
+    let atual = 0, timer, t0 = 0, pausado = false, comFoco = false, pausadoPeloBotao = false, decorrido = 0;
     const DUR = 6000;
+    const parada = () => pausado || comFoco || pausadoPeloBotao || animacoes.paradas || movimentoReduzido;
 
     function ir(n, usuario = false) {
       atual = (n + itens.length) % itens.length;
       trilho.style.transform = `translateX(${-atual * 100}%)`;
-      $$(".miniatura", minis).forEach((b, i) => b.setAttribute("aria-selected", String(i === atual)));
+      $$(".miniatura", minis).forEach((b, i) => b.setAttribute("aria-current", String(i === atual)));
       const ativa = $(`.miniatura[data-n="${atual}"]`, minis);
       if (ativa) minis.scrollTo({ left: ativa.offsetLeft - minis.clientWidth / 2 + ativa.clientWidth / 2, behavior: movimentoReduzido ? "auto" : "smooth" });
       if (usuario) reiniciar();
     }
-    function reiniciar() { t0 = performance.now(); }
+    function reiniciar() { t0 = performance.now(); decorrido = 0; }
     function loop(t) {
-      if (!pausado && !movimentoReduzido) {
+      if (!parada()) {
         const k = (t - t0) / DUR;
         barra.style.width = `${Math.min(1, k) * 100}%`;
         if (k >= 1) { ir(atual + 1); reiniciar(); }
+      } else {
+        t0 = t - decorrido;   // parada: o tempo da imagem atual não corre
       }
+      decorrido = t - t0;
       timer = requestAnimationFrame(loop);
+    }
+
+    /* o botão Pausar da galeria (some com "reduzir movimento": aí ela já não troca sozinha) */
+    const botaoPausar = $("[data-galeria-pausar]", palco);
+    function mostrarBotaoPausar() {
+      if (!botaoPausar) return;
+      const parado = pausadoPeloBotao || animacoes.paradas;
+      $("span", botaoPausar).textContent = parado ? "Continuar imagens" : "Pausar imagens";
+    }
+    if (botaoPausar) {
+      botaoPausar.hidden = movimentoReduzido;
+      botaoPausar.addEventListener("click", () => {
+        pausadoPeloBotao = !(pausadoPeloBotao || animacoes.paradas);
+        if (!pausadoPeloBotao && animacoes.paradas) pararAnimacoes(false);
+        mostrarBotaoPausar();
+      });
+      animacoes.ouvintes.push(mostrarBotaoPausar);
+      mostrarBotaoPausar();
     }
 
     $("[data-ant]", palco).addEventListener("click", () => ir(atual - 1, true));
     $("[data-prox]", palco).addEventListener("click", () => ir(atual + 1, true));
     minis.addEventListener("click", (e) => { const b = e.target.closest(".miniatura"); if (b) ir(+b.dataset.n, true); });
     palco.addEventListener("pointerenter", () => { pausado = true; });
-    palco.addEventListener("pointerleave", () => { pausado = false; reiniciar(); });
+    palco.addEventListener("pointerleave", () => { pausado = false; });
+    // com o teclado dentro da galeria (setas, miniaturas, Pausar) ela não troca sozinha
+    [palco, minis].forEach((el) => {
+      el.addEventListener("focusin", () => { comFoco = true; });
+      el.addEventListener("focusout", (e) => { if (!palco.contains(e.relatedTarget) && !minis.contains(e.relatedTarget)) comFoco = false; });
+    });
     palco.tabIndex = 0;
     palco.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft") ir(atual - 1, true);
       if (e.key === "ArrowRight") ir(atual + 1, true);
-      if (e.key === "Enter") abrirLightbox(atual);
+      // Enter num botão da galeria (setas, Pausar) é o clique do botão, não abre a imagem
+      if (e.key === "Enter" && e.target === palco) abrirLightbox(atual);
     });
 
     /* arrastar / deslizar */
@@ -362,7 +409,8 @@
     const TIPOS = { todos: "Todos", devblog: "Devblog", atualizacao: "Atualização", patch: "Patch", noticia: "Notícia" };
     const cont = posts.reduce((m, p) => ((m[p.tipo] = (m[p.tipo] || 0) + 1), m), {});
     const usados = ["todos", ...Object.keys(TIPOS).filter((t) => t !== "todos" && cont[t])];
-    abas.innerHTML = usados.map((t, i) => `<button class="aba" type="button" role="tab" aria-selected="${i === 0}" data-tipo="${t}">${TIPOS[t]}<sup>${t === "todos" ? posts.length : cont[t]}</sup></button>`).join("");
+    // filtros: botões de alternar (aria-pressed), não abas — a lista abaixo é uma só
+    abas.innerHTML = usados.map((t, i) => `<button class="aba" type="button" aria-pressed="${i === 0}" data-tipo="${t}">${TIPOS[t]} <sup>${t === "todos" ? posts.length : cont[t]}</sup></button>`).join("");
 
     const fmtData = (d) => dataLonga.format(new Date(`${d}T12:00:00`)).replace(/\./g, "");
     function cartao(p, destaque) {
@@ -386,7 +434,7 @@
     abas.addEventListener("click", (e) => {
       const b = e.target.closest(".aba");
       if (!b) return;
-      $$(".aba", abas).forEach((x) => x.setAttribute("aria-selected", String(x === b)));
+      $$(".aba", abas).forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
       filtrar(b.dataset.tipo);
     });
     filtrar("todos");
@@ -471,6 +519,14 @@
       nota.textContent = !s ? "Não deu para consultar o servidor agora. Tente de novo em instantes."
         : noAr ? "O número de jogadores é atualizado a cada minuto."
         : "O servidor está reiniciando ou em manutenção. Volta em instantes.";
+      // O rodapé diz o estado de verdade (antes dizia "online" sempre, até com o servidor fora do ar).
+      const rodape = $("[data-rodape-status]");
+      if (rodape) {
+        rodape.classList.toggle("no-ar", !!s && noAr);
+        rodape.classList.toggle("fora", !!s && !noAr);
+        $("[data-rodape-status-texto]", rodape).textContent = !s ? "Servidor oficial: sem resposta"
+          : noAr ? "Servidor oficial no ar" : "Servidor oficial fora do ar";
+      }
     }
     function consultar() {
       fetch(S.api, { headers: { Accept: "application/json" } })
@@ -581,17 +637,34 @@
 
     /* --- gerar o Pix */
     const emailOk = (s) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s);
+    const aceite = $("#apoio-aceite");
+    // A versão dos Termos fica no value da caixa de aceite (index.html e recarga.html): trocar junto com a data de
+    // vigência do termos.html.
+    const VERSAO_DOS_TERMOS = aceite?.value || "";
+    function marcarInvalido(campo, invalido) {
+      campo.classList.toggle("invalido", invalido);
+      campo.setAttribute("aria-invalid", String(invalido));
+    }
     $("[data-gerar-pix]", modal).addEventListener("click", async (e) => {
       const b = e.currentTarget;
       const em = email.value.trim();
       if (!emailOk(em)) {
-        email.classList.add("invalido");
+        marcarInvalido(email, true);
         erro.textContent = "Digite um e-mail válido — é por ele que a gente acha a sua chave.";
         erro.hidden = false;
         email.focus();
         return;
       }
-      email.classList.remove("invalido");
+      marcarInvalido(email, false);
+      // Decreto 7.962/2013, art. 4º: o comprador vê e aceita as condições antes de pagar.
+      if (aceite && !aceite.checked) {
+        aceite.closest(".aceite")?.classList.add("invalido");
+        aceite.setAttribute("aria-invalid", "true");
+        erro.textContent = "Para gerar o Pix, marque que leu e aceita os Termos de Serviço e a Política de Reembolso.";
+        erro.hidden = false;
+        aceite.focus();
+        return;
+      }
       erro.hidden = true;
       guardar.gravar("rr_email", em);
       b.disabled = true;
@@ -608,13 +681,19 @@
         b.disabled = false;
       }
     });
-    email.addEventListener("input", () => { email.classList.remove("invalido"); erro.hidden = true; });
+    email.addEventListener("input", () => { marcarInvalido(email, false); erro.hidden = true; });
+    aceite?.addEventListener("change", () => {
+      aceite.closest(".aceite")?.classList.remove("invalido");
+      aceite.setAttribute("aria-invalid", "false");
+      erro.hidden = true;
+    });
 
     async function pixDeVerdade(v, em) {
       const r = await fetch(`${A.api}/criar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ valor: v, email: em }),
+        // "aceite" = a versão dos Termos que a pessoa marcou; o servidor guarda no pedido como prova do aceite.
+        body: JSON.stringify({ valor: v, email: em, aceite: VERSAO_DOS_TERMOS }),
       });
       const j = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(j.erro || "Não foi possível gerar o Pix agora.");
@@ -873,9 +952,11 @@
     vigiar();
     if (location.hash === "#minha-chave") setTimeout(abrirRecuperar, 300);
 
-    /* convite ao abrir (uma vez por sessão) */
+    /* convite ao abrir (uma vez por sessão) — nunca por cima do aviso de privacidade da primeira visita: quem ainda
+       não respondeu o aviso não leva uma janela no meio da tela (volta na próxima visita) */
     const semConvite = /[?&]semconvite\b/.test(location.search) || location.hash === "#minha-chave";
-    if (CFG.conviteAoAbrir && !semConvite && !guardar.ler("rr_convite_visto", sessionStorage)) {
+    const avisoPendente = !!window.RR_CONSENTIMENTO && !window.RR_CONSENTIMENTO.respondido();
+    if (CFG.conviteAoAbrir && !semConvite && !avisoPendente && !guardar.ler("rr_convite_visto", sessionStorage)) {
       setTimeout(() => {
         if ($$("dialog[open]").length) return;
         guardar.gravar("rr_convite_visto", true, sessionStorage);

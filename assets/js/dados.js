@@ -5,15 +5,15 @@
 window.RR_DADOS = {
 
   /* ------------------------------------------------------------ GALERIA
-     img: arquivo em assets/img/galeria/ (1920×1080 em .webp) — miniatura em .../mini/ com o mesmo nome. */
+     img: arquivo em assets/img/galeria/ (1920×1080 em .webp) — miniatura em .../mini/ com o mesmo nome.
+     NÃO pôr foto com personagem, marca ou logotipo de terceiros (super-heróis, anime, outros jogos): em 24/10 saíram
+     a 22 (o desfile de skins com Homem-Aranha, Naruto, Miku, Batman, Goku, Gojo, Luffy e Itadori) e a 23 e a 28
+     (o jogador com a skin do Itadori). Foto nova de caverna e de pesca: com uma skin original do jogo. */
   galeria: [
-    { img: "22.webp", titulo: "Seu visual", texto: "Skins de personagem para vestir o seu sobrevivente, e os outros jogadores também veem. Só visual: nada dá vantagem." },
-    { img: "23.webp", titulo: "A caverna", texto: "Lá embaixo é escuro de verdade. Leve a tocha: há minério, caixas e infectados nos salões." },
     { img: "24.webp", titulo: "Savana", texto: "Girafas, zebras, elefantes e avestruzes andam pelo deserto da ilha." },
     { img: "25.webp", titulo: "Cargueiro da Morte", texto: "De tempos em tempos ele ancora perto da ilha, com carga no convés. Por enquanto, só no modo solo." },
     { img: "26.webp", titulo: "Guardas do cargueiro", texto: "Soldados de escopeta vigiam a carga. Eles só atacam quem mexer com eles." },
     { img: "27.webp", titulo: "Mergulho", texto: "Com máscara e tanque, dá para enxergar longe debaixo d'água e ficar minutos sem subir." },
-    { img: "28.webp", titulo: "Pesca", texto: "Lance a vara na beira d'água e acerte o anel na hora certa para fisgar o peixe." },
     { img: "29.webp", titulo: "Pinguins na neve", texto: "No norte gelado, os pinguins andam em grupo. O leopardo das neves também mora lá." },
     { img: "30.webp", titulo: "Máquinas de venda", texto: "Na Zona de Comércio, troque Peças por suprimentos, munição e armas. Ou monte a sua e venda para os outros." },
     { img: "31.webp", titulo: "Fogos de artifício", texto: "Ponha os fogos na base e solte todos de uma vez para comemorar." },
@@ -81,10 +81,10 @@ window.RR_DADOS = {
       titulo: "Devblog 6",
       sub: "O servidor está no ar",
       img: "11.webp",
-      resumo: "O Brasil 1 está online 24 horas, o jogo se atualiza sozinho e o mapa ganhou o mar: plataforma de petróleo, navio-patrulha e chefes de guerra.",
+      resumo: "O Brasil 1 está online, o jogo se atualiza sozinho e o mapa ganhou o mar: plataforma de petróleo, navio-patrulha e chefes de guerra.",
       conteudo: [
         { h: "Servidor oficial" },
-        { ul: ["Brasil 1 (oficial) no ar 24 horas, com vaga para até 100 sobreviventes.", "Entre com a sua chave: a sua base e a sua mochila ficam guardadas no servidor.", "Equipes de até 4, chat e chat de voz.", "Construção, raid, saque, airdrop e chefes conferidos pelo servidor — quem tenta trapacear é corrigido e pode ser banido.", "Temporadas de 7 dias (168 horas)."] },
+        { ul: ["Brasil 1 (oficial) no ar o dia todo, com vaga para até 100 sobreviventes.", "Entre com a sua chave: a sua base e a sua mochila ficam guardadas no servidor.", "Equipes de até 4, chat e chat de voz.", "Construção, raid, saque, airdrop e chefes conferidos pelo servidor — quem tenta trapacear é corrigido e pode ser banido.", "Temporadas de 7 dias (168 horas)."] },
         { h: "Atualização automática" },
         { ul: ["Quando sai versão nova, o jogo avisa, baixa só o que mudou e o Android pede para instalar por cima.", "Versão 1.8: a fornalha e a fechadura de código funcionando online."] },
         { h: "O mar" },
@@ -104,7 +104,7 @@ window.RR_DADOS = {
       conteudo: [
         { p: "Este é o lugar oficial do Rusting Raids. Daqui sai o link do APK, as novidades de cada dia e o apoio para manter o servidor ligado." },
         { h: "Por que apoiar?" },
-        { p: "O jogo é feito por um dev só, sem investidor e sem loja paga dentro do jogo. Todo apoio a partir de R$ 5 vira servidor, correção e conteúdo — e libera a sua chave de acesso." },
+        { p: "O jogo é feito por um dev só, sem investidor. Todo apoio a partir de R$ 5 ajuda a pagar o servidor, as correções e o conteúdo novo — e libera a sua chave de acesso." },
         { h: "O que vem agora" },
         { ul: ["Pix de verdade pelo Mercado Pago, com a chave entregue na hora.", "Painel de chaves com a sua conta e o ID do seu sobrevivente.", "Banimento de quem for pego usando hack."] },
       ],
@@ -193,7 +193,7 @@ window.RR_DADOS = {
   roadmap: [
     { estado: "feito", titulo: "Alpha no Android", texto: "O mundo inteiro rodando no celular: construção, raid, zumbis, veículos e o ciclo de dia e noite." },
     { estado: "feito", titulo: "Site, apoio via Pix e painel de chaves", texto: "Download oficial, devblog e a chave entregue na hora. Banimento de quem usar hack." },
-    { estado: "feito", titulo: "Servidor online", texto: "O Brasil 1 no ar 24 horas, com temporadas de 7 dias, equipes de até 4, chat e voz." },
+    { estado: "feito", titulo: "Servidor online", texto: "O Brasil 1 no ar, com temporadas de 7 dias, equipes de até 4, chat e voz." },
     { estado: "feito", titulo: "Atualização automática", texto: "O jogo baixa só o que mudou, sem precisar baixar o APK inteiro de novo." },
     { estado: "feito", titulo: "Versão completa", texto: "Tudo o que funciona no modo solo funcionando igual online: bancada, armadilhas, eletricidade, defesas e mais." },
     { estado: "feito", titulo: "Lista de amigos", texto: "Adicione os amigos dentro do jogo, chame para a equipe e doe a sua cama." },
@@ -203,20 +203,22 @@ window.RR_DADOS = {
 
   /* ------------------------------------------------------------ DÚVIDAS */
   faq: [
-    { p: "Quanto custa para jogar?", r: "O download é livre. Para jogar, você ativa uma chave de acesso, que recebe ao apoiar o projeto com qualquer valor a partir de R$ 5. O dinheiro paga a hospedagem do servidor." },
+    { p: "Quanto custa para jogar?", r: "O download é livre. Para jogar, você ativa uma chave de acesso, comprada pelo Pix com o valor que você escolher, de R$ 5 a R$ 100. Qualquer valor libera a mesma chave: pagar mais não dá vantagem. O dinheiro ajuda a pagar o servidor e o desenvolvimento. As regras da compra estão nos Termos de Serviço e na Política de Reembolso, no rodapé do site." },
     { p: "Em qual aparelho roda?", r: "Android 6.0 ou mais novo. O jogo foi testado num celular intermediário (Galaxy A05s). No computador, ele roda num emulador de Android. Por enquanto não há versão para iPhone." },
     { p: "Dá para jogar no PC?", r: "Dá! Instale um emulador de Android (BlueStacks, LDPlayer, MuMu ou outro), baixe o APK pelo botão Baixar, instale no emulador e entre com a sua chave. É o mesmo servidor e o mesmo personagem do celular. Teclado: WASD anda, Shift corre, Espaço pula, C agacha, E interage, X deita, L acende a lanterna, os números trocam o item da barra, V troca a vista, B abre o binóculo e R recarrega. O mouse depende do emulador: na maioria ele vira toque, e aí você gira a câmera segurando e arrastando. Onde o mouse chega como mouse, o Q o prende na câmera (Esc solta) e o botão direito mira. O emulador conta como um dos 3 aparelhos da chave." },
-    { p: "Já dá para jogar online com os amigos?", r: "Dá! O servidor oficial Brasil 1 está no ar 24 horas. Ative a sua chave, escolha Online no lobby e entre. Lá dentro, monte uma equipe de até 4 com os amigos." },
+    { p: "Já dá para jogar online com os amigos?", r: "Dá! O servidor oficial Brasil 1 fica ligado o dia todo, com paradas para manutenção e atualizações. Ative a sua chave, escolha Online no lobby e entre. Lá dentro, monte uma equipe de até 4 com os amigos." },
     { p: "Como adiciono um amigo?", r: "No chat, toque no rosto de quem falou: o menu do jogador tem Ver perfil, Adicionar amigo, Convidar para a equipe e Bloquear. O pedido chega no Social do outro jogador. Amigos podem receber a sua cama e ganhar permissão para construir na sua base, pelo botão Gerenciar Permissões do Gabinete. Cada amigo precisa da própria chave." },
     { p: "O jogo pediu para atualizar. E agora?", r: "É normal. Quando sai versão nova, o jogo baixa só o que mudou e o Android pede para instalar por cima — não precisa baixar o APK inteiro de novo. O que é seu no servidor continua lá." },
     { p: "O jogo mandou baixar de novo pelo site.", r: "A versão 1.20 é a de lançamento e vem com outra assinatura, então o Android não instala por cima da antiga. Desinstale o Rusting Raids, baixe o APK pelo botão Baixar e instale. A sua chave e o que é seu no servidor continuam; só o save do modo solo deste celular se perde." },
     { p: "Reinstalei e parece que perdi a minha conta.", r: "O seu personagem não sumiu: no servidor online ele fica guardado pela sua CHAVE, com mochila, base e equipe. Ao reinstalar, o jogo volta para o modo Local (um jogador), que é um mundo novo. Na tela inicial, toque em Trocar, escolha Brasil 1 (oficial) e entre com a mesma chave: você volta no seu personagem. Ligar a conta Google não apaga nada." },
-    { p: "Tem pay-to-win?", r: "Não. Nada que dá vantagem em combate é vendido. Sem talentos, sem pets voadores, sem mechas. O apoio paga o servidor, não compra poder." },
+    { p: "O que a loja vende? Tem pay-to-win?", r: "Armas, munição, armaduras e explosivos não são vendidos por dinheiro: só se conseguem jogando. Sem talentos, sem pets voadores, sem mechas. A loja de cupons vende skins e fórmulas de móveis de enfeite (só visuais), o Passe de temporada, o Cartão de Renomear e alguns itens de conveniência: a Coleta Automática (por 15 ou 30 dias), a Mochila Vinculada (5 casas que não caem na morte, vale até o fim da temporada), o Desfibrilador vinculado e o Detector de superminério. O preço e a regra de cada item aparecem na loja antes da compra." },
     { p: "Como recebo minha chave?", r: "Na hora, na tela, assim que o Pix é confirmado — e ela fica fixa no topo do site, neste aparelho. Pagou no app do banco? Volte para o site: ele confere sozinho e mostra a chave. Ela também vai para o e-mail que você digitou (olhe o spam e a aba Promoções)." },
     { p: "Posso comprar mais de uma chave com o mesmo e-mail?", r: "Pode, quantas quiser — para um amigo ou para outro celular. Cada Pix pago gera uma chave nova, e todas ficam ligadas ao seu e-mail. Cada chave abre o jogo em até 3 aparelhos." },
     { p: "Troquei de celular. Como levo a minha chave?", r: "Instale o jogo no celular novo e toque em Entrar com Google, com a conta Google ligada à chave: ele entra na hora, mesmo com a chave já em 3 aparelhos (sai da chave o aparelho que está há mais tempo sem abrir o jogo). Sem a conta Google, cole a chave: se ela já estiver em 3 aparelhos, o celular novo entra no lugar de um que esteja há mais de 24 horas sem abrir o jogo. O personagem do servidor oficial, os cupons e as skins são da chave e vão junto." },
     { p: "Paguei e não achei a minha chave. E agora?", r: "Toque em Minha chave, no menu, e digite o e-mail que você usou no Pix: a gente manda todas as chaves dele para lá. Não chegou nem no spam? Chame a gente no Discord, no grupo do WhatsApp ou no Telegram com o comprovante do Pix." },
-    { p: "Vi alguém usando hack.", r: "Grave a tela e mande no Discord, no grupo do WhatsApp ou no Telegram. Cada conta tem um ID, e quem for pego é banido pelo painel de chaves." },
+    { p: "Vi alguém usando hack.", r: "Use Denunciar, nas Configurações do jogo online, ou grave a tela e mande no Discord, no grupo do WhatsApp ou no Telegram. Cada conta tem um ID, e quem for pego trapaceando pode ser banido." },
+    { p: "Posso pedir o dinheiro de volta?", r: "Pode, em até 7 dias depois do pagamento (direito de arrependimento do Código de Defesa do Consumidor), e também se você pagou e não recebeu ou foi cobrado duas vezes. Como pedir e o que acontece com a chave e os cupons está na Política de Reembolso, no rodapé do site." },
+    { p: "Que dados vocês guardam sobre mim?", r: "O e-mail que você digita no Pix, a sua chave e as compras dela, o ID do aparelho onde ela foi ativada e o que o jogo precisa para funcionar online (personagem, base, chat). Não usamos cookies de publicidade nem de rastreamento e não vendemos dados. Tudo está na Política de Privacidade, no rodapé do site, com o jeito de pedir uma cópia ou a exclusão." },
     { p: "O que acontece no fim da temporada?", r: "No servidor online, cada temporada dura 7 dias reais (168 horas). No fim, o mundo reinicia e todo mundo começa do zero — igual para todos." },
   ],
 };

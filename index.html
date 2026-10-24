@@ -14,10 +14,9 @@
   <meta property="og:image" content="assets/img/og.jpg">
   <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@500;700&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/estilo.css?v=11">
+  <!-- Fontes servidas pelo próprio site (sem Google Fonts: o navegador do visitante não fala com terceiros). -->
+  <link rel="stylesheet" href="assets/css/fontes.css?v=1">
+  <link rel="stylesheet" href="assets/css/estilo.css?v=12">
 </head>
 <body>
 
@@ -112,7 +111,7 @@
   <canvas class="brasas" id="brasas" aria-hidden="true"></canvas>
 
   <div class="heroi__conteudo container">
-    <p class="kicker kicker--centro revelar"><span class="ponto-vivo"></span> Jogo completo · versão 1.21 · no PC</p>
+    <p class="kicker kicker--centro revelar"><span class="ponto-vivo"></span> Jogo completo · Android e PC</p>
     <h1 class="heroi__logo revelar">
       <picture>
         <source srcset="assets/img/logo.webp" type="image/webp">
@@ -122,7 +121,7 @@
       <span class="faisca faisca--2" aria-hidden="true"></span>
     </h1>
     <p class="heroi__frase revelar">Sobreviva. Construa. <em>Exploda tudo.</em></p>
-    <p class="heroi__sub revelar">Mundo aberto de sobrevivência com zumbis, bases e raids — do jeito raiz: sem pay-to-win, sem talentos, sem pets voadores.</p>
+    <p class="heroi__sub revelar">Mundo aberto de sobrevivência com zumbis, bases e raids — do jeito raiz: sem talentos, sem pets voadores, e arma não se compra com dinheiro.</p>
 
     <div class="heroi__ctas revelar">
       <a class="btn btn--tnt btn--grande" data-baixar href="#como-jogar">
@@ -146,6 +145,7 @@
     <span class="pavio"><span class="pavio__chama"></span></span>
     <span>role</span>
   </a>
+  <button class="btn-mini heroi__animacoes" type="button" data-alternar-animacoes><span>Pausar animações</span></button>
 </section>
 
 <div class="faixa-perigo" aria-hidden="true"></div>
@@ -164,7 +164,7 @@
       <li class="revelar"><svg class="ic"><use href="#i-servidor"/></svg><div><strong>Tudo online</strong><span>Bancada, eletricidade, torres, armadilhas e defesas passam pelo servidor.</span></div></li>
       <li class="revelar"><svg class="ic"><use href="#i-muro"/></svg><div><strong>Base mais forte</strong><span>Peças novas, permissões no Gabinete, Central Automática e o Relatório de perdas: veja quem atacou a sua base.</span></div></li>
       <li class="revelar"><svg class="ic"><use href="#i-lua"/></svg><div><strong>Mais mundo</strong><span>Caverna subterrânea, mergulho e pesca, máquinas de venda e o Cargueiro da Morte.</span></div></li>
-      <li class="revelar"><svg class="ic"><use href="#i-escudo"/></svg><div><strong>Sem pay-to-win</strong><span>Passe de temporada, missões diárias, mercado entre jogadores e ranking. Na loja, só visual.</span></div></li>
+      <li class="revelar"><svg class="ic"><use href="#i-escudo"/></svg><div><strong>Arma não se compra</strong><span>Passe de temporada, missões diárias, mercado entre jogadores e ranking. Na loja, skins e alguns itens de conveniência; armas, munição, armaduras e explosivos só jogando.</span></div></li>
     </ul>
     <div class="passos__ctas revelar">
       <a class="btn btn--tnt btn--grande" href="#devblog" data-abrir-post="devblog-7"><svg class="ic"><use href="#i-seta"/></svg><span>Ver todas as novidades</span></a>
@@ -229,7 +229,7 @@
     <div class="numero revelar"><strong data-contar="168">168</strong><span>horas por temporada</span></div>
     <div class="numero revelar"><strong data-contar="24.6" data-casas="1">24,6</strong><span>km de trilhos de trem</span></div>
     <div class="numero revelar"><strong data-contar="100">100</strong><span>sobreviventes por servidor</span></div>
-    <div class="numero revelar"><strong data-contar="0" class="zero">0</strong><span>pay-to-win</span></div>
+    <div class="numero revelar"><strong data-contar="4">4</strong><span>jogadores por equipe</span></div>
   </div>
 </section>
 
@@ -239,13 +239,13 @@
     <header class="secao__cab revelar">
       <p class="kicker">// servidor oficial</p>
       <h2 class="titulo">A ilha está <span class="tnt-txt">online</span></h2>
-      <p class="secao__lead">O servidor oficial roda 24 horas por dia, no Brasil. Ative a sua chave, escolha Online no lobby e entre.</p>
+      <p class="secao__lead">O servidor oficial fica ligado o dia todo, no Brasil, com paradas para manutenção e atualizações. Ative a sua chave, escolha Online no lobby e entre.</p>
     </header>
     <div class="servidor revelar">
       <div class="servidor__cartao" data-servidor>
         <div class="servidor__topo">
           <span class="servidor__luz" data-servidor-luz></span>
-          <div><strong>Brasil 1</strong><span>oficial · Campinas</span></div>
+          <div><strong>Brasil 1</strong><span>oficial · Brasil</span></div>
           <span class="servidor__estado" data-servidor-estado>conferindo…</span>
         </div>
         <div class="servidor__numeros">
@@ -258,7 +258,7 @@
       <ul class="apoio-bloco__lista servidor__lista">
         <li><svg class="ic"><use href="#i-servidor"/></svg><div><strong>Temporada de 7 dias</strong><span>168 horas de jogo. No fim, o mundo reinicia e todo mundo começa do zero.</span></div></li>
         <li><svg class="ic"><use href="#i-coracao"/></svg><div><strong>Amigos e equipes de até 4</strong><span>Lista de amigos, chat, chat de voz e a base dividida com quem você chamar.</span></div></li>
-        <li><svg class="ic"><use href="#i-escudo"/></svg><div><strong>Conferido pelo servidor</strong><span>Construção, raid, saque e chefes passam pelo servidor. Trapaça é corrigida — e banida.</span></div></li>
+        <li><svg class="ic"><use href="#i-escudo"/></svg><div><strong>Conferido pelo servidor</strong><span>Construção, raid, saque e chefes passam pelo servidor. Trapaça detectada é corrigida e pode dar banimento.</span></div></li>
         <li><svg class="ic"><use href="#i-download"/></svg><div><strong>Atualiza sozinho</strong><span>Quando sai versão nova, o jogo baixa só o que mudou.</span></div></li>
       </ul>
     </div>
@@ -278,9 +278,10 @@
       <div class="galeria__trilho" data-trilho></div>
       <button class="galeria__seta galeria__seta--esq" type="button" data-ant aria-label="Imagem anterior"><svg class="ic"><use href="#i-esq"/></svg></button>
       <button class="galeria__seta galeria__seta--dir" type="button" data-prox aria-label="Próxima imagem"><svg class="ic"><use href="#i-dir"/></svg></button>
+      <button class="btn-mini galeria__pausar" type="button" data-galeria-pausar><span>Pausar imagens</span></button>
       <div class="galeria__progresso" aria-hidden="true"><span data-progresso></span></div>
     </div>
-    <div class="galeria__miniaturas" data-miniaturas role="tablist" aria-label="Escolher imagem"></div>
+    <div class="galeria__miniaturas" data-miniaturas role="group" aria-label="Escolher imagem"></div>
   </div>
 </section>
 
@@ -292,7 +293,7 @@
       <h2 class="titulo">Devblog</h2>
       <p class="secao__lead">Tudo o que entrou no jogo, dia após dia. Transparência total — você vê o jogo nascer.</p>
     </header>
-    <div class="abas revelar" role="tablist" aria-label="Filtrar posts" data-abas></div>
+    <div class="abas revelar" role="group" aria-label="Filtrar posts" data-abas></div>
     <div class="blog" data-blog></div>
   </div>
 </section>
@@ -321,7 +322,7 @@
         <span class="passo__num">1</span>
         <svg class="ic"><use href="#i-pix"/></svg>
         <h3>Apoie com Pix</h3>
-        <p>Escolha um valor a partir de R$ 5. O dinheiro paga a hospedagem do servidor.</p>
+        <p>Escolha um valor de R$ 5 a R$ 100. Qualquer valor libera a mesma chave; o dinheiro ajuda a pagar o servidor e o desenvolvimento.</p>
       </li>
       <li class="passo revelar">
         <span class="passo__num">2</span>
@@ -358,7 +359,7 @@
       <div class="apoio-bloco__texto">
         <p class="kicker">// apoie o desenvolvimento</p>
         <h2 class="titulo">Mantenha a ilha <span class="tnt-txt">acesa</span></h2>
-        <p>O Rusting Raids é feito por um dev só, sem investidor e sem loja paga dentro do jogo. Cada Pix vira servidor ligado, correções e conteúdo novo.</p>
+        <p>O Rusting Raids é feito por um dev só, sem investidor. O dinheiro das chaves e da loja do jogo ajuda a manter o servidor ligado, as correções e o conteúdo novo.</p>
         <button class="btn btn--tnt btn--grande" type="button" data-abrir-apoio><svg class="ic"><use href="#i-coracao"/></svg><span>Apoiar agora</span></button>
       </div>
       <ul class="apoio-bloco__lista">
@@ -397,15 +398,22 @@
     </div>
     <div class="rodape__meio">
       <div class="redes" data-redes></div>
-      <p>© <span data-ano>2026</span> Rusting Raids. Todos os direitos reservados.</p>
-      <p>Um jogo de sobrevivência para Android e PC (pelo emulador), feito no Brasil.</p>
+      <nav class="rodape__legal" aria-label="Informações legais">
+        <a href="/termos">Termos de Serviço</a>
+        <a href="/privacidade">Política de Privacidade</a>
+        <a href="/reembolso">Reembolso</a>
+        <button type="button" data-abrir-aviso-privacidade>Cookies e armazenamento</button>
+      </nav>
+      <!-- Decreto 7.962/2013, art. 2º: nome, CPF/CNPJ e endereço físico e eletrônico de quem vende. -->
+      <p class="rodape__empresa">Rusting Raids é vendido por <span class="preencher">[PREENCHER: nome completo ou razão social]</span>, CPF/CNPJ <span class="preencher">[PREENCHER]</span>, <span class="preencher">[PREENCHER: endereço completo]</span>. Atendimento, reembolso e privacidade: <a href="mailto:rustingraids.suporte@gmail.com">rustingraids.suporte@gmail.com</a>.</p>
+      <p>© <span data-ano>2026</span> Rusting Raids. Um jogo de sobrevivência para Android e PC (pelo emulador), feito no Brasil.</p>
     </div>
-    <div class="rodape__status"><span class="ponto-vivo"></span> Servidor oficial online</div>
+    <div class="rodape__status" data-rodape-status><span class="ponto-vivo"></span> <span data-rodape-status-texto>Servidor oficial</span></div>
   </div>
 </footer>
 
 <!-- Barra fixa no celular -->
-<div class="barra-movel" id="barra-movel">
+<div class="barra-movel" id="barra-movel" role="region" aria-label="Atalhos">
   <a class="btn btn--aco" data-baixar href="#como-jogar"><svg class="ic"><use href="#i-download"/></svg><span>Baixar</span></a>
   <button class="btn btn--tnt" type="button" data-abrir-apoio><svg class="ic"><use href="#i-coracao"/></svg><span>Apoiar</span></button>
 </div>
@@ -445,11 +453,16 @@
       </div>
       <label class="campo">
         <span>Seu e-mail <small>(a chave fica ligada a ele — confira se está certo)</small></span>
-        <input type="email" id="apoio-email" autocomplete="email" inputmode="email" placeholder="voce@email.com" required>
+        <input type="email" id="apoio-email" autocomplete="email" inputmode="email" placeholder="voce@email.com" required aria-describedby="apoio-dados apoio-erro">
       </label>
-      <p class="erro" data-erro hidden></p>
+      <p class="aviso-dados" id="apoio-dados">Usamos o e-mail só para gerar o Pix no Mercado Pago, entregar a chave e mandá-la de novo se você perder. Detalhes na <a href="/privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
+      <label class="aceite">
+        <input type="checkbox" id="apoio-aceite" value="2026-10-24" required>
+        <span>Li e aceito os <a href="/termos" target="_blank" rel="noopener">Termos de Serviço</a> e a <a href="/reembolso" target="_blank" rel="noopener">Política de Reembolso</a>. Estou comprando uma chave de acesso ao jogo (licença de uso).</span>
+      </label>
+      <p class="erro" id="apoio-erro" data-erro role="alert" hidden></p>
       <button class="btn btn--tnt btn--largo" type="button" data-gerar-pix><svg class="ic"><use href="#i-pix"/></svg><span>Gerar Pix de <b data-valor-botao>R$ 10</b></span></button>
-      <p class="modal__rodape">Pagamento processado pelo Mercado Pago. Sem pay-to-win: o apoio não compra vantagem no jogo.</p>
+      <p class="modal__rodape">Pagamento processado pelo Mercado Pago. O valor escolhido não muda a chave nem dá vantagem no jogo.</p>
     </div>
 
     <!-- Etapa 2: Pix -->
@@ -515,10 +528,11 @@
       <p class="modal__texto">Digite o e-mail que você usou no Pix. A gente manda <b>todas</b> as chaves compradas com ele para a sua caixa de entrada.</p>
       <label class="campo">
         <span>E-mail do Pix</span>
-        <input type="email" id="recuperar-email" autocomplete="email" inputmode="email" placeholder="voce@email.com">
+        <input type="email" id="recuperar-email" autocomplete="email" inputmode="email" placeholder="voce@email.com" aria-describedby="recuperar-dados">
       </label>
-      <p class="erro" data-recuperar-erro hidden></p>
-      <p class="aviso-ok" data-recuperar-ok hidden></p>
+      <p class="aviso-dados" id="recuperar-dados">O e-mail serve só para procurar e mandar as suas chaves; as chaves vão só para a caixa dele.</p>
+      <p class="erro" data-recuperar-erro role="alert" hidden></p>
+      <p class="aviso-ok" data-recuperar-ok role="status" hidden></p>
       <button class="btn btn--tnt btn--largo" type="button" data-recuperar-enviar><svg class="ic"><use href="#i-chave"/></svg><span>Mandar minhas chaves por e-mail</span></button>
       <p class="modal__texto modal__texto--nota">Não chegou nem no spam? Chame a gente no <a data-link-discord href="#" target="_blank" rel="noopener">Discord</a> com o comprovante do Pix e o e-mail que você usou.</p>
     </div>
@@ -555,7 +569,8 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="assets/js/config.js?v=14"></script>
-<script src="assets/js/dados.js?v=16"></script>
-<script src="assets/js/app.js?v=12" defer></script>
+<script src="assets/js/dados.js?v=17"></script>
+<script src="assets/js/consentimento.js?v=1" defer></script>
+<script src="assets/js/app.js?v=13" defer></script>
 </body>
 </html>

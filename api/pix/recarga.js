@@ -1,4 +1,5 @@
-// POST /api/pix/recarga  { chave, pacote, email }  ->  { pedidoId, valor, cupons, emDobro, qrBase64, copiaECola, expiraEm }
+// POST /api/pix/recarga  { chave, pacote, email, aceite? }  ->  { pedidoId, valor, cupons, emDobro, qrBase64, copiaECola, expiraEm }
+// "aceite" = a versão dos Termos que a pessoa marcou (fica no pedido como prova; _lib/pedido.js).
 // Pix de recarga de cupons para uma chave. O navegador manda só o ID do pacote: preço e cupons saem da
 // tabela loja_pacotes. Antes de cobrar, confere se a chave existe e não está banida.
 // A RECARGA EM DOBRO (supabase/recarga_em_dobro.sql): se a chave ainda não ganhou o dobro, "cupons" já vem dobrado
@@ -8,6 +9,7 @@ import { supabase } from "../_lib/supabase.js";
 import { criarPix } from "../_lib/mercadopago.js";
 import { limitar } from "../_lib/rate-limit.js";
 import { recargaEmDobro } from "../_lib/recarga.js";
+import { inserirPedido } from "../_lib/pedido.js";
 
 export default async function handler(req, res) {
   if (cabecalhos(req, res)) return;
@@ -39,9 +41,8 @@ export default async function handler(req, res) {
     const emDobro = await recargaEmDobro(sb, chave.id);
     const vaiReceber = emDobro ? cupons * 2 : cupons;
 
-    const { data: pedido, error } = await sb.from("pedidos")
-      .insert({ email, valor, status: "pendente", tipo: "recarga", recarga_chave_id: chave.id, pacote_id: pacote.id, cupons })
-      .select("id").single();
+    const { data: pedido, error } = await inserirPedido(sb,
+      { email, valor, status: "pendente", tipo: "recarga", recarga_chave_id: chave.id, pacote_id: pacote.id, cupons }, corpo.aceite);
     if (error || !pedido) throw new Error("Falha ao criar o pedido");
 
     const host = process.env.SITE_URL || (req.headers.host ? `https://${req.headers.host}` : null);
