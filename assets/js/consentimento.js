@@ -48,7 +48,7 @@
     el.innerHTML = `
       <h2 id="aviso-cookies-titulo">Privacidade neste site</h2>
       <p>Não usamos cookies de publicidade nem de rastreamento. O site guarda neste navegador só o necessário para
-        funcionar: as chaves que você comprar aqui, os Pix em andamento, o e-mail que você digitar e as suas preferências.</p>
+        funcionar: os Pix de recarga em andamento, o e-mail que você digitar e as suas preferências.</p>
       <div class="aviso-cookies__acoes">
         <button class="btn btn--tnt btn--peq" type="button" data-aviso-ok>Entendi</button>
         <a class="btn btn--aco btn--peq" href="/privacidade#armazenamento">Ver detalhes</a>
