@@ -68,13 +68,9 @@
       <a href="#devblog" class="menu__link">Devblog</a>
       <a href="#como-jogar" class="menu__link">Como jogar</a>
       <a href="#faq" class="menu__link">Dúvidas</a>
-      <a href="#minha-chave" class="menu__link menu__link--chave" data-abrir-recuperar>Minha chave</a>
       <div class="menu__redes" data-redes></div>
     </nav>
     <div class="topo__acoes">
-      <button class="btn btn--tnt btn--peq" data-abrir-apoio type="button">
-        <svg class="ic"><use href="#i-coracao"/></svg><span>Apoiar</span>
-      </button>
       <a class="btn btn--aco btn--peq so-desktop" data-baixar href="#como-jogar">
         <svg class="ic"><use href="#i-download"/></svg><span>Baixar</span>
       </a>
@@ -84,21 +80,6 @@
     </div>
   </div>
 </header>
-
-<!-- A chave comprada neste aparelho, GRANDE, logo abaixo do topo — e o aviso de "conferindo o pagamento" enquanto
-     um Pix gerado aqui não foi confirmado (12/10: apoiadores pagavam e não achavam a chave). -->
-<div class="faixa-chave" data-faixa-chave hidden role="region" aria-label="Sua chave de acesso">
-  <div class="faixa-chave__barra container">
-    <div class="faixa-chave__texto">
-      <span class="faixa-chave__rotulo" data-faixa-rotulo>Sua chave de acesso</span>
-      <div class="faixa-chave__codigos" data-faixa-codigos></div>
-    </div>
-    <div class="faixa-chave__acoes">
-      <a class="btn btn--aco btn--peq" href="#como-jogar" data-faixa-como>Como usar</a>
-      <button class="faixa-chave__fechar" type="button" data-faixa-fechar aria-label="Esconder a faixa"><svg class="ic"><use href="#i-x"/></svg></button>
-    </div>
-  </div>
-</div>
 
 <main id="conteudo">
 
@@ -129,11 +110,6 @@
         <span>Baixar para Android e PC</span>
         <small data-versao>alpha</small>
       </a>
-      <button class="btn btn--aco btn--grande" type="button" data-abrir-apoio>
-        <svg class="ic ic--pix"><use href="#i-pix"/></svg>
-        <span>Apoiar com Pix</span>
-        <small>a partir de R$ 5</small>
-      </button>
     </div>
 
     <ul class="chips revelar" aria-label="Características">
@@ -239,7 +215,7 @@
     <header class="secao__cab revelar">
       <p class="kicker">// servidor oficial</p>
       <h2 class="titulo">A ilha está <span class="tnt-txt">online</span></h2>
-      <p class="secao__lead">O servidor oficial fica ligado o dia todo, no Brasil, com paradas para manutenção e atualizações. Ative a sua chave, escolha Online no lobby e entre.</p>
+      <p class="secao__lead">O servidor oficial fica ligado o dia todo, no Brasil, com paradas para manutenção e atualizações. Entre com a sua conta Google, escolha Online no lobby e entre.</p>
     </header>
     <div class="servidor revelar">
       <div class="servidor__cartao" data-servidor>
@@ -314,63 +290,35 @@
 <section class="secao" id="como-jogar">
   <div class="container">
     <header class="secao__cab secao__cab--centro revelar">
-      <p class="kicker">// em 4 passos</p>
+      <p class="kicker">// em 3 passos</p>
       <h2 class="titulo">Como jogar</h2>
     </header>
     <ol class="passos">
       <li class="passo revelar">
         <span class="passo__num">1</span>
-        <svg class="ic"><use href="#i-pix"/></svg>
-        <h3>Apoie com Pix</h3>
-        <p>Escolha um valor de R$ 5 a R$ 100. Qualquer valor libera a mesma chave; o dinheiro ajuda a pagar o servidor e o desenvolvimento.</p>
-      </li>
-      <li class="passo revelar">
-        <span class="passo__num">2</span>
-        <svg class="ic"><use href="#i-chave"/></svg>
-        <h3>Receba sua chave</h3>
-        <p>Assim que o Pix cai, sua chave de acesso aparece na tela. Guarde bem.</p>
-      </li>
-      <li class="passo revelar">
-        <span class="passo__num">3</span>
         <svg class="ic"><use href="#i-download"/></svg>
         <h3>Baixe o jogo</h3>
         <p>O APK para Android sai pelo link oficial. Instale e abra. No PC, instale o mesmo APK num emulador de Android.</p>
       </li>
       <li class="passo revelar">
-        <span class="passo__num">4</span>
+        <span class="passo__num">2</span>
         <svg class="ic"><use href="#i-celular"/></svg>
-        <h3>Ative e sobreviva</h3>
-        <p>No painel de chaves do jogo, cole a sua e escolha Online. Pronto: a ilha é sua. Por enquanto.</p>
+        <h3>Entre com o Google</h3>
+        <p>Toque em Entrar com Google. Na primeira vez a sua conta é criada na hora, de graça. Já tinha uma chave? O jogo pede ela uma vez para trazer tudo o que era seu.</p>
+      </li>
+      <li class="passo revelar">
+        <span class="passo__num">3</span>
+        <svg class="ic"><use href="#i-servidor"/></svg>
+        <h3>Escolha o servidor</h3>
+        <p>Escolha Online no lobby e entre no Brasil 1. Pronto: a ilha é sua. Por enquanto.</p>
       </li>
     </ol>
     <div class="passos__ctas revelar">
-      <button class="btn btn--tnt btn--grande" type="button" data-abrir-apoio><svg class="ic"><use href="#i-chave"/></svg><span>Quero minha chave</span></button>
       <a class="btn btn--aco btn--grande" data-baixar href="#como-jogar"><svg class="ic"><use href="#i-download"/></svg><span>Baixar o APK</span><small data-versao>alpha</small></a>
     </div>
-    <p class="nota revelar" data-minha-chave hidden></p>
-    <p class="nota revelar"><button class="link-discreto link-discreto--forte" type="button" data-abrir-recuperar>Já pagou e não achou a sua chave? Receba no seu e-mail</button></p>
   </div>
 </section>
 
-<!-- ============================================================ APOIAR -->
-<section class="secao secao--apoio" id="apoiar">
-  <div class="container">
-    <div class="apoio-bloco revelar">
-      <div class="apoio-bloco__texto">
-        <p class="kicker">// apoie o desenvolvimento</p>
-        <h2 class="titulo">Mantenha a ilha <span class="tnt-txt">acesa</span></h2>
-        <p>O Rusting Raids é feito por um dev só, sem investidor. O dinheiro das chaves e da loja do jogo ajuda a manter o servidor ligado, as correções e o conteúdo novo.</p>
-        <button class="btn btn--tnt btn--grande" type="button" data-abrir-apoio><svg class="ic"><use href="#i-coracao"/></svg><span>Apoiar agora</span></button>
-      </div>
-      <ul class="apoio-bloco__lista">
-        <li><svg class="ic"><use href="#i-servidor"/></svg><div><strong>Servidor online</strong><span>O Brasil 1, ligado 24 horas por dia, com a temporada de 7 dias.</span></div></li>
-        <li><svg class="ic"><use href="#i-codigo"/></svg><div><strong>Desenvolvimento</strong><span>Conteúdo novo, correções e o que a comunidade pedir.</span></div></li>
-        <li><svg class="ic"><use href="#i-escudo"/></svg><div><strong>Jogo limpo</strong><span>Painel de chaves com banimento de quem usar hack.</span></div></li>
-        <li><svg class="ic"><use href="#i-chave"/></svg><div><strong>Sua chave de acesso</strong><span>Todo apoio a partir de R$ 5 libera a sua chave para jogar.</span></div></li>
-      </ul>
-    </div>
-  </div>
-</section>
 
 <!-- ============================================================ FAQ -->
 <section class="secao" id="faq">
@@ -416,137 +364,8 @@
 <!-- Barra fixa no celular -->
 <div class="barra-movel" id="barra-movel" role="region" aria-label="Atalhos">
   <a class="btn btn--aco" data-baixar href="#como-jogar"><svg class="ic"><use href="#i-download"/></svg><span>Baixar</span></a>
-  <button class="btn btn--tnt" type="button" data-abrir-apoio><svg class="ic"><use href="#i-coracao"/></svg><span>Apoiar</span></button>
 </div>
 
-<!-- ============================================================ MODAL: APOIO -->
-<dialog class="modal modal--apoio" id="modal-apoio" aria-labelledby="apoio-titulo">
-  <div class="modal__caixa">
-    <button class="modal__fechar" type="button" data-fechar aria-label="Fechar"><svg class="ic"><use href="#i-x"/></svg></button>
-
-    <!-- Etapa 0: convite -->
-    <div class="etapa" data-etapa="convite">
-      <p class="kicker">// apoie o desenvolvimento</p>
-      <h2 class="modal__titulo" id="apoio-titulo">Apoie o<br><span>Rusting Raids</span></h2>
-      <p class="modal__texto">Cada contribuição mantém o servidor ligado e acelera o desenvolvimento. Seja um sobrevivente fundador — e receba sua chave de acesso.</p>
-      <button class="btn btn--tnt btn--largo" type="button" data-ir="valor"><svg class="ic"><use href="#i-pix"/></svg><span>Apoiar o Rusting Raids</span></button>
-      <button class="link-discreto" type="button" data-fechar data-mais-tarde>Talvez mais tarde</button>
-    </div>
-
-    <!-- Etapa 1: valor -->
-    <div class="etapa" data-etapa="valor" hidden>
-      <p class="kicker">// passo 1 de 3</p>
-      <h2 class="modal__titulo modal__titulo--menor">Quanto você quer apoiar?</h2>
-      <div class="valor">
-        <output class="valor__numero" id="valor-saida" for="valor-slider">R$ <b>10</b></output>
-        <span class="valor__patente" data-patente>Sobrevivente</span>
-      </div>
-      <div class="deslizante">
-        <input type="range" id="valor-slider" min="5" max="100" step="1" value="10" aria-label="Valor do apoio em reais">
-        <div class="deslizante__marcas" aria-hidden="true"><span>R$ 5</span><span>R$ 50</span><span>R$ 100</span></div>
-      </div>
-      <div class="rapidos" data-rapidos>
-        <button type="button" data-valor="5">R$ 5</button>
-        <button type="button" data-valor="10">R$ 10</button>
-        <button type="button" data-valor="25">R$ 25</button>
-        <button type="button" data-valor="50">R$ 50</button>
-        <button type="button" data-valor="100">R$ 100</button>
-      </div>
-      <label class="campo">
-        <span>Seu e-mail <small>(a chave fica ligada a ele — confira se está certo)</small></span>
-        <input type="email" id="apoio-email" autocomplete="email" inputmode="email" placeholder="voce@email.com" required aria-describedby="apoio-dados apoio-erro">
-      </label>
-      <p class="aviso-dados" id="apoio-dados">Usamos o e-mail só para gerar o Pix no Mercado Pago, entregar a chave e mandá-la de novo se você perder. Detalhes na <a href="/privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
-      <label class="aceite">
-        <input type="checkbox" id="apoio-aceite" value="2026-10-24" required>
-        <span>Li e aceito os <a href="/termos" target="_blank" rel="noopener">Termos de Serviço</a> e a <a href="/reembolso" target="_blank" rel="noopener">Política de Reembolso</a>. Estou comprando uma chave de acesso ao jogo (licença de uso) e tenho 18 anos ou mais, ou a autorização dos meus pais ou responsáveis.</span>
-      </label>
-      <p class="erro" id="apoio-erro" data-erro role="alert" hidden></p>
-      <button class="btn btn--tnt btn--largo" type="button" data-gerar-pix><svg class="ic"><use href="#i-pix"/></svg><span>Gerar Pix de <b data-valor-botao>R$ 10</b></span></button>
-      <p class="modal__rodape">Pagamento processado pelo Mercado Pago. O valor escolhido não muda a chave nem dá vantagem no jogo.</p>
-    </div>
-
-    <!-- Etapa 2: Pix -->
-    <div class="etapa" data-etapa="pix" hidden>
-      <p class="kicker">// passo 2 de 3</p>
-      <h2 class="modal__titulo modal__titulo--menor">Pague com Pix</h2>
-      <p class="aviso-demo" data-aviso-demo hidden>Modo de demonstração — este QR não é um Pix de verdade. O pagamento real entra na próxima etapa.</p>
-      <div class="pix">
-        <div class="pix__qr" data-qr><div class="carregando"></div></div>
-        <div class="pix__info">
-          <div class="pix__valor">Valor: <strong data-pix-valor>R$ 10,00</strong></div>
-          <div class="pix__tempo">Expira em <strong data-pix-tempo>30:00</strong></div>
-          <div class="pix__status"><span class="radar"></span> Aguardando pagamento…</div>
-        </div>
-      </div>
-      <label class="campo campo--copia">
-        <span>Pix copia e cola</span>
-        <div class="copia">
-          <input type="text" readonly data-pix-codigo value="">
-          <button class="btn btn--aco btn--peq" type="button" data-copiar-pix><svg class="ic"><use href="#i-copiar"/></svg><span>Copiar</span></button>
-        </div>
-      </label>
-      <ol class="pix__como">
-        <li>Abra o app do seu banco e escolha <b>Pix</b>.</li>
-        <li>Leia o QR ou cole o código copia e cola.</li>
-        <li>Confirme e <b>volte para esta página</b>: a chave aparece aqui e no topo do site assim que o Pix cair.</li>
-      </ol>
-      <p class="modal__texto modal__texto--nota">Pode fechar esta janela ou sair para o app do banco: este aparelho continua conferindo o pagamento e mostra a chave quando você voltar.</p>
-      <button class="btn btn--aco btn--largo" type="button" data-simular hidden>Simular pagamento aprovado (demo)</button>
-      <button class="link-discreto" type="button" data-ir="recuperar">Já paguei e a chave não apareceu</button>
-      <button class="link-discreto" type="button" data-ir="valor">Voltar e mudar o valor</button>
-    </div>
-
-    <!-- Etapa 3: chave -->
-    <div class="etapa" data-etapa="chave" hidden>
-      <div class="explosao" aria-hidden="true"></div>
-      <p class="kicker kicker--verde">// pagamento confirmado</p>
-      <h2 class="modal__titulo modal__titulo--menor">Valeu, sobrevivente!</h2>
-      <p class="modal__texto">Esta é a sua chave de acesso. Ela fica guardada neste aparelho e no topo do site, mas anote num lugar seguro.</p>
-      <div class="chave">
-        <code data-chave>RR-XXXX-XXXX</code>
-        <button class="btn btn--aco btn--peq" type="button" data-copiar-chave><svg class="ic"><use href="#i-copiar"/></svg><span>Copiar</span></button>
-      </div>
-      <p class="modal__texto modal__texto--nota" data-por-email hidden>Também mandamos a chave para o seu e-mail. Não achou? Olhe o spam e a aba Promoções.</p>
-      <a class="btn btn--tnt btn--largo" data-baixar href="#como-jogar"><svg class="ic"><use href="#i-download"/></svg><span>Baixar o jogo</span></a>
-      <ol class="pix__como">
-        <li>Instale o APK e abra o Rusting Raids.</li>
-        <li>No <b>painel de chaves</b>, cole a sua chave.</li>
-        <li>Crie sua conta e boa sorte na ilha.</li>
-      </ol>
-      <p class="modal__texto modal__texto--nota">Quer mais uma, para um amigo ou para outro celular? Pode comprar quantas quiser com o mesmo e-mail: cada Pix pago gera uma chave nova.</p>
-      <button class="btn btn--aco btn--largo" type="button" data-ir="valor"><svg class="ic"><use href="#i-chave"/></svg><span>Comprar outra chave</span></button>
-    </div>
-
-    <!-- Não achou a chave: as deste aparelho + receber todas as do e-mail -->
-    <div class="etapa" data-etapa="recuperar" hidden>
-      <p class="kicker">// minha chave</p>
-      <h2 class="modal__titulo modal__titulo--menor">Não achou sua chave?</h2>
-      <div data-recuperar-locais hidden>
-        <p class="modal__texto">Chaves compradas neste aparelho:</p>
-        <div data-recuperar-lista></div>
-      </div>
-      <p class="modal__texto">Digite o e-mail que você usou no Pix. A gente manda <b>todas</b> as chaves compradas com ele para a sua caixa de entrada.</p>
-      <label class="campo">
-        <span>E-mail do Pix</span>
-        <input type="email" id="recuperar-email" autocomplete="email" inputmode="email" placeholder="voce@email.com" aria-describedby="recuperar-dados">
-      </label>
-      <p class="aviso-dados" id="recuperar-dados">O e-mail serve só para procurar e mandar as suas chaves; as chaves vão só para a caixa dele.</p>
-      <p class="erro" data-recuperar-erro role="alert" hidden></p>
-      <p class="aviso-ok" data-recuperar-ok role="status" hidden></p>
-      <button class="btn btn--tnt btn--largo" type="button" data-recuperar-enviar><svg class="ic"><use href="#i-chave"/></svg><span>Mandar minhas chaves por e-mail</span></button>
-      <p class="modal__texto modal__texto--nota">Não chegou nem no spam? Chame a gente no <a data-link-discord href="#" target="_blank" rel="noopener">Discord</a> com o comprovante do Pix e o e-mail que você usou.</p>
-    </div>
-
-    <!-- Erro -->
-    <div class="etapa" data-etapa="erro" hidden>
-      <p class="kicker kicker--tnt">// algo deu errado</p>
-      <h2 class="modal__titulo modal__titulo--menor">Não deu para gerar o Pix</h2>
-      <p class="modal__texto" data-erro-texto>Tente de novo em instantes.</p>
-      <button class="btn btn--tnt btn--largo" type="button" data-ir="valor">Tentar de novo</button>
-    </div>
-  </div>
-</dialog>
 
 <!-- ============================================================ MODAL: POST -->
 <dialog class="modal modal--post" id="modal-post" aria-labelledby="post-titulo">
@@ -570,8 +389,8 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="assets/js/config.js?v=15"></script>
-<script src="assets/js/dados.js?v=18"></script>
+<script src="assets/js/dados.js?v=19"></script>
 <script src="assets/js/consentimento.js?v=1" defer></script>
-<script src="assets/js/app.js?v=13" defer></script>
+<script src="assets/js/app.js?v=14" defer></script>
 </body>
 </html>

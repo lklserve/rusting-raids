@@ -12,6 +12,11 @@
 //   Liga a conta Google à chave que ESTE aparelho já ativou (a mesma conferência do /api/jogo/validar: quem só sabe
 //   o código da chave, sem o aparelho ativado nela, não liga). Uma chave por conta e uma conta por chave.
 //   -> 200 como o /auth/google · 409 { ok:false, erro } chave de outra conta / conta com outra chave
+// POST /api/conta/criar  { deviceId }   Authorization: Bearer <sessao>          (lançamento aberto, 27/10)
+//   A conta Google sem chave ganha a sua (supabase/lancamento_aberto.sql): o jogo não vende mais chave e só entra pelo
+//   Google; a chave fica por baixo, como a conta dos cupons, das skins e do personagem. Pedido repetido devolve a mesma.
+//   -> 200 como o /auth/google (chave preenchida; o jogo ativa a chave neste aparelho sem o jogador ver)
+//   -> 401 sessão · 403 { banido, motivo } aparelho banido ou conta bloqueada · 429
 // GET  /api/player/progress[?so=info]          Authorization: Bearer <sessao>
 //   -> 200 { ok, existe, versao, atualizadoEm, tamanho, versaoDoJogo, dados? }   (dados = o save em TEXTO JSON)
 // POST /api/player/progress  { dados, versaoBase, forcar?, versaoDoJogo? }   Authorization: Bearer <sessao>
@@ -28,6 +33,7 @@ import { MAX_DISPOSITIVOS, aparelhosDaChave, trocarAparelho } from "../_lib/apar
 import { resumoDoAparelho } from "../_lib/bilhete.js";
 import { conferirTokenDoGoogle, googleDisponivel } from "../_lib/google.js";
 import { emitirSessao, lerSessao, tokenDoPedido, sessaoDisponivel } from "../_lib/sessao.js";
+import { gerarCodigo } from "../_lib/keygen.js";
 
 // O save solo de hoje tem ~20 KB; uma base enorme passa de 1 MB. A Vercel recusa corpo acima de 4,5 MB.
 export const MAX_DO_SAVE = 3_000_000;
@@ -39,6 +45,7 @@ const ROTAS = new Map([
   ["google", { metodos: ["POST"], rodar: entrarComGoogle }],
   ["link-google", { metodos: ["POST"], rodar: vincularGoogle }],
   ["vincular", { metodos: ["POST"], rodar: vincularGoogle }],
+  ["criar", { metodos: ["POST"], rodar: criarConta }],
   ["progress", { metodos: ["GET", "POST"], rodar: progresso }],
   ["progresso", { metodos: ["GET", "POST"], rodar: progresso }],
 ]);
@@ -49,7 +56,7 @@ export default async function handler(req, res) {
   if (!rota) return res.status(404).json({ ok: false, erro: "Rota não encontrada." });
   if (!rota.metodos.includes(req.method)) return res.status(405).json({ ok: false, erro: "Método não permitido" });
   // Sem as variáveis o login não pode funcionar: responde "fora" em vez de 500 com pilha.
-  if (!sessaoDisponivel() || (rota.rodar !== progresso && !googleDisponivel()))
+  if (!sessaoDisponivel() || (rota.rodar !== progresso && rota.rodar !== criarConta && !googleDisponivel()))
     return res.status(503).json({ ok: false, erro: "Login com Google ainda não está ligado no servidor." });
 
   try {
@@ -138,6 +145,38 @@ async function vincularGoogle(req, res, corpo, sb) {
     return res.status(status).json({ ok: false, erro: frases[data.erro] || "Não foi possível ligar a conta." });
   }
   return res.status(200).json(respostaDaConta(data, corpo.deviceId));
+}
+
+// ================================================================== conta nova (lançamento aberto)
+
+async function criarConta(req, res, corpo, sb) {
+  const s = await contaDaSessao(sb, req);
+  if (!s.ok) return res.status(s.status).json(s.corpo);
+  if (!(await limitar(`criar:ip:${ipDe(req)}`, 10, 3600)) || !(await limitar(`criar:conta:${s.contaId}`, 5, 3600)))
+    return res.status(429).json({ ok: false, erro: "Muitas tentativas. Espere um pouco." });
+
+  // O aparelho banido não abre conta nova (o ban do Ronni é por aparelho).
+  const deviceId = texto(corpo.deviceId, 128);
+  if (deviceId) {
+    const ban = await banDoAparelho(sb, deviceId);
+    if (ban) return res.status(403).json({ ok: false, banido: true, motivo: ban.motivo });
+  }
+
+  // O código sai do gerador criptográfico; a colisão (23505, uma em ~10^12) tenta outro.
+  for (let tentativa = 0; tentativa < 4; tentativa++) {
+    const { data, error } = await sb.rpc("criar_chave_da_conta", { p_conta: s.contaId, p_codigo: gerarCodigo() });
+    if (error) {
+      if (error.code === "23505") continue;
+      throw error;
+    }
+    if (!data.ok) {
+      if (data.erro === "conta_bloqueada") return res.status(403).json({ ok: false, banido: true, motivo: "Conta bloqueada." });
+      return res.status(401).json(SEM_SESSAO);
+    }
+    if (data.criada) console.info("conta nova", { conta: String(data.conta_id).slice(0, 8) });
+    return res.status(200).json(respostaDaConta(data, deviceId));
+  }
+  return res.status(503).json({ ok: false, erro: "Não consegui criar a conta agora. Tente de novo." });
 }
 
 // ================================================================== progresso

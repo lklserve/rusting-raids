@@ -11,9 +11,16 @@ import { inserirPedido } from "../_lib/pedido.js";
 const MIN = 5;
 const MAX = 100;
 
+// Lançamento aberto (27/10, o Ronni: "remova a obrigatoriedade de digitar uma Key ... remova a seção de Apoiadores"):
+// o jogo não vende mais chave — entra-se com a conta Google. Esta rota fica respondendo 410 para página antiga em cache;
+// a recarga de cupons (/api/pix/recarga) continua. O código de baixo fica para o histórico dos pedidos.
+const VENDA_DE_CHAVE_ENCERRADA = true;
+
 export default async function handler(req, res) {
   if (cabecalhos(req, res)) return;
   if (req.method !== "POST") return res.status(405).json({ erro: "Método não permitido" });
+  if (VENDA_DE_CHAVE_ENCERRADA)
+    return res.status(410).json({ erro: "O jogo agora é aberto: baixe e entre com a sua conta Google. Cupons: pela recarga dentro do jogo." });
 
   try {
     const corpo = req.body || {};
