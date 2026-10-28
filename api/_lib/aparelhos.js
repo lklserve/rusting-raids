@@ -27,6 +27,13 @@ export async function aparelhosDaChave(sb, chaveId) {
   return data || [];
 }
 
+// Há um aparelho que a troca pode tirar (o mesmo filtro do trocarAparelho), sem mexer em nada: a prévia da troca de
+// chave da conta (api/conta/[acao].js, trocar) diz antes se este aparelho cabe.
+export function haAparelhoParaTrocar(aparelhos, paradoHaMs = PARADO_PARA_TROCAR_MS) {
+  const agora = Date.now();
+  return aparelhos.some((j) => !j.banido && agora - usadoEm(j) >= paradoHaMs);
+}
+
 // Passa para `deviceId` a linha do aparelho parado há mais tempo (nunca a de um aparelho banido: o ban iria junto).
 // -> { id } do jogador (a mesma linha, agora deste aparelho) | null se nenhum aparelho pode sair ou se outro pedido
 // mexeu nele ao mesmo tempo (quem chamou confere de novo).
