@@ -483,7 +483,9 @@
         <p>${esc(m.texto)}</p>
       </li>`).join("");
     const faq = $("[data-faq]");
-    faq.innerHTML = (DADOS.faq || []).map((f) => `<details class="revelar"><summary>${esc(f.p)}</summary><div>${esc(f.r)}</div></details>`).join("");
+    // link (opcional): um arquivo do próprio site para baixar, como o esquema de controles do BlueStacks.
+    const baixar = (l) => (l ? `<br><a href="${esc(l.href)}" download>${esc(l.texto)}</a>` : "");
+    faq.innerHTML = (DADOS.faq || []).map((f) => `<details class="revelar"><summary>${esc(f.p)}</summary><div>${esc(f.r)}${baixar(f.link)}</div></details>`).join("");
     observarRevelar();
   })();
 
