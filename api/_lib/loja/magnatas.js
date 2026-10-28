@@ -1,9 +1,10 @@
 // POST /api/jogo/loja/magnatas  { codigo, deviceId }
 //   -> { ok: true, lista: [{ pos, nome, cupons, eu, id, avatar, moldura }], eu: { pos, cupons } | null, total, atualizado }
 // OS MAGNATAS (pedido do Ronni, 22/10: "um sistema de rank de quem mais gastou em conta, mais fez recarga, um botão no
-// lobby que mostre esse rank dos jogadores mais magnatas do jogo"): as chaves que mais recarregaram cupons.
-// - Conta as recargas APROVADAS, pelo valor pago: 20 cupons por R$ 1. O bônus dos pacotes e o dobro da primeira recarga
-//   não contam, para o ranking ser de quem pagou mais.
+// lobby que mostre esse rank dos jogadores mais magnatas do jogo"): as chaves que mais compraram cupons.
+// - Conta os CUPONS COMPRADOS: o que cada recarga aprovada creditou (cupons_movimentos do tipo "recarga", um por pedido),
+//   com o bônus do pacote e o dobro da primeira recarga. Os presentes do ADM (ajuste) e os estornos não contam.
+//   Até 28/10 contava o valor pago × 20, sem o bônus; o Ronni, vendo a coluna "Cupons": "mostre quem mais comprou cupons".
 // - Ficam de fora as chaves banidas, as de teste (observação "CHAVE DE TESTE") e as de quem pediu para sair do ranking
 //   (observação com "FORA DOS MAGNATAS": a oposição da LGPD, art. 18, § 2º — Política de Privacidade, seção 9).
 // - O nome é o apelido da chave (o Cartão de Renomear); sem apelido, o último nome que um aparelho dela mandou; sem nenhum,
@@ -18,7 +19,6 @@ import { limitar } from "../rate-limit.js";
 import { autenticarJogador } from "../jogador.js";
 
 export const TAMANHO_DA_LISTA = 50;
-export const CUPONS_POR_REAL = 20;
 const GUARDAR_MS = 60 * 1000;
 const PAGINA = 1000;
 let guardado = null;   // { em, ranking: [{ chaveId, nome, cupons }] }
@@ -35,8 +35,8 @@ async function tudo(consulta) {
 }
 
 export async function calcularRanking(sb) {
-  const [pedidos, chaves, apelidos, jogadores, vitrines] = await Promise.all([
-    tudo(() => sb.from("pedidos").select("recarga_chave_id, valor").eq("tipo", "recarga").eq("status", "aprovado").order("id")),
+  const [recargas, chaves, apelidos, jogadores, vitrines] = await Promise.all([
+    tudo(() => sb.from("cupons_movimentos").select("chave_id, cupons").eq("tipo", "recarga").order("id")),
     tudo(() => sb.from("chaves").select("id, status, observacao").order("id")),
     tudo(() => sb.from("apelidos_da_chave").select("chave_id, apelido").order("chave_id")),
     tudo(() => sb.from("jogadores").select("chave_id, nome, ultimo_acesso").order("id")),
@@ -49,9 +49,10 @@ export async function calcularRanking(sb) {
   const vitrine = new Map(vitrines.map((v) => [v.chave_id, v]));
   const fora = new Set(chaves.filter((c) => c.status === "banida" || /CHAVE DE TESTE|FORA DOS MAGNATAS/i.test(c.observacao || "")).map((c) => c.id));
   const soma = new Map();
-  for (const p of pedidos) {
-    if (!p.recarga_chave_id || fora.has(p.recarga_chave_id)) continue;
-    soma.set(p.recarga_chave_id, (soma.get(p.recarga_chave_id) || 0) + Math.round(Number(p.valor) * CUPONS_POR_REAL));
+  for (const m of recargas) {
+    const cupons = Math.round(Number(m.cupons) || 0);
+    if (!m.chave_id || cupons <= 0 || fora.has(m.chave_id)) continue;
+    soma.set(m.chave_id, (soma.get(m.chave_id) || 0) + cupons);
   }
   const apelido = new Map(apelidos.map((a) => [a.chave_id, a.apelido]));
   const ultimoNome = new Map();
