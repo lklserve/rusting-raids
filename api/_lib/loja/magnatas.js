@@ -11,6 +11,9 @@
 //   "Sobrevivente". O código da chave nunca sai daqui.
 // - O avatar, a moldura e o ID (roleId do servidor, para o jogo abrir o perfil) vêm da vitrine que o jogo de cada um conta
 //   ao site (supabase/vitrines.sql); quem ainda não contou vai com id "" e 0 (a cabeça padrão).
+// - Os 5 primeiros aparecem com a moldura de Apoiador Top 1 a 5 da posição (MOLDURAS_DO_TOPO, os kits de
+//   Game.Core.Loja.CosmeticosExclusivos), seja qual for a vestida: o kit é de quem está na posição (o painel dá e tira
+//   pelo supabase/magnatas_kits.sql; pedido do Ronni de 28/10: "essas molduras ... apareçam lá no rank").
 // - Os TAMANHO_DA_LISTA primeiros; "eu" é a posição de quem pediu, mesmo fora da lista (nulo sem nenhuma recarga).
 // A conta inteira fica guardada GUARDAR_MS na memória da função: a lista não muda a cada segundo.
 import { cabecalhos, ipDe } from "../http.js";
@@ -19,6 +22,8 @@ import { limitar } from "../rate-limit.js";
 import { autenticarJogador } from "../jogador.js";
 
 export const TAMANHO_DA_LISTA = 50;
+// A moldura de Apoiador Top 1 … Top 5 (991000205 … 991000209).
+export const MOLDURAS_DO_TOPO = [991000205, 991000206, 991000207, 991000208, 991000209];
 const GUARDAR_MS = 60 * 1000;
 const PAGINA = 1000;
 let guardado = null;   // { em, ranking: [{ chaveId, nome, cupons }] }
@@ -90,7 +95,8 @@ export default async function handler(req, res) {
     return res.status(200).json({
       ok: true,
       lista: ranking.slice(0, TAMANHO_DA_LISTA).map((r, i) => ({
-        pos: i + 1, nome: r.nome, cupons: r.cupons, eu: r.chaveId === auth.chave.id, id: r.id, avatar: r.avatar, moldura: r.moldura,
+        pos: i + 1, nome: r.nome, cupons: r.cupons, eu: r.chaveId === auth.chave.id, id: r.id, avatar: r.avatar,
+        moldura: MOLDURAS_DO_TOPO[i] || r.moldura,
       })),
       eu: minha >= 0 ? { pos: minha + 1, cupons: ranking[minha].cupons } : null,
       total: ranking.length,
