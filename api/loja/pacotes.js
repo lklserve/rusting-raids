@@ -1,11 +1,12 @@
-// GET /api/loja/pacotes[?chave=RR-XXXX-XXXX]  ->  { pacotes: [{ id, reais, cupons, bonus }], emDobro }
+// GET /api/loja/pacotes[?chave=RR-XXXX-XXXX]  ->  { pacotes: [{ id, reais, cupons, bonus }], livre, emDobro }
 // Os pacotes de recarga à venda (para a página /recarga). Com a chave, diz também se ela ainda tem a RECARGA EM
 // DOBRO (supabase/recarga_em_dobro.sql): só um sim ou não, nada da conta. Sem chave (ou chave que não existe), emDobro
-// é falso.
+// é falso. "livre" = a faixa e a escada do bônus da recarga com valor livre (_lib/recarga.js), para a página fazer a
+// mesma conta que o servidor.
 import { cabecalhos, ipDe, normalizarCodigo } from "../_lib/http.js";
 import { supabase } from "../_lib/supabase.js";
 import { limitar } from "../_lib/rate-limit.js";
-import { recargaEmDobro } from "../_lib/recarga.js";
+import { recargaEmDobro, RECARGA_LIVRE } from "../_lib/recarga.js";
 
 export default async function handler(req, res) {
   if (cabecalhos(req, res)) return;
@@ -22,6 +23,7 @@ export default async function handler(req, res) {
     }
     return res.status(200).json({
       pacotes: (data || []).map((p) => ({ id: p.id, reais: Number(p.reais), cupons: p.cupons, bonus: p.bonus })),
+      livre: RECARGA_LIVRE,
       emDobro,
     });
   } catch (e) {

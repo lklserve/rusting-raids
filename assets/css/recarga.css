@@ -14,7 +14,8 @@
   font-size: 13px; color: var(--aco); margin-bottom: 8px; padding: 0;
 }
 .pacotes__grade { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-@media (min-width: 640px) { .pacotes__grade { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); } }
+/* 3 colunas no PC: com seis pacotes, "3.809 cupons" não cabia em 6 colunas (29/10). */
+@media (min-width: 640px) { .pacotes__grade { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .pacote { position: relative; display: block; cursor: pointer; }
 .pacote input { position: absolute; opacity: 0; pointer-events: none; }
 .pacote__cartao {
@@ -27,6 +28,30 @@
 .pacote__preco { margin-top: auto; font-family: var(--fonte-rotulo); font-weight: 700; color: var(--faisca); }
 .pacote input:checked + .pacote__cartao { border-color: var(--faisca); box-shadow: 0 0 0 3px rgba(255, 176, 46, .15); }
 .pacote input:focus-visible + .pacote__cartao { outline: 2px solid var(--faisca); outline-offset: 2px; }
+
+/* Outro valor (29/10): o cartão, a frase da escada do bônus, o campo em reais e a conta ao vivo. */
+.pacotes__escada { margin: 0 0 10px; color: var(--aco-2); font-size: 14px; line-height: 1.45; }
+.pacote--livre { grid-column: 1 / -1; }
+.pacote--livre .pacote__cartao {
+  flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; min-height: 0; border-style: dashed;
+}
+.pacote--livre .pacote__cupons { font-size: 26px; }
+.pacote--livre .pacote__bonus { min-height: 0; }
+.pacote--livre .pacote__preco { margin: 0 0 0 auto; font-size: 14px; }
+.livre { margin: -4px 0 14px; padding: 12px; background: #0b0b0d; border: 1px solid var(--faisca); }
+.livre .campo { margin-bottom: 8px; }
+.livre__entrada { display: flex; align-items: stretch; }
+.livre__moeda {
+  display: grid; place-items: center; padding: 0 12px; border: 1px solid var(--linha-2); border-right: 0;
+  font-family: var(--fonte-rotulo); font-weight: 700; color: var(--faisca); background: var(--painel);
+}
+.livre__entrada input { flex: 1; min-width: 0; font-size: 20px; }
+.livre__conta { margin: 0; display: flex; flex-direction: column; gap: 4px; color: var(--aco-2); font-size: 14px; line-height: 1.4; }
+.livre__conta b { color: var(--verde); }
+.livre__conta strong { font-family: var(--fonte-titulo); font-size: 28px; line-height: 1.1; color: var(--aco); font-weight: 400; }
+.livre__conta--erro { color: var(--tnt-claro); }
+.livre__dobro { color: var(--faisca); }
+.livre__dobro b { color: var(--faisca); }
 
 .recarga__pronto { text-align: center; }
 .recarga__pronto p { color: var(--aco-2); }

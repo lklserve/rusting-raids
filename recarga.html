@@ -10,7 +10,7 @@
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <link rel="stylesheet" href="assets/css/fontes.css?v=1">
   <link rel="stylesheet" href="assets/css/estilo.css?v=12">
-  <link rel="stylesheet" href="assets/css/recarga.css?v=4">
+  <link rel="stylesheet" href="assets/css/recarga.css?v=5">
   <link rel="stylesheet" href="assets/css/legal.css?v=1">
 </head>
 <body class="pagina-recarga">
@@ -28,7 +28,7 @@
 <main class="container container--estreito recarga">
   <p class="kicker kicker--tnt">// loja do jogo</p>
   <h1 class="titulo">Recarga de cupons</h1>
-  <p class="recarga__lead">20 cupons = R$ 1. Os cupons ficam na sua chave e servem para comprar itens na loja do jogo, que mostra o preço e as regras de cada item antes da compra. Skins são só visuais; alguns itens de conveniência valem só até o fim da temporada. O que você comprar fica na sua chave, em todos os aparelhos dela, enquanto o jogo estiver no ar. Cupons não voltam em dinheiro, a não ser nos casos da <a href="/reembolso">Política de Reembolso</a>.</p>
+  <p class="recarga__lead">20 cupons = R$ 1, mais um bônus que cresce com a recarga. Escolha um pacote ou digite outro valor. Os cupons ficam na sua chave e servem para comprar itens na loja do jogo, que mostra o preço e as regras de cada item antes da compra. Skins são só visuais; alguns itens de conveniência valem só até o fim da temporada. O que você comprar fica na sua chave, em todos os aparelhos dela, enquanto o jogo estiver no ar. Cupons não voltam em dinheiro, a não ser nos casos da <a href="/reembolso">Política de Reembolso</a>.</p>
 
   <!-- 1: chave, pacote e e-mail -->
   <form class="recarga__caixa" data-etapa="pedido" novalidate>
@@ -39,8 +39,19 @@
     <p class="recarga__dobro" data-dobro hidden><b>2×</b><span>Recarga em dobro: a próxima recarga desta chave vale o dobro de cupons, em qualquer pacote. Vale uma vez por chave.</span></p>
     <fieldset class="pacotes" data-pacotes>
       <legend>Pacote</legend>
+      <p class="pacotes__escada" data-escada hidden></p>
       <div class="carregando"></div>
     </fieldset>
+    <div class="livre" data-livre hidden>
+      <label class="campo">
+        <span>Valor da recarga <small data-livre-faixa></small></span>
+        <span class="livre__entrada">
+          <span class="livre__moeda" aria-hidden="true">R$</span>
+          <input type="text" name="valor" data-livre-valor inputmode="numeric" autocomplete="off" maxlength="4" placeholder="12" aria-describedby="livre-conta">
+        </span>
+      </label>
+      <p class="livre__conta" id="livre-conta" data-livre-conta aria-live="polite"></p>
+    </div>
     <label class="campo">
       <span>E-mail <small>(o Mercado Pago pede o e-mail de quem paga)</small></span>
       <input type="email" name="email" data-email placeholder="voce@email.com" autocomplete="email" required aria-describedby="recarga-dados">
@@ -105,6 +116,6 @@
 </footer>
 
 <script src="assets/js/consentimento.js?v=2" defer></script>
-<script src="assets/js/recarga.js?v=4" defer></script>
+<script src="assets/js/recarga.js?v=5" defer></script>
 </body>
 </html>
